@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_mode_local"
+            android:icon="@drawable/baseline_cloud_off_24"
+            android:title="@string/nav_mode_local" />
+
+        <item
+            android:id="@+id/nav_mode_web"
+            android:icon="@drawable/baseline_cloud_queue_24"
+            android:title="@string/nav_mode_web" />
+
+    </group>
+
+    <item
+        android:id="@+id/nav_web_manager"
+        android:icon="@drawable/baseline_language_24"
+        android:title="@string/nav_net_manager" />
+
+    <item
+        android:id="@+id/nav_mode_web_logout"
+        android:icon="@drawable/baseline_reply_24"
+        android:title="@string/nav_mode_web_logout" />
+
+    <item
+        android:id="@+id/nav_server_setting"
+        android:title="@string/nav_server_setting" />
+
+</menu>

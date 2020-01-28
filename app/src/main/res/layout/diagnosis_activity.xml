@@ -1,0 +1,162 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/app_bar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:background="@color/colorContent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/colorMain"
+            android:orientation="horizontal"
+            style="@style/row_side_padding_dp_15">
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:src="@drawable/blt_con01"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midium"
+                android:text="@string/diagnosis_content_ss" />
+        </LinearLayout>
+
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            style="@style/row_side_padding_dp_15"
+            android:stretchColumns="1">
+
+            <TableRow
+                android:minHeight="35dp">
+
+                <LinearLayout
+                    android:id="@+id/llPlc"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    style="@style/row_side_padding_dp_15">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        android:textColor="@color/color1"
+                        android:textSize="@dimen/font_midsmall"
+                        android:textStyle="bold"
+                        android:text="PLC"/>
+
+                    <ImageButton
+                        android:id="@+id/ibtnPlcState"
+                        android:checked="false"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/my_custom_checkbox_drawable"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnLearning"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:src="@drawable/outline_memory_white_18dp"
+                        android:scaleType="fitCenter"
+                        android:clickable="false"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        android:textColor="@color/color1"
+                        android:textSize="@dimen/font_midsmall"
+                        android:textStyle="bold"
+                        android:text="Learning"
+                        android:clickable="false"/>
+
+                </LinearLayout>
+
+
+            </TableRow>
+
+        </TableLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ffffff"/>
+
+        <ListView
+            android:id="@+id/diagnosis_content_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:stackFromBottom="false"
+            android:divider="@null"
+            android:dividerHeight="0dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ffffff"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+                <Button
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:id="@+id/btnUploadToWebManager"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color1"
+                    android:textSize="@dimen/font_midium"
+                    android:gravity="center"
+                    android:text="Upload sensor information to Web Manager"
+                    android:layout_marginLeft="10dp"
+                    android:textAllCaps="false" />
+
+
+                <ImageButton
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:id="@+id/btnGoToWebManager"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:src="@drawable/baseline_cloud_queue_white_24"
+                    android:layout_marginRight="10dp"/>
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorContent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorMain"
+        android:orientation="horizontal"
+        style="@style/row_side_padding_dp_15">
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="5dp"
+            android:layout_gravity="center"
+            android:src="@drawable/blt_con01"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/color1"
+            android:textSize="@dimen/font_midium"
+            android:text="@string/diagnosis_content_fpc" />
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/row_side_margin_dp_15"
+        android:stretchColumns="*"
+        android:shrinkColumns="3,4">
+
+        <TableRow
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="50dp"
+                android:textColor="@color/color3"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_fpc_en" />
+
+            <TextView
+                android:gravity="center"
+                android:textColor="@color/color3"
+                android:layout_marginLeft="5dp"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_fpc_mi" />
+
+            <TextView
+                android:gravity="center"
+                android:textColor="@color/color3"
+                android:layout_marginLeft="5dp"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_fpc_ma" />
+
+            <TextView
+                android:gravity="center"
+                android:textColor="@color/color3"
+                android:layout_marginLeft="5dp"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_fpc_lw" />
+
+            <TextView
+                android:gravity="center"
+                android:textColor="@color/color3"
+                android:layout_marginLeft="5dp"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_fpc_ld" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+
+            <CheckBox
+                android:id="@+id/diagnosis_content_fpc_en1V"
+                android:theme="@style/checkBoxStyle"
+                android:enabled="false"
+                android:textSize="@dimen/font_small"
+                android:text="#1" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_mi1V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_ma1V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_lw1V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_ld1V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+
+            <CheckBox
+                android:id="@+id/diagnosis_content_fpc_en2V"
+                android:theme="@style/checkBoxStyle"
+                android:enabled="false"
+                android:textSize="@dimen/font_small"
+                android:text="#2" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_mi2V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_ma2V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_lw2V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_ld2V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+
+            <CheckBox
+                android:id="@+id/diagnosis_content_fpc_en3V"
+                android:theme="@style/checkBoxStyle"
+                android:enabled="false"
+                android:textSize="@dimen/font_small"
+                android:text="#3" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_mi3V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_ma3V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_lw3V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_ld3V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+
+            <CheckBox
+                android:id="@+id/diagnosis_content_fpc_en4V"
+                android:theme="@style/checkBoxStyle"
+                android:enabled="false"
+                android:textSize="@dimen/font_small"
+                android:text="#4" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_mi4V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_ma4V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_lw4V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_ld4V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+
+            <CheckBox
+                android:id="@+id/diagnosis_content_fpc_en5V"
+                android:theme="@style/checkBoxStyle"
+                android:enabled="false"
+                android:textSize="@dimen/font_small"
+                android:text="#5" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_mi5V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_ma5V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_lw5V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_ld5V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+
+            <CheckBox
+                android:id="@+id/diagnosis_content_fpc_en6V"
+                android:theme="@style/checkBoxStyle"
+                android:enabled="false"
+                android:textSize="@dimen/font_small"
+                android:text="#6" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_mi6V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_ma6V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_lw6V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_fpc_ld6V"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_small"
+                android:text="0" />
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

@@ -1,0 +1,174 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorMain">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorContent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:text="E"
+            android:textColor="@color/myorange"
+            android:textSize="@dimen/font_large" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="quipment"
+            android:textColor="@color/mygray"
+            android:textSize="@dimen/font_large" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical">
+
+            <Button
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/btnDetailUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midium"
+                android:gravity="center"
+                android:text="Detail &amp; Update"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textAllCaps="false"
+                android:visibility="visible"/>
+
+            <Button
+                android:id="@+id/btn_register_equipment"
+                android:layout_width="26dp"
+                android:layout_height="27dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/btn_new"
+                android:layout_marginRight="20dp"/>
+
+            <Button
+                android:id="@+id/buttonPresetList"
+                android:layout_width="26dp"
+                android:layout_height="27dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/baseline_clear_white_48"
+                android:layout_marginRight="20dp"/><!--added by hslee for test-->
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/equipment_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:choiceMode="singleChoice"
+            android:stackFromBottom="false"
+            android:dividerHeight="5dp"
+            android:divider="@null"
+            style="@style/row_side_padding_dp_15"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/llCurrentLocalMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="@color/colorContent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color1"
+            android:textSize="@dimen/font_midium"
+            android:text="Current Sensor"/>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/baseline_cloud_off_white_18"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llCurrentWebMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="@color/colorContent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color1"
+            android:textSize="@dimen/font_midium"
+            android:text="Current Platform"/>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/baseline_cloud_queue_white_18"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="@color/colorContent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/signallinkhome"
+            android:layout_width="130dp"
+            android:layout_height="24dp"
+            android:gravity="center_horizontal"
+            android:src="@drawable/signallink"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="130dp"
+            android:layout_height="100dp"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,172 @@
+<resources>
+    <string name="app_name">SVS</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Smart Vibration Sensor</string>
+    <string name="nav_header_subtitle">support@signallink.co.kr</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="nav_register">Register</string>
+    <string name="nav_monitor">Monitoring \u0026 Trend</string>
+    <string name="nav_history">History</string>
+    <string name="nav_setting">Sensor Info</string>
+    <string name="nav_server_setting">Upload Server Setting</string>
+    <string name="nav_net_manager">Go to Web Manager</string>
+    <string name="nav_mode_local">Change Local</string>
+    <string name="nav_mode_web">Change Platform</string>
+    <string name="nav_mode_web_logout">Logout</string>
+
+    <string name="homepage">http://www.signallink.co.kr</string>
+    <string name="main_screen">Smart Vibration Sensor</string>
+    <string name="title_net_manager">Web Manager</string>
+    <string name="register_screen">Register</string>
+    <string name="update_screen">Detail \u0026 Update</string>
+    <string name="history_screen">History</string>
+    <string name="record_screen">Record Chart</string>
+    <string name="monitoring1_screen">Monitoring \u0026 Trend</string>
+    <string name="monitoring2_screen">Monitoring \u0026 RawData</string>
+    <string name="diagnosis_screen">Sensor Info</string>
+    <string name="manualmode_screen">Monitoring \u0026 History</string>
+    <string name="automode_screen">Auto Saving</string>
+    <string name="button_ble_search">Search</string>
+    <string name="button_ble_close">Disconnect</string>
+    <string name="popup_title">Mobile SVS Quit</string>
+    <string name="popup_message">Do you want to quit the mobile app?</string>
+    <string name="popup_yes">yes</string>
+    <string name="popup_no">no</string>
+    <string name="device_listname">SVS List</string>
+    <string name="scanning">Finding SVS ...</string>
+    <string name="requesting">Requesting</string>
+    <string name="requestconnect">SVS Connected</string>
+    <string name="requestsvsinfo">Information uploaded</string>
+    <string name="requestsettinginfo">Information uploaded</string>
+    <string name="autosaving">Result saved</string>
+    <string name="notconnected">Please connect SVS first.</string>
+    <string name="connected">SVS connected !</string>
+    <string name="notuploaded">Not received Setting Information.</string>
+    <string name="disconnected">SVS disconnected !</string>
+    <string name="notfound">SVS not found</string>
+    <string name="notregistered">SVS not registered</string>
+    <string name="ble_not_supported">This mobile does not Support the BLE.</string>
+    <string name="notEquipmentName">Equipment Name is Empty.</string>
+    <string name="notChangedEquipmentName">Name is not Changed</string>
+    <string name="notParsedSetting">Not Parsed Setting</string>
+    <string name="notParsedMeasur">Not Parsed Measure</string>
+    <string name="notSVSLocationName">Check SVS LocationName</string>
+    <string name="BleTurnON">Turn On Bluetooth</string>
+    <string name="BleTurnOFF">Turn Off Bluetooth</string>
+    <string name="Completed">Processing completed</string>
+    <string name="notCompleted">Not processing completed</string>
+    <string name="history_toolbar_btn_delete">Delete</string>
+
+    <string name="collectingchartdata">Collecting data...</string>
+    <string name="recordingchartdata">Recording data...</string>
+    <string name="measure_type_title">Data Select</string>
+
+    <string name="hello_content_name">SVS Mobile</string>
+    <string name="hello_content_Devname">Name : </string>
+    <string name="hello_content_FWver">Firmware version : </string>
+    <string name="hello_content_HWver">Hardware version : </string>
+    <string name="hello_content_SFI">SFI : </string>
+    <string name="hello_content_CID">Customer ID : </string>
+    <string name="hello_content_BAT">BAT : </string>
+
+    <string name="diagnosis_content_ss">Sensor Setting</string>
+
+    <string name="diagnosis_content_os_de">SVS Device</string>
+    <string name="diagnosis_content_os">Overall Setting</string>
+    <string name="diagnosis_content_os_it">Interval Time (min)</string>
+    <string name="diagnosis_content_os_mr">Measure Range (g)</string>
+    <string name="diagnosis_content_os_ma">Measure Axis</string>
+    <string name="diagnosis_content_os_sp">Sampling Freq (Hz)</string>
+    <string name="diagnosis_content_os_or">Offset Removal</string>
+    <string name="diagnosis_content_os_oa">Offset Adjustment</string>
+    <string name="diagnosis_content_os_dc">Data Conversion</string>
+    <string name="diagnosis_content_os_fac">FFT Average Count</string>
+    <string name="diagnosis_content_os_sv">Sensitivity</string>
+
+    <string name="diagnosis_content_de_serial">Serial Number</string>
+    <string name="diagnosis_content_de_firmware">Firmware Version</string>
+    <string name="diagnosis_content_de_hardware">Hardware Version</string>
+
+    <string name="diagnosis_content_lp">Learning Parameters</string>
+    <string name="diagnosis_content_lp_lc">Learning Count</string>
+    <string name="diagnosis_content_lp_of">Offset (%)</string>
+    <string name="diagnosis_content_lp_sf">StdDev Factor</string>
+    <string name="diagnosis_content_lp_fco">FFT Curve Offset</string>
+    <string name="diagnosis_content_lp_lr">Limit Resolution</string>
+
+    <string name="diagnosis_content_ddp">Diagnosis Decision Parameters</string>
+    <string name="diagnosis_content_ddp_dl">Danger Limit (%)</string>
+    <string name="diagnosis_content_ddp_wc">Warning Count</string>
+    <string name="diagnosis_content_ddp_dc">Danger Count</string>
+
+    <string name="diagnosis_content_md">Mode</string>
+    <string name="diagnosis_content_md_md">Mode</string>
+    <string name="diagnosis_content_md_tc">Trigger Code</string>
+    <string name="diagnosis_content_md_tv">Trigger Value</string>
+
+    <string name="diagnosis_content_dl">Data Logging</string>
+    <string name="diagnosis_content_dl_ws">Warning State</string>
+    <string name="diagnosis_content_dl_ds">Danger State</string>
+
+    <string name="diagnosis_content_tem">Temperature</string>
+    <string name="diagnosis_content_tem_en">Enable</string>
+    <string name="diagnosis_content_tem_lw">Limit Warning</string>
+    <string name="diagnosis_content_tem_ld">Limit Danger</string>
+
+    <string name="diagnosis_content_tc">Time Codes</string>
+    <string name="diagnosis_content_tc_en">Enable</string>
+    <string name="diagnosis_content_tc_lw">Limit Warning</string>
+    <string name="diagnosis_content_tc_ld">Limit Danger</string>
+
+    <string name="diagnosis_content_fpc">Frequency-Peak Codes</string>
+    <string name="diagnosis_content_fpc_en">Enable</string>
+    <string name="diagnosis_content_fpc_mi">Min (Hz)</string>
+    <string name="diagnosis_content_fpc_ma">Max (Hz)</string>
+    <string name="diagnosis_content_fpc_lw">Limit Warning</string>
+    <string name="diagnosis_content_fpc_ld">Limit Danger</string>
+
+    <string name="diagnosis_content_fbc">Frequency-Band Codes</string>
+    <string name="diagnosis_content_fbc_en">Enable</string>
+    <string name="diagnosis_content_fbc_mi">Min (Hz)</string>
+    <string name="diagnosis_content_fbc_ma">Max (Hz)</string>
+    <string name="diagnosis_content_fbc_lw">Limit Warning</string>
+    <string name="diagnosis_content_fbc_ld">Limit Danger</string>
+
+    <string name="diagnosis_content_andflag">AND Flag</string>
+    <string name="diagnosis_content_andflag_en">Condition</string>
+
+    <string name="diagnosis_content_fcl">FFT Curve Limit</string>
+    <string name="diagnosis_content_fcl_en">Enable</string>
+    <string name="diagnosis_content_fcl_wr">Warning (%)</string>
+    <string name="diagnosis_content_fcl_da">Danger (%)</string>
+
+    <string-array name="custom_list_dialog_equipment">
+        <item>Sensors</item>
+        <item>Detail \u0026 Update</item>
+    </string-array>
+
+    <string-array name="custom_list_dialog_svslocation">
+        <item>Monitoring</item>
+        <item>History</item>
+    </string-array>
+
+    <string-array name="custom_list_dialog_wsvslocation">
+        <item>Monitoring \u0026 Trend</item>
+        <item>Raw Data</item>
+    </string-array>
+
+    <string-array name="custom_list_dialog_image">
+        <item>Camera</item>
+        <item>Album</item>
+        <item>Delete</item>
+    </string-array>
+
+    <string-array name="custom_list_preset">
+        <item>Next</item>
+        <item>Update</item>
+    </string-array>
+
+
+</resources>

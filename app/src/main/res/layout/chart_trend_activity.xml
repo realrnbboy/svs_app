@@ -1,0 +1,83 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorContent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/app_bar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:max="100"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        tools:progress="25"
+        />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        style="@style/row_side_padding_dp_15"
+        android:stretchColumns="*">
+
+        <TableRow
+            android:minHeight="35dp">
+
+            <TextView
+                android:id="@+id/temperature_chartraw"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midium"
+                android:gravity="center"
+                android:text="Temp -"/>
+
+        </TableRow>
+
+    </TableLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/llCharts123"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            style="@style/row_side_margin_dp_15"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentLeft="true">
+
+            <com.github.mikephil.charting.charts.CombinedChart
+                android:id="@+id/chart01_CombinedChart_chartraw"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.github.mikephil.charting.charts.CombinedChart
+                android:id="@+id/chart02_CombinedChart_chartraw"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.github.mikephil.charting.charts.CombinedChart
+                android:id="@+id/chart03_CombinedChart_chartraw"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

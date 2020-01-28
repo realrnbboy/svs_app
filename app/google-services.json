@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "677270536613",
+    "firebase_url": "https://signallink-f0ebb.firebaseio.com",
+    "project_id": "signallink-f0ebb",
+    "storage_bucket": "signallink-f0ebb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677270536613:android:5843d4d2a81c94f0",
+        "android_client_info": {
+          "package_name": "kr.co.signallink.svsv2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "677270536613-02rsabnrjs25q6hm27ugfcv79j2tqes8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCo2T-9OFHGMB68wHW7yggHz2Y37tc1WKU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "677270536613-02rsabnrjs25q6hm27ugfcv79j2tqes8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

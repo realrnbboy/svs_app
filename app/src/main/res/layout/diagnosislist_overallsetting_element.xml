@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorContent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorMain"
+        android:orientation="horizontal"
+        style="@style/row_side_padding_dp_15">
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="5dp"
+            android:layout_gravity="center"
+            android:src="@drawable/blt_con01"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/color1"
+            android:textSize="@dimen/font_midium"
+            android:text="@string/diagnosis_content_os" />
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/row_side_margin_dp_15"
+        android:stretchColumns="*">
+
+        <TableRow
+            android:layout_marginTop="5dp">
+            <TextView
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_os_it" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_os_itV"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                tools:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+            <TextView
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_os_mr" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_os_mrV"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                tools:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+            <TextView
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_os_ma" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_os_maV"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                tools:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+            <TextView
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_os_sp" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_os_spV"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                tools:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+            <TextView
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_os_or" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_os_orV"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                tools:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+            <TextView
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_os_oa" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_os_oaV"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                tools:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+            <TextView
+                android:gravity="left"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_os_dc" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_os_dcV"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                tools:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+            <TextView
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_os_fac" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_os_facV"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                tools:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5dp">
+            <TextView
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                android:text="@string/diagnosis_content_os_sv" />
+
+            <TextView
+                android:id="@+id/diagnosis_content_os_svV"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                tools:text="0" />
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

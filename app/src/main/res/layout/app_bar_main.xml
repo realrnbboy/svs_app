@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:contentInsetStart="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btn_select_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:background="@android:color/transparent"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    android:text="Select Mode"
+                    android:textColor="@color/color1"
+                    android:textSize="@dimen/font_midsmall"/>
+
+                <Button
+                    android:id="@+id/button_record"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/btn_rec"/>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/toolbar_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textStyle="bold"
+                        android:textColor="@color/color1"
+                        android:textSize="@dimen/font_midium"
+                        tools:text="@string/main_screen"/>
+
+                    <ImageView
+                        android:id="@+id/toolbar_img_title"
+                        android:layout_width="100dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/signallink"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+                <Button
+                    android:id="@+id/button_control_ble"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:background="@android:color/transparent"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    android:textColor="@color/color1"
+                    android:textSize="@dimen/font_midsmall" /><!--added by hslee visible -> gone for test-->
+
+
+                <ImageView
+                    android:id="@+id/imageViewRemovePreset"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="right|center_vertical"
+                    android:scaleType="centerCrop"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_remove_circle_red_24dp" /><!--added by hslee-->
+
+                <Button
+                    android:id="@+id/buttonAddPreset"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="right|center_vertical"
+                    android:visibility="gone"
+                    android:background="@drawable/btn_new"
+                    android:layout_marginRight="8dp"/><!--added by hslee-->
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

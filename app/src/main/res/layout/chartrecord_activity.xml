@@ -1,0 +1,94 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorContent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/app_bar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:gravity="center_vertical"
+        android:background="@color/colorContent"
+        android:orientation="horizontal"
+        style="@style/row_side_margin_dp_15">
+
+        <TextView
+            android:id="@+id/temperature_chartrecord"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="35dp"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/color1"
+            android:textSize="@dimen/font_midium"
+            tools:text="Temperature -"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="22dp"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_recalarm"/>
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="3dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/icons_rec"/>
+
+            <TextView
+                android:id="@+id/alarm_chartrecord"
+                android:layout_width="50dp"
+                android:layout_height="22dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:textColor="@color/color1"
+                android:text=""
+                android:textSize="15dp"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        style="@style/row_side_margin_dp_15">
+
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/chart01_CombinedChart_chartrecord"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/chart02_CombinedChart_chartrecord"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/chart03_CombinedChart_chartrecord"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

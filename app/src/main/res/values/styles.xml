@@ -1,0 +1,90 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:spinnerStyle">@style/AppTheme.spinnerStyle</item>
+        <item name="android:spinnerDropDownItemStyle">@style/AppTheme.spinnerDropDownItemStyle</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="checkBoxStyle" parent="Base.Theme.AppCompat">
+        <item name="colorAccent">@color/color2</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/color2</item> <!-- red -->
+        <item name="android:textColorSecondary">@color/color2</item>
+    </style>
+
+    <style name="AppTheme.spinnerStyle" parent="@android:style/Widget.Material.Light.Spinner">
+        <item name="android:textColor">@color/color1</item>
+        <item name="android:background">@color/colorPrimaryInput</item>
+        <item name="android:dropDownWidth">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="AppTheme.spinnerDropDownItemStyle" parent="@android:style/Widget.Material.DropDownItem.Spinner">
+        <item name="android:textColor">@color/color1</item>
+        <item name="android:background">@color/colorPrimaryInput</item>
+        <item name="android:dropDownWidth">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+
+    </style>
+
+
+    <!-- Custom Style -->
+
+    <!-- List뷰의 Element 타이틀 스타일 -->
+    <style name="row_side_margin_dp_15">
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginRight">15dp</item>
+    </style>
+    <style name="row_side_padding_dp_15">
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+    </style>
+
+    <style name="preset_item_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="preset_item_edittext">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">25dp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:inputType">text</item>
+        <item name="android:textColor">@color/color1</item>
+        <item name="android:background">@color/colorPrimaryInput</item>
+        <item name="android:textSize">@dimen/font_midium</item>
+    </style>
+
+    <style name="preset_item_textview">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/myblue</item>
+        <item name="android:textSize">@dimen/font_midium</item>
+    </style>
+
+    <style name="preset_item_spinner">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">28dp</item>
+<!--        <item name="android:textColor">@color/myblue</item>-->
+        <item name="android:textColor">@color/color1</item>
+        <item name="android:textSize">@dimen/font_midium</item>
+    </style>
+
+
+</resources>

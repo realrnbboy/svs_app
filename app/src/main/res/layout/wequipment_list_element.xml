@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemlayout_equipment_list_element"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:checked="false"
+    android:focusable="false"
+    android:background="@drawable/my_custom_list_equipment_drawable">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/image_border">
+
+            <kr.co.signallink.svsv2.views.custom.SquareImageView
+                android:id="@+id/keyimage_equipment_list_element"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:scaleType="centerCrop"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:orientation="vertical"
+            android:gravity="left">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="35dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/name_equipment_list_element"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/myorange"
+                    android:textSize="@dimen/font_large"
+                    tools:text="Equipment Name"/>
+
+            </LinearLayout>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="1"
+                android:shrinkColumns="1">
+
+                <TableRow
+                    android:minHeight="25dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:textColor="@color/myblue"
+                        android:textSize="@dimen/font_midium"
+                        android:text="Company" />
+
+                    <TextView
+                        android:id="@+id/company_name_equipment_list_element"
+                        android:textColor="@color/mygray"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="@dimen/font_midium"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:minHeight="25dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:textColor="@color/myblue"
+                        android:textSize="@dimen/font_midium"
+                        android:text="Factory" />
+
+                    <TextView
+                        android:id="@+id/factory_name_equipment_list_element"
+                        android:textColor="@color/mygray"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="@dimen/font_midium"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:minHeight="25dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_span="2"
+                        android:id="@+id/created_equipment_list_element"
+                        android:textColor="@color/mygray"
+                        android:textSize="@dimen/font_midium"/>
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

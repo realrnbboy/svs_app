@@ -1,0 +1,160 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorContent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/app_bar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:max="100"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        tools:progress="25"
+        />
+
+    <Button
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:id="@+id/btnStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/color1"
+        android:textSize="@dimen/font_midium"
+        android:gravity="center"
+        android:text="Start"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/tvProcessingState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Processing..."
+        android:textColor="@android:color/transparent"
+        android:textSize="@dimen/font_midium"
+        android:gravity="center"/>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        style="@style/row_side_padding_dp_15"
+        android:stretchColumns="1"
+        android:visibility="gone">
+
+        <TableRow
+            android:minHeight="35dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midsmall"
+                android:textStyle="bold"
+                android:text="Raw Option"/>
+
+            <Spinner
+                android:id="@+id/measure_option_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"/>
+
+        </TableRow>
+
+
+    </TableLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/llCharts45"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            style="@style/row_side_margin_dp_15"
+            android:layout_marginBottom="5dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvTimeStamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="@dimen/font_midsmall"
+                    android:textColor="@android:color/white"/>
+
+            </LinearLayout>
+
+            <com.github.mikephil.charting.charts.CombinedChart
+                android:id="@+id/chart04_CombinedChart_chartraw"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.github.mikephil.charting.charts.CombinedChart
+                android:id="@+id/chart05_CombinedChart_chartraw"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ffffff"/>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow>
+            <Button
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/btnUploadToWebManager"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/font_midium"
+                android:gravity="center"
+                android:text="Upload Raw Data to Web Manager"
+                android:layout_marginLeft="10dp"
+                android:textAllCaps="false" />
+
+
+            <ImageButton
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/btnGoToWebManager"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:src="@drawable/baseline_cloud_queue_white_24"
+                android:layout_marginRight="10dp"/>
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

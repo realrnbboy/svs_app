@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#131B2A</color>
+    <color name="colorPrimaryDark">#101927</color>
+    <color name="colorPrimaryInput">#293141</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="nav_item_background">#FFFFFF</color>
+    <color name="nav_item_background_default">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorMain">#1d2637</color>
+    <color name="colorContent">#232e40</color>
+    <color name="colorLine">#7c889c</color>
+    <color name="color1">#ffffff</color>
+    <color name="color2">#fa9f01</color>
+    <color name="color3">#a2b0c7</color>
+    <color name="myorange">#fa9f01</color>
+    <color name="myblue">#8da6d3</color>
+    <color name="mygray">#959ba7</color>
+    <color name="myred">#f20a0a</color>
+    <color name="myyellow">#ffe53d</color>
+    <color name="mygreen">#61ff3d</color>
+    <color name="mypressed">#293141</color>
+    <color name="mylogred">#d74e2d</color>
+    <color name="hotpink">#C63361</color>
+
+
+    <!-- Drawable Color Chip -->
+    <drawable name="drawable_color_disable">#aaaaaa</drawable>
+    <drawable name="drawable_color_dark">#101927</drawable>
+    <drawable name="drawable_color_white">#ffffff</drawable>
+    <drawable name="drawable_color_hotpink">#C63361</drawable>
+
+</resources>

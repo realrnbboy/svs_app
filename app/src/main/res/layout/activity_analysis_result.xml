@@ -1,0 +1,95 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorMain">
+
+    <include
+        android:id="@+id/include_view"
+        layout="@layout/app_bar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/margin_default"
+            style="@style/row_side_padding_dp_15">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/myblue"
+                android:textSize="@dimen/font_midium"
+                android:text="Vibration limit" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_default"
+            android:orientation="vertical">
+            <LinearLayout
+                style="@style/preset_item_layout">
+
+                <TextView
+                    android:id="@+id/textViewCode"
+                    android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                    style="@style/preset_item_textview"
+                    android:text="Equipment code"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/preset_item_other_contents"
+        android:orientation="horizontal"
+        style="@style/row_side_padding_dp_15">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/myblue"
+            android:textSize="@dimen/font_midium"
+            android:text="Vibration level" />
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewVibrationLevel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:choiceMode="none"
+        android:stackFromBottom="false"
+        android:dividerHeight="5dp"
+        android:divider="@null"
+        style="@style/row_side_padding_dp_15"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/preset_item_other_contents"
+        android:orientation="horizontal"
+        style="@style/row_side_padding_dp_15">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/myblue"
+            android:textSize="@dimen/font_midium"
+            android:text="FFT result" />
+    </LinearLayout>
+</LinearLayout>

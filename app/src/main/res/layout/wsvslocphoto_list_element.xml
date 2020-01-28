@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemlayout_svslocphoto_list_element"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:checked="false"
+    android:focusable="false"
+    android:background="@color/colorMain">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/image_border"
+            android:gravity="center">
+
+            <kr.co.signallink.svsv2.views.custom.SquareImageView
+                android:id="@+id/image_svslocphoto_list_element"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:src="@drawable/btn_imgadd"
+                android:scaleType="centerCrop"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/svslocphoto_svslocphoto_list_element"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:minHeight="35dp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical|left"
+                    android:textColor="@color/myorange"
+                    android:textSize="@dimen/font_large"
+                    android:text="Key"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/serialnumber_svslocphoto_list_element"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:textColor="@color/mygray"
+                android:textSize="@dimen/font_midium"/>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="1"
+                android:shrinkColumns="1">
+
+                <TableRow
+                    android:layout_marginTop="5dp"
+                    android:layout_height="25dp">
+
+                    <TextView
+                        android:textColor="@color/myblue"
+                        android:textSize="@dimen/font_midium"
+                        android:text="Model"/>
+
+                    <TextView
+                        android:id="@+id/model_svslocphoto_list_element"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/mygray"
+                        android:textSize="@dimen/font_midium"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginTop="5dp"
+                    android:layout_height="25dp">
+
+                    <TextView
+                        android:textColor="@color/myblue"
+                        android:textSize="@dimen/font_midium"
+                        android:text="Position"/>
+
+                    <TextView
+                        android:id="@+id/position_svslocphoto_list_element"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/mygray"
+                        android:textSize="@dimen/font_midium"/>
+
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

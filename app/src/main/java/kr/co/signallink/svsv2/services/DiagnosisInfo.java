@@ -79,11 +79,18 @@ public class DiagnosisInfo {
         nCauseCount = mainform.featureInfos.nCount;
         tableFeature = new double[nCauseCount][Constants.FEATURE_COUNT];
         tableResult = new double[nCauseCount][Constants.FEATURE_COUNT];
+
         for (int row = 0; row < nCauseCount; row++) {
             for (int col = 0; col < Constants.FEATURE_COUNT; col++) // A>R, R>A, Hor/Ver/, 1x, 2x, ..., LF, Overall
                                                                     // RMS까지 --> 25개
             {
-                tableFeature[row][col] = mainform.featureInfos.infos[row].fValues[col];
+                try {
+                    tableFeature[row][col] = mainform.featureInfos.infos[row].fValues[col];
+                    //tableFeature[row][col] = mainform.featureInfos.infos[col].fValues[row];
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

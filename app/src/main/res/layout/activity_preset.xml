@@ -28,49 +28,13 @@
 
 
             <LinearLayout
+                android:orientation="horizontal"
                 style="@style/preset_item_layout"
                 android:layout_marginTop="@dimen/margin_default">
 
                 <Spinner
                     android:id="@+id/spinnerPreset"
                     style="@style/preset_item_spinner"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearLayoutPresetName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/margin_default"
-                    style="@style/row_side_padding_dp_15">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/myblue"
-                        android:textSize="@dimen/font_midium"
-                        android:text="Preset Name" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_default"
-                    android:orientation="vertical">
-                    <LinearLayout
-                        style="@style/preset_item_layout">
-
-                        <EditText
-                            android:id="@+id/editTextPresetName"
-                            android:text="new preset"
-                            style="@style/preset_item_edittext"/>
-                    </LinearLayout>
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout

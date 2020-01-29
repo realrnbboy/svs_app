@@ -55,7 +55,6 @@ public class PresetActivity extends BaseActivity {
     ArrayList arrayListEquipmentType = new ArrayList<>();
     ArrayList arrayListBearingType = new ArrayList<>();
 
-    EditText editTextPresetName;
     EditText editTextSiteCode;
     EditText editTextEquipmentName;
     EditText editTextInputPower;
@@ -102,9 +101,6 @@ public class PresetActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         findViewById(R.id.button_record).setVisibility(View.GONE);  // 안쓰는 버튼 숨김
 
-        Intent intent = getIntent();
-
-        editTextPresetName = findViewById(R.id.editTextPresetName);
         editTextSiteCode = findViewById(R.id.editTextSiteCode);
         editTextEquipmentName = findViewById(R.id.editTextEquipmentName);
         editTextInputPower = findViewById(R.id.editTextInputPower);
@@ -123,13 +119,15 @@ public class PresetActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //dialogSave();
+                if( validateForm() ) {
 
-                // 수정된 preset 확인 및 세팅
+                    // 수정된 preset 확인 및 세팅
 
-                //matrix2 계산
-                MATRIX_2_Type matrix2 = makeMatrix2();
+                    //matrix2 계산
+                    MATRIX_2_Type matrix2 = makeMatrix2();
 
-                // 다음 화면으로 이동
+                    // 다음 화면으로 이동
+                }
             }
         });
 
@@ -146,6 +144,12 @@ public class PresetActivity extends BaseActivity {
         ArrayAdapter arrayAdapterLineFrequency = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListLineFrequency);
         ArrayAdapter arrayAdapterEquipmentType = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListEquipmentType);
         ArrayAdapter arrayAdapterBearingType = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListBearingType);
+
+        arrayAdapterPreset.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        arrayAdapterEquipmentCode.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        arrayAdapterLineFrequency.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        arrayAdapterEquipmentType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        arrayAdapterBearingType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerPreset.setAdapter(arrayAdapterPreset);
         spinnerEquipmentCode.setAdapter(arrayAdapterEquipmentCode);
@@ -246,77 +250,82 @@ public class PresetActivity extends BaseActivity {
         super.onBackPressed();
     }
 
-    //저장전에 체크하는 것들
+    // 값이 정상적으로 들어가 있는지 확인
     private boolean validateForm() {
 
         String siteCode = editTextSiteCode.getText().toString().trim();
         if(siteCode.isEmpty()){
+            editTextSiteCode.requestFocus();
             ToastUtil.showShort("site code is empty");
-            return false;
-        }
-
-        String presetName = editTextPresetName.getText().toString().trim();
-        if(presetName.isEmpty()){
-            ToastUtil.showShort("preset name is empty");
             return false;
         }
 
         String equipmentName = editTextEquipmentName.getText().toString().trim();
         if(equipmentName.isEmpty()){
+            editTextEquipmentName.requestFocus();
             ToastUtil.showShort("equipment name is empty");
             return false;
         }
 
         String inputPower = editTextInputPower.getText().toString().trim();
         if(inputPower.isEmpty()){
+            editTextInputPower.requestFocus();
             ToastUtil.showShort("input power is empty");
             return false;
         }
 
         String equipmentRpm = editTextEquipmentRpm.getText().toString().trim();
         if(equipmentRpm.isEmpty()){
+            editTextEquipmentRpm.requestFocus();
             ToastUtil.showShort("equipment rpm is empty");
             return false;
         }
 
         String bladeVane = editTextBladeVane.getText().toString().trim();
         if(bladeVane.isEmpty()){
+            editTextBladeVane.requestFocus();
             ToastUtil.showShort("blade/vane is empty");
             return false;
         }
 
         String noOfBalls = editTextNoOfBalls.getText().toString().trim();
         if(noOfBalls.isEmpty()){
+            editTextNoOfBalls.requestFocus();
             ToastUtil.showShort("No. of Balls is empty");
             return false;
         }
 
         String tagNo = editTextTagNo.getText().toString().trim();
         if(tagNo.isEmpty()){
+            editTextTagNo.requestFocus();
             ToastUtil.showShort("tag No is empty");
             return false;
         }
 
         String pitchDiameter = editTextPitchDiameter.getText().toString().trim();
         if(pitchDiameter.isEmpty()){
+            editTextPitchDiameter.requestFocus();
             ToastUtil.showShort("pitch diameter is empty");
             return false;
         }
 
         String ballDiameter = editTextBallDiameter.getText().toString().trim();
         if(ballDiameter.isEmpty()){
+            editTextBallDiameter.requestFocus();
             ToastUtil.showShort("ball diameter is empty");
             return false;
         }
 
         String rps = editTextRps.getText().toString().trim();
         if(rps.isEmpty()){
+            editTextRps.requestFocus();
             ToastUtil.showShort("rps is empty");
             return false;
         }
 
         String contactAngle = editTextContactAngle.getText().toString().trim();
         if(contactAngle.isEmpty()){
+            editTextContactAngle.requestFocus();
             ToastUtil.showShort("contact angle is empty");
             return false;
         }
@@ -332,7 +341,7 @@ public class PresetActivity extends BaseActivity {
             //Preset 객체 만들기
             final PresetEntity presetEntity = new PresetEntity();
 
-            presetEntity.setName(editTextPresetName.getText().toString());
+            //presetEntity.setName(editTextPresetName.getText().toString());
 
             int code = (int)spinnerEquipmentCode.getSelectedItemId();
 //            if( spinnerEquipmentCode.getSelectedItemId() == 0 ) code = "ANSI HI 9.6.4";
@@ -464,21 +473,18 @@ public class PresetActivity extends BaseActivity {
         if( jsonString == null || "".equals(jsonString) ) {
             ToastUtil.showShort("failed get preset from server. use in local storage");
 
-            preset = Utils.getStringArrayPref("preset");
-            if( preset == null ) {   // 앱 설치 후 최초 실행인 경우 호출됨.
-                preset = new String[][]{
-                        {"1", "Charge Pump #1", "1", "1", "HDO", "Charge Pump", "PP-L25-51", "980", "1", "0", "3579", "5", "3", "0", "0", "0", "0", "0"},
-                        {"2", "Charge Pump #2", "2", "2", "HDO", "Charge Pump", "PP-L25-01", "1080", "1", "0", "3600", "8", "2", "4", "200", "20", "1600", "180"},
-                        {"3", "test2", "3", "1", "dodo1", "motor", "p-02", "200", "1", "0", "3600", "8", "2", "8", "1", "2", "3", "4"},
-                        {"4", "test3", "0", "0", "dodo1", "valve", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "4"},
-                        {"5", "test4", "4", "9", "dodo1", "pump", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "60"}};
+            preset = new String[][]{
+                    {"1", "Charge Pump #1", "1", "1", "HDO", "Charge Pump", "PP-L25-51", "980", "1", "0", "3579", "5", "3", "0", "0", "0", "0", "0"},
+                    {"2", "Charge Pump #2", "2", "2", "HDO", "Charge Pump", "PP-L25-01", "1080", "1", "0", "3600", "8", "2", "4", "200", "20", "1600", "180"},
+                    {"3", "test2", "3", "1", "dodo1", "motor", "p-02", "200", "1", "0", "3600", "8", "2", "8", "1", "2", "3", "4"},
+                    {"4", "test3", "0", "0", "dodo1", "valve", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "4"},
+                    {"5", "test4", "4", "9", "dodo1", "pump", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "60"}};
 
-                arrayListPreset.add("Charge Pump #1");
-                arrayListPreset.add("Charge Pump #2");
-                arrayListPreset.add("test2");
-                arrayListPreset.add("test3");
-                arrayListPreset.add("test4");
-            }
+            arrayListPreset.add("Charge Pump #1");
+            arrayListPreset.add("Charge Pump #2");
+            arrayListPreset.add("test2");
+            arrayListPreset.add("test3");
+            arrayListPreset.add("test4");
         }
         else {
 
@@ -541,24 +547,20 @@ public class PresetActivity extends BaseActivity {
                 e.printStackTrace();
             }
 
-            arrayAdapterPreset.notifyDataSetChanged();
         }
 
+        arrayAdapterPreset.notifyDataSetChanged();
+
         setViewData(0);
-        //spinnerPreset.setSelection(0);
-
-
-        Utils.setStringArrayPref("preset", preset);
     }
 
     // 처음 서버에서 데이터를 받아올 때, preset spinner의 값이 변경될 때, 적절한 값일 넣어준다.
     void setViewData(int i) {
         if( preset == null || preset.length < i ) {
-            ToastUtil.showShort("preset data is null");
+            //ToastUtil.showShort("preset data is null");
             return;
         }
 
-        editTextPresetName.setText(preset[i][1]);
         int equipmentCode = Integer.parseInt(preset[i][2]);
         editTextProjectVibSpec.setText(preset[i][3]);
         editTextSiteCode.setText(preset[i][4]);

@@ -131,23 +131,23 @@ public class PresetListActivity extends BaseActivity {
         findViewById(R.id.button_record).setVisibility(View.GONE);  // 안쓰는 버튼 숨김
 
         //등록 버튼
-        buttonAddPreset = findViewById(R.id.buttonAddPreset);
-        buttonAddPreset.setVisibility(View.VISIBLE);
-        buttonAddPreset.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goIntent(PresetActivity.class);
-            }
-        });
+//        buttonAddPreset = findViewById(R.id.buttonAddPreset);
+//        buttonAddPreset.setVisibility(View.VISIBLE);
+//        buttonAddPreset.setOnClickListener(new Button.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                goIntent(PresetActivity.class);
+//            }
+//        });
 
-        ImageView imageViewRemovePreset = findViewById(R.id.imageViewRemovePreset);
-        imageViewRemovePreset.setVisibility(View.VISIBLE);
-        imageViewRemovePreset.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                removeItems();
-            }
-        });
+//        ImageView imageViewRemovePreset = findViewById(R.id.imageViewRemovePreset);
+//        imageViewRemovePreset.setVisibility(View.VISIBLE);
+//        imageViewRemovePreset.setOnClickListener(new Button.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                removeItems();
+//            }
+//        });
     }
 
     private void initAdapter(){

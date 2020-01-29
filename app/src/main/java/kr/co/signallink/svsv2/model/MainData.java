@@ -613,9 +613,7 @@ public class MainData {
             }
         }
 
-        Utils.setStringArrayPref("cause", cause);
-
-        final int nRows = cause.length-1;
+        final int nRows = cause.length;
 
         if (nRows > 0)  // 헤더 제외 row 수
         {
@@ -637,6 +635,8 @@ public class MainData {
 //                causeInfos.infos[i].strDesc = cause[2][i];
             }
         }
+
+        Utils.setStringArrayPref("cause", cause);
 
         //checkDataSet();
     }
@@ -757,10 +757,8 @@ public class MainData {
             }
         }
 
-        Utils.setStringArrayPref("feature", feature);
-
-        final int nRows = feature.length-1;
-        int nFeatureCols = feature[0].length-1;
+        final int nRows = feature.length;
+        int nFeatureCols = feature[0].length;
 
         featureInfos = new DIAGNOSIS_FEATURES_Type();
         featureInfos.nCount = nRows;
@@ -769,12 +767,12 @@ public class MainData {
         for (int i = 0; i < nRows; i++)
         {
             featureInfos.infos[i] = new FEATURE_INFO_Type();
-            featureInfos.infos[i].fValues = new float[nFeatureCols - 1];
+            featureInfos.infos[i].fValues = new float[nFeatureCols];
             featureInfos.infos[i].nCauseNo = i + 1;
-            for (int j = 0; j < nFeatureCols - 1; j++) // 첫번째 컬럼(C1, C2, ... C21) 제외
+            for (int j = 0; j < nFeatureCols; j++) // 첫번째 컬럼(C1, C2, ... C21) 제외
             {
                 try {
-                    featureInfos.infos[i].fValues[j] = Float.parseFloat(feature[i+1][j+1]);
+                    featureInfos.infos[i].fValues[j] = Float.parseFloat(feature[i][j]);
                     // System.out.println("i: " + i + ", j : " + j + " : " + xlFeature[i+1 ][j+1 ]);
                 }
                 catch (Exception e) {
@@ -783,6 +781,7 @@ public class MainData {
             }
         }
 
+        Utils.setStringArrayPref("feature", feature);
         //checkDataSet();
     }
 

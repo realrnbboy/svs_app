@@ -11,6 +11,7 @@ import android.util.Log;
 import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.model.MainData;
 import kr.co.signallink.svsv2.utils.ToastUtil;
+import kr.co.signallink.svsv2.views.activities.PresetActivity;
 import kr.co.signallink.svsv2.views.activities.PresetListActivity;
 
 /**
@@ -20,11 +21,16 @@ import kr.co.signallink.svsv2.views.activities.PresetListActivity;
 public class SendMessageHandler extends Handler {
 
     MainData mainData = null;
+    PresetActivity presetActivity = null;
 
     public SendMessageHandler() {}
 
     public SendMessageHandler(MainData mainData) {
         this.mainData = mainData;
+    }
+
+    public SendMessageHandler(PresetActivity presetActivity) {
+        this.presetActivity = presetActivity;
     }
 
 
@@ -46,6 +52,10 @@ public class SendMessageHandler extends Handler {
 
             case DefConstant.URL_TYPE_GET_FEATURE:
                 mainData.parseFeature(jsonString);
+                break;
+
+            case DefConstant.URL_TYPE_GET_PRESET:
+                presetActivity.parsePreset(jsonString);
                 break;
 
             case DefConstant.URL_TYPE_SERVER_NO_RESPONSE:

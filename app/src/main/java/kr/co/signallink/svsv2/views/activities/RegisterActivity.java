@@ -628,7 +628,7 @@ public class RegisterActivity extends BaseActivity implements SwipeRefreshLayout
 
         @Override
         public void onScanFailed(int errorCode) {
-
+            Log.d(TAG, "errorCode " + errorCode);
         }
 
         private void processResult(final ScanResult result) {

@@ -13,6 +13,7 @@ import kr.co.signallink.svsv2.server.SendPost;
 import kr.co.signallink.svsv2.services.SendMessageHandler;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 import kr.co.signallink.svsv2.utils.Utils;
+import kr.co.signallink.svsv2.views.activities.PresetActivity;
 import kr.co.signallink.svsv2.views.activities.PresetListActivity;
 
 // Config File 저장용
@@ -75,8 +76,8 @@ public class MainData {
         fnSetPreset2Variables();
 
         //main.fnGetPresetInfo();
-        getCause();
-        getFeature();
+        getCauseFromServer();
+        getFeatureFromServer();
         //fnGetRawDatas();
     }
 
@@ -561,9 +562,9 @@ public class MainData {
     }
 
     // 웹서버로 cause 요청
-    void getCause() {
+    void getCauseFromServer() {
 
-        SendPost sendPost = new SendPost(context, DefConstant.URL_TYPE_GET_CAUSE);
+        SendPost sendPost = new SendPost(DefConstant.URL_TYPE_GET_CAUSE);
 
         sendPost.setHandler(handler);
         sendPost.start();
@@ -637,13 +638,13 @@ public class MainData {
             }
         }
 
-        checkDataSet();
+        //checkDataSet();
     }
 
     // 웹서버로 feature 요청
-    void getFeature() {
+    void getFeatureFromServer() {
 
-        SendPost sendPost = new SendPost(context, DefConstant.URL_TYPE_GET_FEATURE);
+        SendPost sendPost = new SendPost(DefConstant.URL_TYPE_GET_FEATURE);
 
         sendPost.setHandler(handler);
         sendPost.start();
@@ -782,13 +783,13 @@ public class MainData {
             }
         }
 
-        checkDataSet();
+        //checkDataSet();
     }
 
     // feature, cause값이 세팅이 되었는지 확인
     boolean checkDataSet() {
         if( bResponseCause && bResponseFeature ) {
-            ((PresetListActivity)context).makeMatrix2();
+            ((PresetActivity)context).makeMatrix2();
         }
 
         return false;

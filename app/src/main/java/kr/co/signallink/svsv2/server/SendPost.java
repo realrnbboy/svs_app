@@ -33,7 +33,6 @@ public class SendPost extends Thread {
     int sendType = 0;
 
     int returnContextType = 0;
-    Context mainContext = null;
 
     static boolean bNetworkError = false;
     static long networkErrorTime = 0;
@@ -52,8 +51,7 @@ public class SendPost extends Thread {
         this.returnContextType = returnContext;
     }
 
-    public SendPost(Context context, int sendType) {
-        mainContext = context;
+    public SendPost(int sendType) {
         this.sendType = sendType;
 
         try {
@@ -95,6 +93,9 @@ public class SendPost extends Thread {
                     break;
                 case DefConstant.URL_TYPE_GET_FEATURE :
                     urlStr = DefConstant.URL_GET_FEATURE;
+                    break;
+                case DefConstant.URL_TYPE_GET_PRESET :
+                    urlStr = DefConstant.URL_GET_PRESET;
                     break;
 
                 default :

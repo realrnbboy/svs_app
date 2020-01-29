@@ -46,7 +46,7 @@ import kr.co.signallink.svsv2.views.adapters.PresetAdapter;
 import kr.co.signallink.svsv2.views.custom.CustomListDialog;
 
 // added by hslee 2020-01-15
-// preset 목록 화면
+// preset 목록 화면 - not used
 public class PresetListActivity extends BaseActivity {
 
     private static final String TAG = "PresetListActivity";

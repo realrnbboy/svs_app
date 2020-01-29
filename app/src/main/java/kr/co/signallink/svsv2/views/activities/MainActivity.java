@@ -438,15 +438,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             }
         });
 
-        //preset list 버튼  // added by hslee
-        Button buttonPresetList = findViewById(R.id.buttonPresetList);
-        buttonPresetList.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goIntent(PresetListActivity.class);
-            }
-        });
-
         //블루투스 연결 상태 버튼
         btnControlBle = findViewById(R.id.button_control_ble);
         btnControlBle.setText(R.string.button_ble_close);
@@ -646,6 +637,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                             map.put(EXTRA_EQUIPMENT_UUID, uuid);
                             map.put(EXTRA_EQUIPMENT_NAME, name);
                             goIntent(DetailUpdateActivity.class, false, map);
+                        }
+                        else if( viewIdx == 3 ) {   // added by hslee
+                            goIntent(PresetActivity.class, false);
                         }
                     }
 

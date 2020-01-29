@@ -55,6 +55,8 @@ public class DefConstant {
     public static final String URL_GET_CAUSE = "/setting/exe_get_cause";
     public static final int URL_TYPE_GET_FEATURE = 2;
     public static final String URL_GET_FEATURE = "/setting/exe_get_feature";
+    public static final int URL_TYPE_GET_PRESET = 3;
+    public static final String URL_GET_PRESET = "/setting/exe_get_preset";
 
     public static final int URL_TYPE_SERVER_NO_RESPONSE = 999;
 

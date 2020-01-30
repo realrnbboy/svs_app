@@ -450,13 +450,15 @@
 
                 <Button
                     android:id="@+id/buttonNext"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/btn_orange_round"
-                    android:text="save"
-                    android:textColor="@android:color/white"/>
+                    style="@style/button_confirm"
+                    android:text="next"/>
 
             </LinearLayout>
+
+            <include
+                layout="@layout/footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -785,12 +785,12 @@ public class MainData {
         //checkDataSet();
     }
 
-    // feature, cause값이 세팅이 되었는지 확인
-    boolean checkDataSet() {
-        if( bResponseCause && bResponseFeature ) {
-            ((PresetActivity)context).makeMatrix2();
-        }
-
-        return false;
-    }
+//    // feature, cause값이 세팅이 되었는지 확인
+//    boolean checkDataSet() {
+//        if( bResponseCause && bResponseFeature ) {
+//            ((PresetActivity)context).makeMatrix2();
+//        }
+//
+//        return false;
+//    }
 }

@@ -29,7 +29,7 @@ import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.DatabaseUtil;
 import kr.co.signallink.svsv2.databases.PresetEntity;
-import kr.co.signallink.svsv2.dto.PresetData;
+import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.MainData;
@@ -83,11 +83,11 @@ public class PresetListActivity extends BaseActivity {
 
     public void makeMatrix2() {
 
-        DiagnosisInfo diagnosis = new DiagnosisInfo(mainData);
-
-        DIAGNOSIS_DATA_Type[] rawData = mainData.fnGetRawDatas();
-
-        MATRIX_2_Type testResult = diagnosis.fnMakeMatrix2(rawData[0], rawData[1], rawData[2]);
+//        DiagnosisInfo diagnosis = new DiagnosisInfo(mainData);
+//
+//        DIAGNOSIS_DATA_Type[] rawData = mainData.fnGetRawDatas();
+//
+//        MATRIX_2_Type testResult = diagnosis.fnMakeMatrix2(rawData[0], rawData[1], rawData[2]);
 
         int i = 0;
     }
@@ -264,17 +264,17 @@ public class PresetListActivity extends BaseActivity {
                 public void onBtnClicked(int viewIdx) {
 
                     if( viewIdx == 1 ) {    // next 클릭
-                        Intent intent = new Intent(getBaseContext(), AnalysisResultActivity.class);
-                        PresetData presetData = setPresetData(presetEntity);
-                        intent.putExtra("presetData", presetData);
-                        startActivity(intent);
+//                        Intent intent = new Intent(getBaseContext(), AnalysisResultActivity.class);
+//                        AnalysisData analysisData = setAnalysisData(presetEntity);
+//                        intent.putExtra("analysisData", analysisData);
+//                        startActivity(intent);
                     }
                     else if( viewIdx == 2 ) {    // update 클릭
 
                         Intent intent = new Intent(getBaseContext(), PresetActivity.class);
-                        PresetData presetData = setPresetData(presetEntity);
+                        AnalysisData analysisData = setAnalysisData(presetEntity);
                         intent.putExtra("bModeCreate", "0");
-                        intent.putExtra("presetData", presetData);
+                        intent.putExtra("analysisData", analysisData);
                         startActivity(intent);
                     }
                 }
@@ -297,29 +297,29 @@ public class PresetListActivity extends BaseActivity {
         }
     };
 
-    PresetData setPresetData(PresetEntity presetEntity) {
-        PresetData presetData = new PresetData();
+    AnalysisData setAnalysisData(PresetEntity presetEntity) {
+        AnalysisData analysisData = new AnalysisData();
 
-        presetData.setNo(presetEntity.getNo());
-        presetData.setName(presetEntity.getName());
-        presetData.setCode(presetEntity.getCode());
-        presetData.setEquipmentType(presetEntity.getBearingType());
-        presetData.setBearingType(presetEntity.getBearingType());
-        presetData.setLineFreq(presetEntity.getLineFreq());
-        presetData.setProjectVibSpec(presetEntity.getProjectVibSpec());
-        presetData.setSiteCode(presetEntity.getSiteCode());
-        presetData.setEquipmentName(presetEntity.getEquipmentName());
-        presetData.setTagNo(presetEntity.getTagNo());
-        presetData.setInputPower(presetEntity.getInputPower());
-        presetData.setRpm(presetEntity.getRpm());
-        presetData.setBladeCount(presetEntity.getBladeCount());
-        presetData.setBallCount(presetEntity.getBallCount());
-        presetData.setPitchDiameter(presetEntity.getPitchDiameter());
-        presetData.setBallDiameter(presetEntity.getBallDiameter());
-        presetData.setRps(presetEntity.getRps());
-        presetData.setContactAngle(presetEntity.getContactAngle());
+        analysisData.setNo(presetEntity.getNo());
+        analysisData.setName(presetEntity.getName());
+        analysisData.setCode(presetEntity.getCode());
+        analysisData.setEquipmentType(presetEntity.getBearingType());
+        analysisData.setBearingType(presetEntity.getBearingType());
+        analysisData.setLineFreq(presetEntity.getLineFreq());
+        analysisData.setProjectVibSpec(presetEntity.getProjectVibSpec());
+        analysisData.setSiteCode(presetEntity.getSiteCode());
+        analysisData.setEquipmentName(presetEntity.getEquipmentName());
+        analysisData.setTagNo(presetEntity.getTagNo());
+        analysisData.setInputPower(presetEntity.getInputPower());
+        analysisData.setRpm(presetEntity.getRpm());
+        analysisData.setBladeCount(presetEntity.getBladeCount());
+        analysisData.setBallCount(presetEntity.getBallCount());
+        analysisData.setPitchDiameter(presetEntity.getPitchDiameter());
+        analysisData.setBallDiameter(presetEntity.getBallDiameter());
+        analysisData.setRps(presetEntity.getRps());
+        analysisData.setContactAngle(presetEntity.getContactAngle());
 
-        return presetData;
+        return analysisData;
     }
 
 }

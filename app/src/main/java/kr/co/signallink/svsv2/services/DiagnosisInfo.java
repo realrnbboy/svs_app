@@ -1,5 +1,6 @@
 package kr.co.signallink.svsv2.services;
 
+import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.MainData;
 import kr.co.signallink.svsv2.model.SVSCommon;
 import kr.co.signallink.svsv2.model.VARIABLES_1_Type;
@@ -31,6 +32,8 @@ public class DiagnosisInfo {
     // MainForm mainform;
     SVSCommon svsCommon;
 
+    public double[][] resultDiagnosis;
+
     private float nFreq_Lower = 5;
     private float nFreq_Upper = 1000;
     public float[] aFeatureValues;
@@ -51,10 +54,10 @@ public class DiagnosisInfo {
     private double[][] tableResult; // Matrix2 결과와 tableFeature 연산 결과 저장용 테이블
     private int nCauseCount = 0;
 
-    MainData mainform;
+    //MainData mainform;
 
-    public DiagnosisInfo(MainData form) {
-        mainform = form;
+    public DiagnosisInfo(AnalysisData analysisData) {
+        //mainform = form;
         svsCommon = new SVSCommon();
 
         aFeatureValues = new float[Constants.FEATURE_COUNT + 3]; // Constants.FEATURE_COUNT = 25, A>R, A<R, HORZ/VERT 추가
@@ -70,13 +73,13 @@ public class DiagnosisInfo {
         aVar2Data2 = new double[Constants.FREQ_ELE][Constants.FEATURE_COUNT];
         aVar2Data3 = new double[Constants.FREQ_ELE][Constants.FEATURE_COUNT];
 
-        diagVar1 = mainform.diagVar1;
-        valueVar2 = mainform.valueVar2;
-        rangeVar2 = mainform.rangeVar2;
-        lowerVar2 = mainform.lowerVar2;
-        upperVar2 = mainform.upperVar2;
+        diagVar1 = analysisData.diagVar1;
+        valueVar2 = analysisData.valueVar2;
+        rangeVar2 = analysisData.rangeVar2;
+        lowerVar2 = analysisData.lowerVar2;
+        upperVar2 = analysisData.upperVar2;
 
-        nCauseCount = mainform.featureInfos.nCount;
+        nCauseCount = analysisData.featureInfos.nCount;
         tableFeature = new double[nCauseCount][Constants.FEATURE_COUNT];
         tableResult = new double[nCauseCount][Constants.FEATURE_COUNT];
 
@@ -85,7 +88,7 @@ public class DiagnosisInfo {
                                                                     // RMS까지 --> 25개
             {
                 try {
-                    tableFeature[row][col] = mainform.featureInfos.infos[row].fValues[col];
+                    tableFeature[row][col] = analysisData.featureInfos.infos[row].fValues[col];
                     //tableFeature[row][col] = mainform.featureInfos.infos[col].fValues[row];
                 }
                 catch (Exception e) {
@@ -412,7 +415,7 @@ public class DiagnosisInfo {
             }
 
             // RANK 추출을 위한 SUM & Ratio 테이블 추출
-            double[][] resultDiagnosis = new double[nCauseCount][3]; // 21(cause) x 3(rank, sum, ratio) 배열
+            resultDiagnosis = new double[nCauseCount][3]; // 21(cause) x 3(rank, sum, ratio) 배열
             // - SUM 추출
             double dSum = 0;
             for (int row = 0; row < nCauseCount; row++) {

@@ -27,10 +27,11 @@ import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.DatabaseUtil;
 import kr.co.signallink.svsv2.databases.PresetEntity;
-import kr.co.signallink.svsv2.dto.PresetData;
+import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.MainData;
+import kr.co.signallink.svsv2.model.VARIABLES_1_Type;
 import kr.co.signallink.svsv2.server.SendPost;
 import kr.co.signallink.svsv2.services.DiagnosisInfo;
 import kr.co.signallink.svsv2.services.SendMessageHandler;
@@ -47,7 +48,7 @@ public class PresetActivity extends BaseActivity {
 
     String bModeCreate = "1"; // create or update
 
-    PresetData presetData = null;
+    AnalysisData analysisData = null;
 
     ArrayList arrayListPreset = new ArrayList<>();
     ArrayList arrayListEquipmentCode = new ArrayList<>();
@@ -122,11 +123,12 @@ public class PresetActivity extends BaseActivity {
                 if( validateForm() ) {
 
                     // 수정된 preset 확인 및 세팅
-
-                    //matrix2 계산
-                    MATRIX_2_Type matrix2 = makeMatrix2();
+                    AnalysisData analysisData = setAnalysisData();
 
                     // 다음 화면으로 이동
+                    Intent intent = new Intent(getBaseContext(), MeasureActivity.class);
+                    intent.putExtra("analysisData", analysisData);
+                    startActivity(intent);
                 }
             }
         });
@@ -176,26 +178,26 @@ public class PresetActivity extends BaseActivity {
 //            toolbarTitle.setText("Preset Update");
 //
 //            // PresetListActivity 에서 전달받은 데이터 가져오기
-//            presetData = (PresetData)intent.getSerializableExtra("presetData");
-//            if( presetData != null ) {
-//                editTextPresetName.setText(presetData.getName());
-//                editTextSiteCode.setText(presetData.getSiteCode());
-//                editTextEquipmentName.setText(presetData.getEquipmentName());
-//                editTextInputPower.setText(String.valueOf(presetData.getInputPower()));
-//                editTextEquipmentRpm.setText(String.valueOf(presetData.getRpm()));
-//                editTextBladeVane.setText(String.valueOf(presetData.getBladeCount()));
-//                editTextNoOfBalls.setText(String.valueOf(presetData.getBallCount()));
-//                editTextTagNo.setText(presetData.getTagNo());
-//                editTextPitchDiameter.setText(String.valueOf(presetData.getPitchDiameter()));
-//                editTextBallDiameter.setText(String.valueOf(presetData.getBallDiameter()));
-//                editTextRps.setText(String.valueOf(presetData.getRps()));
-//                editTextContactAngle.setText(String.valueOf(presetData.getContactAngle()));
-//                editTextProjectVibSpec.setText(String.valueOf(presetData.getProjectVibSpec()));
+//            analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");
+//            if( analysisData != null ) {
+//                editTextPresetName.setText(analysisData.getName());
+//                editTextSiteCode.setText(analysisData.getSiteCode());
+//                editTextEquipmentName.setText(analysisData.getEquipmentName());
+//                editTextInputPower.setText(String.valueOf(analysisData.getInputPower()));
+//                editTextEquipmentRpm.setText(String.valueOf(analysisData.getRpm()));
+//                editTextBladeVane.setText(String.valueOf(analysisData.getBladeCount()));
+//                editTextNoOfBalls.setText(String.valueOf(analysisData.getBallCount()));
+//                editTextTagNo.setText(analysisData.getTagNo());
+//                editTextPitchDiameter.setText(String.valueOf(analysisData.getPitchDiameter()));
+//                editTextBallDiameter.setText(String.valueOf(analysisData.getBallDiameter()));
+//                editTextRps.setText(String.valueOf(analysisData.getRps()));
+//                editTextContactAngle.setText(String.valueOf(analysisData.getContactAngle()));
+//                editTextProjectVibSpec.setText(String.valueOf(analysisData.getProjectVibSpec()));
 //
-//                spinnerEquipmentCode.setSelection(presetData.getCode());
-//                spinnerLineFrequency.setSelection(presetData.getLineFreq());
-//                spinnerEquipmentType.setSelection(presetData.getEquipmentType());
-//                spinnerBearingType.setSelection(presetData.getBearingType());
+//                spinnerEquipmentCode.setSelection(analysisData.getCode());
+//                spinnerLineFrequency.setSelection(analysisData.getLineFreq());
+//                spinnerEquipmentType.setSelection(analysisData.getEquipmentType());
+//                spinnerBearingType.setSelection(analysisData.getBearingType());
 //            }
 //            else {
 //                ToastUtil.showShort("failed to preset data load");
@@ -207,6 +209,77 @@ public class PresetActivity extends BaseActivity {
 
         mainData = new MainData(this);
     }
+
+    // measureactivity로 전달할 데이터 구성
+    AnalysisData setAnalysisData() {
+        AnalysisData analysisData = new AnalysisData();
+
+        int code = (int)spinnerEquipmentCode.getSelectedItemId();
+        int equipmentType = (int)spinnerEquipmentType.getSelectedItemId();
+        int bearingType = (int)spinnerBearingType.getSelectedItemId();
+        int lineFrequency = (int)spinnerLineFrequency.getSelectedItemId();// == 0 ? 50 : 60;
+        int projectVibSpec = Integer.parseInt(editTextProjectVibSpec.getText().toString());
+        String siteCode = editTextSiteCode.getText().toString();
+        String equipmentName = editTextEquipmentName.getText().toString();
+        String tagNo = editTextTagNo.getText().toString();
+        int inputPower = Integer.parseInt(editTextInputPower.getText().toString());
+        int equipmentRpm = Integer.parseInt(editTextEquipmentRpm.getText().toString());
+        int bladeVane = Integer.parseInt(editTextBladeVane.getText().toString());
+        int noOfBalls = Integer.parseInt(editTextNoOfBalls.getText().toString());
+        int pitchDiameter = Integer.parseInt(editTextPitchDiameter.getText().toString());
+        int ballDiameter = Integer.parseInt(editTextBallDiameter.getText().toString());
+        int rps = Integer.parseInt(editTextRps.getText().toString());
+        int contactAngle = Integer.parseInt(editTextContactAngle.getText().toString());
+
+        //analysisData.setNo(presetEntity.getNo());
+        //analysisData.setName(presetEntity.getName());
+        // diagVar1에 세팅되어 불필요
+//        analysisData.setCode(code);
+//        analysisData.setEquipmentType(equipmentType);
+//        analysisData.setBearingType(bearingType);
+//        analysisData.setLineFreq(lineFrequency);
+//        analysisData.setProjectVibSpec(projectVibSpec);
+//        analysisData.setSiteCode(siteCode);
+//        analysisData.setEquipmentName(equipmentName);
+//        analysisData.setTagNo(tagNo);
+//        analysisData.setInputPower(inputPower);
+//        analysisData.setRpm(equipmentRpm);
+//        analysisData.setBladeCount(bladeVane);
+//        analysisData.setBallCount(noOfBalls);
+//        analysisData.setPitchDiameter(pitchDiameter);
+//        analysisData.setBallDiameter(ballDiameter);
+//        analysisData.setRps(rps);
+//        analysisData.setContactAngle(contactAngle);
+
+        VARIABLES_1_Type diagVar1 = new VARIABLES_1_Type();
+
+        diagVar1.nCode = code;
+        diagVar1.nEquipType = equipmentType;
+        diagVar1.nBearingType = bearingType;
+        diagVar1.nLineFreq = lineFrequency;
+        diagVar1.nPrjVibSpec = projectVibSpec;
+        diagVar1.strSiteCode = siteCode;
+        diagVar1.strEquipName = equipmentName;
+        diagVar1.strTagNo = tagNo;
+        diagVar1.nInputPower = inputPower;
+        diagVar1.nRPM = equipmentRpm;
+        diagVar1.nBladeCount = bladeVane;
+        diagVar1.nBallCount = noOfBalls;
+        diagVar1.nPitchDiameter =pitchDiameter;
+        diagVar1.nBallDiameter = ballDiameter;
+        diagVar1.nRPS = rps;
+        diagVar1.nContactAngle = contactAngle;
+
+        analysisData.setDiagVar1(diagVar1);
+        analysisData.setValueVar2(mainData.valueVar2);
+        analysisData.setRangeVar2(mainData.rangeVar2);
+        analysisData.setLowerVar2(mainData.lowerVar2);
+        analysisData.setUpperVar2(mainData.upperVar2);
+        analysisData.setFeatureInfos(mainData.featureInfos);
+
+        return analysisData;
+    }
+
 
     void initDefaultValue() {
 
@@ -401,7 +474,7 @@ public class PresetActivity extends BaseActivity {
 
                     int no = 0;
                     if( "0".equals(bModeCreate) ) {
-                        no = presetData.getNo();
+                        no = analysisData.getNo();
                     }
                     else {  // 추가일 경우 index값 증가
                         Number currentNo = realm.where(PresetEntity.class).max("no");
@@ -424,17 +497,6 @@ public class PresetActivity extends BaseActivity {
             //화면 종료
             finish();
         }
-    }
-
-    public MATRIX_2_Type makeMatrix2() {
-
-        DiagnosisInfo diagnosis = new DiagnosisInfo(mainData);
-
-        DIAGNOSIS_DATA_Type[] rawData = mainData.fnGetRawDatas();
-
-        MATRIX_2_Type result = diagnosis.fnMakeMatrix2(rawData[0], rawData[1], rawData[2]);
-
-        return result;
     }
 
 

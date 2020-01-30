@@ -86,5 +86,12 @@
         <item name="android:textSize">@dimen/font_midium</item>
     </style>
 
+    <style name="button_confirm">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/btn_orange_round</item>
+    </style>
+
 
 </resources>

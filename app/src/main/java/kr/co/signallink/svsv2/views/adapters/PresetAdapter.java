@@ -3,27 +3,20 @@ package kr.co.signallink.svsv2.views.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import io.realm.OrderedRealmCollection;
-import io.realm.RealmList;
 import io.realm.RealmRecyclerViewAdapter;
 import kr.co.signallink.svsv2.R;
-import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.databases.PresetEntity;
-import kr.co.signallink.svsv2.databases.SVSEntity;
 import kr.co.signallink.svsv2.services.MyApplication;
 import kr.co.signallink.svsv2.user.SVS;
-import kr.co.signallink.svsv2.utils.StringUtil;
 import kr.co.signallink.svsv2.views.adapters.viewholders.PresetListViewHolder;
 
 public class PresetAdapter extends RealmRecyclerViewAdapter<PresetEntity, PresetListViewHolder> {
@@ -48,7 +41,7 @@ public class PresetAdapter extends RealmRecyclerViewAdapter<PresetEntity, Preset
 
     @Override
     public PresetListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.preset_list_item, viewGroup, false);
+        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item_preset, viewGroup, false);
         return new PresetListViewHolder(itemView);
     }
 

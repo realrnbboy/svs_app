@@ -63,7 +63,13 @@
         </activity>
 
         <activity
-            android:name=".views.activities.AnalysisResultActivity"
+            android:name=".views.activities.MeasureActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name=".views.activities.ResultActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" >
         </activity>

@@ -1,10 +1,11 @@
 package kr.co.signallink.svsv2.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 //#region [HDEC 자료 구조 정의]
     //[StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class VARIABLES_1_Type
+    public class VARIABLES_1_Type implements Serializable
     {
         public Date datetime;
         public int nCode;   // 0:ANSI HI 9.6.4, 1:API 610, 2:ISO 10816 Cat.1, 3:ISO 10816 Cat.2, 4:Project VIB Spec.

@@ -2,10 +2,15 @@ package kr.co.signallink.svsv2.dto;
 
 import java.io.Serializable;
 
+import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
+import kr.co.signallink.svsv2.model.DIAGNOSIS_FEATURES_Type;
+import kr.co.signallink.svsv2.model.VARIABLES_1_Type;
+import kr.co.signallink.svsv2.model.VARIABLES_2_Type;
+
 // added by hslee
 // PresetEntity와 같은 구조이나 presetEntity는 직렬화가 불가능하여
 // 개발의 편의를 위해 data만 저장하는 클래스를 만듦.
-public class PresetData implements Serializable {
+public class AnalysisData implements Serializable {
 
     private int no; // index
 
@@ -26,8 +31,14 @@ public class PresetData implements Serializable {
     private int ballDiameter;
     private int rps;
     private int contactAngle;
+    public double[][] resultDiagnosis; // 진단 rank 결과, 순위 내림 차순 정렬된 것
 
-    public PresetData(){
+    public VARIABLES_1_Type diagVar1;
+    public VARIABLES_2_Type valueVar2, rangeVar2, lowerVar2, upperVar2;
+
+    public DIAGNOSIS_FEATURES_Type featureInfos;
+
+    public AnalysisData(){
     }
 
     public int getNo() {
@@ -172,5 +183,61 @@ public class PresetData implements Serializable {
 
     public void setContactAngle(int contactAngle) {
         this.contactAngle = contactAngle;
+    }
+
+    public VARIABLES_1_Type getDiagVar1() {
+        return diagVar1;
+    }
+
+    public void setDiagVar1(VARIABLES_1_Type diagVar1) {
+        this.diagVar1 = diagVar1;
+    }
+
+    public VARIABLES_2_Type getValueVar2() {
+        return valueVar2;
+    }
+
+    public void setValueVar2(VARIABLES_2_Type valueVar2) {
+        this.valueVar2 = valueVar2;
+    }
+
+    public VARIABLES_2_Type getRangeVar2() {
+        return rangeVar2;
+    }
+
+    public void setRangeVar2(VARIABLES_2_Type rangeVar2) {
+        this.rangeVar2 = rangeVar2;
+    }
+
+    public VARIABLES_2_Type getLowerVar2() {
+        return lowerVar2;
+    }
+
+    public void setLowerVar2(VARIABLES_2_Type lowerVar2) {
+        this.lowerVar2 = lowerVar2;
+    }
+
+    public VARIABLES_2_Type getUpperVar2() {
+        return upperVar2;
+    }
+
+    public void setUpperVar2(VARIABLES_2_Type upperVar2) {
+        this.upperVar2 = upperVar2;
+    }
+
+    public DIAGNOSIS_FEATURES_Type getFeatureInfos() {
+        return featureInfos;
+    }
+
+    public void setFeatureInfos(DIAGNOSIS_FEATURES_Type featureInfos) {
+        this.featureInfos = featureInfos;
+    }
+
+    public double[][] getResultDiagnosis() {
+        return resultDiagnosis;
+    }
+
+    public void setResultDiagnosis(double[][] resultDiagnosis) {
+        this.resultDiagnosis = resultDiagnosis;
     }
 }

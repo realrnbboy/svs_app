@@ -15,6 +15,7 @@
     <color name="color3">#a2b0c7</color>
     <color name="myorange">#fa9f01</color>
     <color name="myblue">#8da6d3</color>
+    <color name="myBlueLight">#12BBF0</color>
     <color name="mygray">#959ba7</color>
     <color name="myred">#f20a0a</color>
     <color name="myyellow">#ffe53d</color>
@@ -22,6 +23,7 @@
     <color name="mypressed">#293141</color>
     <color name="mylogred">#d74e2d</color>
     <color name="hotpink">#C63361</color>
+    <color name="myWhiteDark">#EAE8E5</color>
 
 
     <!-- Drawable Color Chip -->

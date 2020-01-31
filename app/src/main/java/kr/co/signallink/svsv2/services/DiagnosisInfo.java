@@ -432,7 +432,7 @@ public class DiagnosisInfo {
             double dTotalSum = 0; // Ratio 연산을 위해 생성
             for (int row = 0; row < nCauseCount; row++)
                 dTotalSum += resultDiagnosis[row][1];
-            dTotalSum = Math.abs(dTotalSum);
+                dTotalSum = Math.abs(dTotalSum);
 
             for (int row = 0; row < nCauseCount; row++) {
                 resultDiagnosis[row][2] = resultDiagnosis[row][1] / dTotalSum;
@@ -449,44 +449,6 @@ public class DiagnosisInfo {
                 }
             }
 
-            if (Constants.DEBUG) { // 각 중간 연산 과정 확인용
-                String strTmp;
-
-                // Variable2 기반
-                for (int row = 0; row < Constants.FREQ_ELE; row++) {
-                    for (int col = 0; col < Constants.FEATURE_COUNT; col++) {
-                        if (col < 24 && aVar2Data1[row][col] > 0) {
-                            System.out.println(
-                                    "[DEBUG] aVar2Data1[" + row + ", " + col + "] : " + (aVar2Data1[row][col] * 1000));
-                        }
-                    }
-                }
-
-                for (int row = 0; row < Constants.FREQ_ELE; row++) {
-                    for (int col = 0; col < Constants.FEATURE_COUNT; col++) {
-                        if (col < 24 && aVar2Data2[row][col] > 0) {
-                            System.out.println(
-                                    "[DEBUG] aVar2Data2[" + row + ", " + col + "] : " + (aVar2Data2[row][col] * 1000));
-                        }
-                    }
-                }
-
-                for (int row = 0; row < Constants.FREQ_ELE; row++) {
-                    for (int col = 0; col < Constants.FEATURE_COUNT; col++) {
-                        if (col < 24 && aVar2Data3[row][col] > 0) {
-                            System.out.println(
-                                    "[DEBUG] aVar2Data3[" + row + ", " + col + "] : " + (aVar2Data3[row][col] * 1000));
-                        }
-                    }
-                }
-
-                //// 각 측정 데이터별 분석 결과 데이터
-                // strTmp = string.Format("result DATA1 : ");
-                // for (int col = 0; col < Constants.FREQ_ELE; col++)
-                // {
-                // strTmp += string.Format("{0:F2}", )
-                // }
-            }
 
             // mainform.diagnosisForm.fnDisplayResult(aFeatureValues, aFeatureRanges,
             // aFeatureLowers, aFeatureUppers, resultMatrix2, resultDiagnosis);

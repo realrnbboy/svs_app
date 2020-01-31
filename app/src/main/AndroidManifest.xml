@@ -75,6 +75,12 @@
         </activity>
 
         <activity
+            android:name=".views.activities.ResultDiagnosisActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
             android:name=".views.activities.RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" >

@@ -2,8 +2,8 @@ package kr.co.signallink.svsv2.dto;
 
 import java.io.Serializable;
 
-import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
 import kr.co.signallink.svsv2.model.DIAGNOSIS_FEATURES_Type;
+import kr.co.signallink.svsv2.model.CauseModel;
 import kr.co.signallink.svsv2.model.VARIABLES_1_Type;
 import kr.co.signallink.svsv2.model.VARIABLES_2_Type;
 
@@ -31,7 +31,8 @@ public class AnalysisData implements Serializable {
     private int ballDiameter;
     private int rps;
     private int contactAngle;
-    public double[][] resultDiagnosis; // 진단 rank 결과, 순위 내림 차순 정렬된 것
+
+    public ResultDiagnosisData[] resultDiagnosis; // 진단 rank 결과, 순위 내림 차순 정렬된 것
 
     public VARIABLES_1_Type diagVar1;
     public VARIABLES_2_Type valueVar2, rangeVar2, lowerVar2, upperVar2;
@@ -233,11 +234,11 @@ public class AnalysisData implements Serializable {
         this.featureInfos = featureInfos;
     }
 
-    public double[][] getResultDiagnosis() {
+    public ResultDiagnosisData[] getResultDiagnosis() {
         return resultDiagnosis;
     }
 
-    public void setResultDiagnosis(double[][] resultDiagnosis) {
+    public void setResultDiagnosis(ResultDiagnosisData[] resultDiagnosis) {
         this.resultDiagnosis = resultDiagnosis;
     }
 }

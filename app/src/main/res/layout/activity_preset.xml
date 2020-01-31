@@ -29,7 +29,7 @@
 
             <LinearLayout
                 android:orientation="horizontal"
-                style="@style/preset_item_layout"
+                style="@style/item_sub_layout"
                 android:layout_marginTop="@dimen/margin_default">
 
                 <Spinner
@@ -58,7 +58,7 @@
                 android:padding="@dimen/padding_default"
                 android:orientation="vertical">
                 <LinearLayout
-                    style="@style/preset_item_layout">
+                    style="@style/item_sub_layout">
 
                     <TextView
                         android:id="@+id/textViewTime"
@@ -90,7 +90,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    style="@style/preset_item_layout">
+                    style="@style/item_sub_layout">
 
                     <TextView
                         android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
@@ -104,7 +104,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/preset_item_layout"
+                    style="@style/item_sub_layout"
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
@@ -138,7 +138,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    style="@style/preset_item_layout">
+                    style="@style/item_sub_layout">
 
                     <TextView
                         android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
@@ -152,7 +152,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/preset_item_layout"
+                    style="@style/item_sub_layout"
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
@@ -178,7 +178,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/preset_item_layout"
+                    style="@style/item_sub_layout"
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
@@ -192,7 +192,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/preset_item_layout"
+                    style="@style/item_sub_layout"
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
@@ -206,7 +206,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/preset_item_layout"
+                    style="@style/item_sub_layout"
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
@@ -222,7 +222,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/preset_item_layout"
+                    style="@style/item_sub_layout"
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
@@ -271,7 +271,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    style="@style/preset_item_layout">
+                    style="@style/item_sub_layout">
 
                     <TextView
                         android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
@@ -284,7 +284,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/preset_item_layout"
+                    style="@style/item_sub_layout"
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
@@ -315,7 +315,7 @@
 
 
                 <LinearLayout
-                    style="@style/preset_item_layout"
+                    style="@style/item_sub_layout"
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
@@ -330,7 +330,7 @@
                         style="@style/preset_item_edittext"/>
                 </LinearLayout>
                 <LinearLayout
-                    style="@style/preset_item_layout"
+                    style="@style/item_sub_layout"
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
@@ -344,7 +344,7 @@
                         style="@style/preset_item_edittext"/>
                 </LinearLayout>
                 <LinearLayout
-                    style="@style/preset_item_layout"
+                    style="@style/item_sub_layout"
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
@@ -370,7 +370,7 @@
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
-                    style="@style/preset_item_layout"
+                    style="@style/item_sub_layout"
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
@@ -396,7 +396,7 @@
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
-                    style="@style/preset_item_layout"
+                    style="@style/item_sub_layout"
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
@@ -411,7 +411,7 @@
                         style="@style/preset_item_edittext"/>
                 </LinearLayout>
                 <LinearLayout
-                    style="@style/preset_item_layout"
+                    style="@style/item_sub_layout"
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView

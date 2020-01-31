@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:checked="false"
+    android:focusable="false"
+    android:background="@drawable/my_custom_list_equipment_drawable">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:orientation="vertical">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:progress="25"
+                android:max="100" />
+
+            <TextView
+                android:id="@+id/textViewCause"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:textColor="@color/color1"
+                android:gravity="start|center"
+                android:background="@color/colorPrimaryInput"
+                android:textSize="@dimen/font_midium"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="test"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewRatio"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:gravity="end|center"
+            android:layout_gravity="center"
+            android:textColor="@color/myblue"
+            android:textSize="@dimen/font_larger"
+            android:text="80%"/>
+    </LinearLayout>
+</LinearLayout>

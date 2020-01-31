@@ -1,12 +1,10 @@
 package kr.co.signallink.svsv2.views.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,24 +26,20 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.dto.MeasureData;
-import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
-import kr.co.signallink.svsv2.model.MainData;
-import kr.co.signallink.svsv2.model.Matrix2Model;
-import kr.co.signallink.svsv2.services.DiagnosisInfo;
+import kr.co.signallink.svsv2.model.RmsModel;
 import kr.co.signallink.svsv2.user.SVS;
 import kr.co.signallink.svsv2.utils.MyValueFormatter;
 import kr.co.signallink.svsv2.utils.ToastUtil;
-import kr.co.signallink.svsv2.views.adapters.Matrix2ListAdapter;
+import kr.co.signallink.svsv2.views.adapters.RmsListAdapter;
 
 // added by hslee 2020-01-29
-// 진단분석 결과 화면
+// 진단분석 결과1 화면
 public class ResultActivity extends BaseActivity {
 
     private static final String TAG = "ResultActivity";
@@ -53,9 +47,9 @@ public class ResultActivity extends BaseActivity {
     AnalysisData analysisData = null;
     MATRIX_2_Type matrix2;
 
-    ListView listViewMatrix2;
-    Matrix2ListAdapter matrix2ListAdapter;
-    ArrayList<Matrix2Model> matrix2List = new ArrayList<>();
+    ListView listViewRms;
+    RmsListAdapter rmsListAdapter;
+    ArrayList<RmsModel> rmsList = new ArrayList<>();
 
     CombinedChart combinedChartRawData;
     private SVS svs = SVS.getInstance();
@@ -99,13 +93,16 @@ public class ResultActivity extends BaseActivity {
             return;
         }
 
+        TextView textViewCode = findViewById(R.id.textViewCode);
+        textViewCode.setText(String.valueOf(analysisData.diagVar1.nCode));
+
         // rms 값 추가
-        addMatrix2Item();
+        addRmsItem();
 
-        listViewMatrix2 = findViewById(R.id.listViewMatrix2);
+        listViewRms = findViewById(R.id.listViewRms);
 
-        matrix2ListAdapter = new Matrix2ListAdapter(this, R.layout.list_item_matrix2, matrix2List, getResources());
-        listViewMatrix2.setAdapter(matrix2ListAdapter);
+        rmsListAdapter = new RmsListAdapter(this, R.layout.list_item_rms, rmsList, getResources());
+        listViewRms.setAdapter(rmsListAdapter);
 
         Button buttonNext = findViewById(R.id.buttonNext);
         buttonNext.setOnClickListener(new View.OnClickListener() {
@@ -113,15 +110,45 @@ public class ResultActivity extends BaseActivity {
             public void onClick(View v) {
 
                 // 다음 화면으로 이동
-                Intent intent = new Intent(getBaseContext(), ResultActivity.class);
+                Intent intent = new Intent(getBaseContext(), ResultDiagnosisActivity.class);
                 intent.putExtra("analysisData", analysisData);
+                intent.putExtra("matrix2", matrix2);
                 startActivity(intent);
             }
         });
     }
 
-    private void addMatrix2Item() {
+    // rms 값 추가
+    private void addRmsItem() {
+        RmsModel rmsModel1 = new RmsModel();
+        RmsModel rmsModel2 = new RmsModel();
+        RmsModel rmsModel3 = new RmsModel();
+        RmsModel rmsModel4 = new RmsModel();
 
+        rmsModel1.setName("PT1");
+        rmsModel2.setName("PT2");
+        rmsModel3.setName("PT3");
+        rmsModel4.setName("PT4");
+
+        rmsModel1.setRms(7.2);
+        rmsModel2.setRms(4.1);
+        rmsModel3.setRms(3.5);
+        rmsModel4.setRms(1.1);
+
+        rmsModel1.setDanger(5.3);
+        rmsModel2.setDanger(2.3);
+        rmsModel3.setDanger(5.3);
+        rmsModel4.setDanger(3.3);
+
+        rmsModel1.setWarning(2.2);
+        rmsModel2.setWarning(2.2);
+        rmsModel3.setWarning(2.2);
+        rmsModel4.setWarning(2.2);
+
+        rmsList.add(rmsModel1);
+        rmsList.add(rmsModel2);
+        rmsList.add(rmsModel3);
+        rmsList.add(rmsModel4);
     }
 
     private void initChart() {

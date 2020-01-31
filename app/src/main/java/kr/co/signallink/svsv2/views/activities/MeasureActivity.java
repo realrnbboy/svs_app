@@ -28,10 +28,12 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 import io.realm.Realm;
@@ -42,6 +44,7 @@ import kr.co.signallink.svsv2.databases.DatabaseUtil;
 import kr.co.signallink.svsv2.databases.PresetEntity;
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.dto.MeasureData;
+import kr.co.signallink.svsv2.dto.ResultDiagnosisData;
 import kr.co.signallink.svsv2.dto.SVSCode;
 import kr.co.signallink.svsv2.dto.SVSParam;
 import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
@@ -96,7 +99,7 @@ public class MeasureActivity extends BaseActivity {
 
         Intent intent = getIntent();
 
-        // PresetActivity 에서 전달받은 데이터 가져오기
+        // 이전 Activity 에서 전달받은 데이터 가져오기
         analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");
         if( analysisData == null ) {
             ToastUtil.showShort("analysis data is null");
@@ -283,16 +286,30 @@ public class MeasureActivity extends BaseActivity {
         double [][] tResultDiagnosis = diagnosis.resultDiagnosis;
         if( tResultDiagnosis != null ) {
 
+            // 정렬된 데이터를 구하기 위해 클래스 구성
+            ResultDiagnosisData[] resultDiagnosisData = new ResultDiagnosisData[tResultDiagnosis.length];
+
+            for( int i = 0; i<tResultDiagnosis.length; i++ ) {
+                resultDiagnosisData[i] = new ResultDiagnosisData();
+
+                resultDiagnosisData[i].cause = mainData.causeInfos.infos[i].strCause;
+                resultDiagnosisData[i].desc = mainData.causeInfos.infos[i].strDesc;
+
+                resultDiagnosisData[i].rank = tResultDiagnosis[i][0];
+                resultDiagnosisData[i].sum = tResultDiagnosis[i][1];
+                resultDiagnosisData[i].ratio = tResultDiagnosis[i][2];
+            }
+
             // 1번째 행렬로 정렬하기 위해 Comparator를 이용합니다
-            Arrays.sort(tResultDiagnosis, new Comparator<double[]>() {
+            Arrays.sort(resultDiagnosisData, new Comparator<ResultDiagnosisData>() {
                 // Override된 compare 함수를 어떻게 정의하냐에 따라서 다양한 정렬이 가능해집니다
                 @Override
-                public int compare(double[] o1, double[] o2) {
-                    return o1[1] > o2[1] ? -1 : 1; // 내림자순 정렬을 하고 싶다면 o2와 o1의 위치를 바꿔줍니다
+                public int compare(ResultDiagnosisData o1, ResultDiagnosisData o2) {
+                    return o1.rank < o2.rank ? -1 : 1; // 내림자순 정렬을 하고 싶다면 o2와 o1의 위치를 바꿔줍니다
                 }
             });
 
-            analysisData.setResultDiagnosis(tResultDiagnosis);
+            analysisData.setResultDiagnosis(resultDiagnosisData);
         }
     }
 

@@ -39,10 +39,15 @@ public class SendMessageHandler extends Handler {
         super.handleMessage(msg);
 
         int type = msg.getData().getInt("type");
+        int errorType = msg.getData().getInt("errorType");
         int message = msg.getData().getInt("message");
         String data = msg.getData().getString("data");
         int returnContext = msg.getData().getInt("returnContext");
         String jsonString = msg.getData().getString("jsonString");
+
+        if( errorType == DefConstant.URL_TYPE_SERVER_NO_RESPONSE ) {
+            //ToastUtil.showShort("server not respond. please try later.");
+        }
 
         switch (type) {
 
@@ -58,9 +63,9 @@ public class SendMessageHandler extends Handler {
                 presetActivity.parsePreset(jsonString);
                 break;
 
-            case DefConstant.URL_TYPE_SERVER_NO_RESPONSE:
-                ToastUtil.showShort("server not respond. please try later.");
-                break;
+//            case DefConstant.URL_TYPE_SERVER_NO_RESPONSE:
+//                ToastUtil.showShort("server not respond. please try later.");
+//                break;
 
             default:
                 break;

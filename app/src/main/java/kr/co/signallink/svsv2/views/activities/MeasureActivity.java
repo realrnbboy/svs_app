@@ -276,6 +276,14 @@ public class MeasureActivity extends BaseActivity {
 
     public void makeMatrix2() {
 
+        if( analysisData.getValueVar2() == null ) { // 초기 세팅이 안되어 있을 경우 세팅.
+            analysisData.setValueVar2(mainData.valueVar2);
+            analysisData.setRangeVar2(mainData.rangeVar2);
+            analysisData.setLowerVar2(mainData.lowerVar2);
+            analysisData.setUpperVar2(mainData.upperVar2);
+            analysisData.setFeatureInfos(mainData.featureInfos);
+        }
+
         DiagnosisInfo diagnosis = new DiagnosisInfo(analysisData);
 
         //DIAGNOSIS_DATA_Type[] rawData = analysisData.fnGetRawDatas();   // 센서의 rawdata로 변경 해야함.

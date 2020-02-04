@@ -28,6 +28,9 @@ import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.DatabaseUtil;
 import kr.co.signallink.svsv2.databases.PresetEntity;
 import kr.co.signallink.svsv2.dto.AnalysisData;
+import kr.co.signallink.svsv2.dto.MeasureData;
+import kr.co.signallink.svsv2.dto.SVSCode;
+import kr.co.signallink.svsv2.dto.SVSParam;
 import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.MainData;
@@ -35,6 +38,7 @@ import kr.co.signallink.svsv2.model.VARIABLES_1_Type;
 import kr.co.signallink.svsv2.server.SendPost;
 import kr.co.signallink.svsv2.services.DiagnosisInfo;
 import kr.co.signallink.svsv2.services.SendMessageHandler;
+import kr.co.signallink.svsv2.user.SVS;
 import kr.co.signallink.svsv2.utils.DateUtil;
 import kr.co.signallink.svsv2.utils.DialogUtil;
 import kr.co.signallink.svsv2.utils.ToastUtil;
@@ -133,6 +137,11 @@ public class PresetActivity extends BaseActivity {
             }
         });
 
+
+        SVS svs = SVS.getInstance();
+        ArrayList<MeasureData> measureDatas = svs.getMeasureDatas();
+        SVSParam svsParam = SVS.getInstance().getUploaddata().getSvsParam();
+
         spinnerPreset = findViewById(R.id.spinnerPreset);
         spinnerEquipmentCode = findViewById(R.id.spinnerEquipmentCode);
         spinnerLineFrequency = findViewById(R.id.spinnerLineFrequency);
@@ -207,7 +216,7 @@ public class PresetActivity extends BaseActivity {
         // 서버에서 preset 정보 불러오기
         getPresetFromServer();
 
-        mainData = new MainData(this);
+       // mainData = new MainData(this);
     }
 
     // measureactivity로 전달할 데이터 구성
@@ -271,11 +280,11 @@ public class PresetActivity extends BaseActivity {
         diagVar1.nContactAngle = contactAngle;
 
         analysisData.setDiagVar1(diagVar1);
-        analysisData.setValueVar2(mainData.valueVar2);
-        analysisData.setRangeVar2(mainData.rangeVar2);
-        analysisData.setLowerVar2(mainData.lowerVar2);
-        analysisData.setUpperVar2(mainData.upperVar2);
-        analysisData.setFeatureInfos(mainData.featureInfos);
+//        analysisData.setValueVar2(mainData.valueVar2);
+//        analysisData.setRangeVar2(mainData.rangeVar2);
+//        analysisData.setLowerVar2(mainData.lowerVar2);
+//        analysisData.setUpperVar2(mainData.upperVar2);
+//        analysisData.setFeatureInfos(mainData.featureInfos);
 
         return analysisData;
     }

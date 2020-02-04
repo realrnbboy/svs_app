@@ -154,8 +154,8 @@ public class SendPost extends Thread {
         if( handler != null ) { // 서버연결 실패 등의 오류
             Message msg = new Message();
             Bundle data = new Bundle();
-            data.putInt("type", DefConstant.URL_TYPE_SERVER_NO_RESPONSE);
-            data.putInt("tryType", sendType);
+            data.putInt("errorType", DefConstant.URL_TYPE_SERVER_NO_RESPONSE);
+            data.putInt("type", sendType);
             msg.setData(data);
 
 

@@ -184,7 +184,7 @@
                     <TextView
                         android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
                         style="@style/preset_item_textview"
-                        android:text="Line frequency"/>
+                        android:text="Line frequency :"/>
 
                     <Spinner
                         android:id="@+id/spinnerLineFrequency"

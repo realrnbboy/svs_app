@@ -94,7 +94,37 @@ public class ResultActivity extends BaseActivity {
         }
 
         TextView textViewCode = findViewById(R.id.textViewCode);
-        textViewCode.setText(String.valueOf(analysisData.diagVar1.nCode));
+        String code;
+        if( analysisData.diagVar1.nCode == 0 )
+            code = "ANSI HI 9.6.4";
+        else if( analysisData.diagVar1.nCode == 1 )
+            code = "API 610";
+        else if( analysisData.diagVar1.nCode == 2 )
+            code = "ISO 10816 Cat.1";
+        else if( analysisData.diagVar1.nCode == 3 )
+            code = "ISO 10816 Cat.2";
+        else if( analysisData.diagVar1.nCode == 4 )
+            code = "Project VIB Spec";
+        else
+            code = "invalid value";
+
+        textViewCode.setText(code);
+
+        TextView textViewInputPower = findViewById(R.id.textViewInputPower);
+        textViewInputPower.setText(String.valueOf(analysisData.diagVar1.nInputPower) + " kW");
+
+        TextView textViewLineFrequency = findViewById(R.id.textViewLineFrequency);
+        String lineFrequency;
+        if( analysisData.diagVar1.nLineFreq == 0 )
+            lineFrequency = "50 Hz";
+        else if( analysisData.diagVar1.nLineFreq == 1 )
+            lineFrequency = "60 Hz";
+        else
+            lineFrequency = "invalid value";
+        textViewLineFrequency.setText(lineFrequency);
+
+        TextView textViewEquipmentRpm = findViewById(R.id.textViewEquipmentRpm);
+        textViewEquipmentRpm.setText(String.valueOf(analysisData.diagVar1.nRPM));
 
         // rms 값 추가
         addRmsItem();

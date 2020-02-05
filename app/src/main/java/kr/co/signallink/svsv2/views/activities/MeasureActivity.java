@@ -1,16 +1,12 @@
 package kr.co.signallink.svsv2.views.activities;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -29,37 +25,23 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
 
 import io.realm.OrderedRealmCollection;
-import io.realm.Realm;
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.commons.DefLog;
-import kr.co.signallink.svsv2.databases.DatabaseUtil;
-import kr.co.signallink.svsv2.databases.EquipmentEntity;
-import kr.co.signallink.svsv2.databases.PresetEntity;
 import kr.co.signallink.svsv2.databases.SVSEntity;
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.dto.MeasureData;
 import kr.co.signallink.svsv2.dto.ResultDiagnosisData;
-import kr.co.signallink.svsv2.dto.SVSCode;
-import kr.co.signallink.svsv2.dto.SVSParam;
-import kr.co.signallink.svsv2.dto.SVSTime;
 import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.MainData;
 import kr.co.signallink.svsv2.services.DiagnosisInfo;
-import kr.co.signallink.svsv2.user.ConnectSVSItem;
 import kr.co.signallink.svsv2.user.SVS;
-import kr.co.signallink.svsv2.utils.DateUtil;
-import kr.co.signallink.svsv2.utils.DialogUtil;
 import kr.co.signallink.svsv2.utils.MyValueFormatter;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 
@@ -120,7 +102,7 @@ public class MeasureActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if( bMeasure ) {
+                if( !bMeasure ) {   // !!!!! 원래 !없음
                     //matrix2 계산
                     makeMatrix2();
 

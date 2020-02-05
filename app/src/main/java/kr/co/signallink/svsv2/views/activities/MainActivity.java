@@ -652,7 +652,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                                 ToastUtil.showShort("3 sensor required.");
                                 return;
                             }
-                            goIntent(SVSLocationAutoModeActivity.class);
 
                             goIntent(PresetActivity.class, false);
                         }

@@ -63,7 +63,6 @@ public class MeasureExeActivity extends Activity {
 
     private OrderedRealmCollection<SVSEntity> svsEntities;
 
-    //private ProgressDialog progressDialog = null;
     private boolean showProgressDialogButton = false;
 
     private BluetoothAdapter checkbluetooth = null;
@@ -255,8 +254,6 @@ public class MeasureExeActivity extends Activity {
         setContentView(R.layout.activity_measure_exe);
 
         Log.d("TTTT","SVS AutoMode onCreate");
-
-        initProgressDialog();
 
         init_service();
 
@@ -491,48 +488,6 @@ public class MeasureExeActivity extends Activity {
         }
 
         return true;
-    }
-
-    private void initProgressDialog()
-    {
-//        progressDialog = new ProgressDialog(MeasureExeActivity.this);
-//        progressDialog.setTitle("");
-//        progressDialog.setMessage("");
-//        progressDialog.setCanceledOnTouchOutside(false);
-//        progressDialog.setCancelable(false);
-
-    }
-
-    private void showProgressDialogOld(boolean showButton, String subMessage)
-    {
-//        String equipmentName = ((EquipmentEntity)svs.getLinkedEquipmentData()).getName();
-//        String title = "Processing " + (connectSVSItems.getIndex_connecting()+1) + " of " + connectSVSItems.size();
-//        String message = equipmentName
-//                + " " + connectSVSItems.getCurrentIndexSvsLocation().toString().toUpperCase()
-//                + "\n\n"+ subMessage + "...";
-//
-//        progressDialog.setTitle(title);
-//        progressDialog.setMessage(message);
-//        if(!showProgressDialogButton && showButton)
-//        {
-//            progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    dialog.dismiss();
-//                    connectSVSItems.removeAll();
-//                    if(DefConstant.UART_PROFILE_CONNECTED == svs.getBleConnectState())
-//                        uartService.disconnect();
-//                    else
-//                        broadcastUpdate(UartService.ACTION_GATT_DISCONNECTED);
-//                }
-//            });
-//            showProgressDialogButton = true;
-//        }
-//
-//        if(!progressDialog.isShowing())
-//        {
-//            progressDialog.show();
-//        }
     }
 
     private void showProgressDialog(boolean showButton, String subMessage)

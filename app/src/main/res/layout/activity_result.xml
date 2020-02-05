@@ -51,16 +51,85 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding_default"
                     android:orientation="vertical">
+
                     <LinearLayout
-                        style="@style/item_sub_layout">
+                        style="@style/item_sub_layout"
+                        android:layout_marginTop="@dimen/margin_default">
+
+                        <TextView
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_textview"
+                            android:text="Equipment code :"/>
 
                         <TextView
                             android:id="@+id/textViewCode"
                             android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
-                            style="@style/preset_item_textview"
+                            style="@style/preset_item_edittext"
                             android:text="Equipment code"/>
                     </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/item_sub_layout"
+                        android:layout_marginTop="@dimen/margin_default">
+
+                        <TextView
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_textview"
+                            android:text="Input power :"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/textViewInputPower"
+                                android:layout_weight="1"
+                                android:text="0"
+                                android:inputType="numberDecimal"
+                                style="@style/preset_item_edittext"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/item_sub_layout"
+                        android:layout_marginTop="@dimen/margin_default">
+
+                        <TextView
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_textview"
+                            android:text="Line frequency"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/textViewLineFrequency"
+                                android:layout_weight="1"
+                                android:text="0"
+                                android:inputType="numberDecimal"
+                                style="@style/preset_item_edittext"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/item_sub_layout"
+                        android:layout_marginTop="@dimen/margin_default">
+
+                        <TextView
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_textview"
+                            android:text="Equipment RPM :"/>
+
+                        <TextView
+                            android:id="@+id/textViewEquipmentRpm"
+                            android:text="0"
+                            android:inputType="numberDecimal"
+                            style="@style/preset_item_edittext"/>
+                    </LinearLayout>
                 </LinearLayout>
+
+
             </LinearLayout>
 
             <LinearLayout

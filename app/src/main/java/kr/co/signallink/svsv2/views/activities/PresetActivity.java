@@ -27,22 +27,14 @@ import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.DatabaseUtil;
-import kr.co.signallink.svsv2.databases.EquipmentEntity;
 import kr.co.signallink.svsv2.databases.PresetEntity;
 import kr.co.signallink.svsv2.databases.SVSEntity;
 import kr.co.signallink.svsv2.dto.AnalysisData;
-import kr.co.signallink.svsv2.dto.MeasureData;
-import kr.co.signallink.svsv2.dto.SVSCode;
-import kr.co.signallink.svsv2.dto.SVSParam;
-import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
-import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.MainData;
 import kr.co.signallink.svsv2.model.VARIABLES_1_Type;
 import kr.co.signallink.svsv2.server.SendPost;
-import kr.co.signallink.svsv2.services.DiagnosisInfo;
 import kr.co.signallink.svsv2.services.SendMessageHandler;
 import kr.co.signallink.svsv2.user.SVS;
-import kr.co.signallink.svsv2.utils.DateUtil;
 import kr.co.signallink.svsv2.utils.DialogUtil;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 import kr.co.signallink.svsv2.utils.Utils;
@@ -53,9 +45,9 @@ public class PresetActivity extends BaseActivity {
 
     private static final String TAG = "PresetActivity";
 
-    String bModeCreate = "1"; // create or update
+    //String bModeCreate = "1"; // create or update
 
-    AnalysisData analysisData = null;
+    //AnalysisData analysisData = null;
 
     ArrayList arrayListPreset = new ArrayList<>();
     ArrayList arrayListEquipmentCode = new ArrayList<>();
@@ -416,116 +408,116 @@ public class PresetActivity extends BaseActivity {
     }
 
 
-    private void save() {
+//    private void save() {
+//
+//        if(validateForm()) {
+//
+//            //Preset 객체 만들기
+//            final PresetEntity presetEntity = new PresetEntity();
+//
+//            //presetEntity.setName(editTextPresetName.getText().toString());
+//
+//            int code = (int)spinnerEquipmentCode.getSelectedItemId();
+////            if( spinnerEquipmentCode.getSelectedItemId() == 0 ) code = "ANSI HI 9.6.4";
+////            else if( spinnerEquipmentCode.getSelectedItemId() == 1 ) code = "API 610";
+////            else if( spinnerEquipmentCode.getSelectedItemId() == 2 ) code = "ISO 10816 Cat.1";
+////            else if( spinnerEquipmentCode.getSelectedItemId() == 3 ) code = "ISO 10816 Cat.2";
+////            else if( spinnerEquipmentCode.getSelectedItemId() == 4 ) code = "Project VIB Spec";
+//
+//            int equipmentType = (int)spinnerEquipmentType.getSelectedItemId();
+////            if( spinnerEquipmentType.getSelectedItemId() == 0 ) equipmentType = "Horizontal (BB&OH)";
+////            else if( spinnerEquipmentType.getSelectedItemId() == 1 ) equipmentType = "Vertical (VS)";
+////            else if( spinnerEquipmentType.getSelectedItemId() == 2 ) equipmentType = "ETC";
+//
+//            int bearingType = (int)spinnerBearingType.getSelectedItemId();
+////            if( spinnerBearingType.getSelectedItemId() == 0 ) bearingType = "Ball";
+////            else if( spinnerBearingType.getSelectedItemId() == 1 ) bearingType = "Roller";
+////            else if( spinnerBearingType.getSelectedItemId() == 2 ) bearingType = "Journal";
+////            else if( spinnerBearingType.getSelectedItemId() == 3 ) bearingType = "ETC";
+//
+//            int lineFrequency = (int)spinnerLineFrequency.getSelectedItemId();// == 0 ? 50 : 60;
+//
+//            int projectVibSpec = Integer.parseInt(editTextProjectVibSpec.getText().toString());
+//            String siteCode = editTextSiteCode.getText().toString();
+//            String equipmentName = editTextEquipmentName.getText().toString();
+//            String tagNo = editTextTagNo.getText().toString();
+//            int inputPower = Integer.parseInt(editTextInputPower.getText().toString());
+//            int equipmentRpm = Integer.parseInt(editTextEquipmentRpm.getText().toString());
+//            int bladeVane = Integer.parseInt(editTextBladeVane.getText().toString());
+//            int noOfBalls = Integer.parseInt(editTextNoOfBalls.getText().toString());
+//            int pitchDiameter = Integer.parseInt(editTextPitchDiameter.getText().toString());
+//            int ballDiameter = Integer.parseInt(editTextBallDiameter.getText().toString());
+//            int rps = Integer.parseInt(editTextRps.getText().toString());
+//            int contactAngle = Integer.parseInt(editTextContactAngle.getText().toString());
+//
+//            presetEntity.setCode(code);
+//            presetEntity.setEquipmentType(equipmentType);
+//            presetEntity.setBearingType(bearingType);
+//            presetEntity.setLineFreq(lineFrequency);
+//            presetEntity.setProjectVibSpec(projectVibSpec);
+//            presetEntity.setSiteCode(siteCode);
+//            presetEntity.setEquipmentName(equipmentName);
+//            presetEntity.setTagNo(tagNo);
+//            presetEntity.setInputPower(inputPower);
+//            presetEntity.setRpm(equipmentRpm);
+//            presetEntity.setBladeCount(bladeVane);
+//            presetEntity.setBallCount(noOfBalls);
+//            presetEntity.setPitchDiameter(pitchDiameter);
+//            presetEntity.setBallDiameter(ballDiameter);
+//            presetEntity.setRps(rps);
+//            presetEntity.setContactAngle(contactAngle);
+//
+//
+//            //기록
+//            DatabaseUtil.transaction(new Realm.Transaction() {
+//                @Override
+//                public void execute(Realm realm) {
+//
+//                    int no = 0;
+//                    if( "0".equals(bModeCreate) ) {
+//                        no = analysisData.getNo();
+//                    }
+//                    else {  // 추가일 경우 index값 증가
+//                        Number currentNo = realm.where(PresetEntity.class).max("no");
+//
+//                        if (currentNo == null) {
+//                            no = 1;
+//                        } else {
+//                            no = currentNo.intValue() + 1;
+//                        }
+//                    }
+//
+//                    presetEntity.setNo(no);
+//                    realm.copyToRealmOrUpdate(presetEntity);
+//                }
+//            });
+//
+//            //토스트
+//            ToastUtil.showShort("Save Success");
+//
+//            //화면 종료
+//            finish();
+//        }
+//    }
 
-        if(validateForm()) {
 
-            //Preset 객체 만들기
-            final PresetEntity presetEntity = new PresetEntity();
-
-            //presetEntity.setName(editTextPresetName.getText().toString());
-
-            int code = (int)spinnerEquipmentCode.getSelectedItemId();
-//            if( spinnerEquipmentCode.getSelectedItemId() == 0 ) code = "ANSI HI 9.6.4";
-//            else if( spinnerEquipmentCode.getSelectedItemId() == 1 ) code = "API 610";
-//            else if( spinnerEquipmentCode.getSelectedItemId() == 2 ) code = "ISO 10816 Cat.1";
-//            else if( spinnerEquipmentCode.getSelectedItemId() == 3 ) code = "ISO 10816 Cat.2";
-//            else if( spinnerEquipmentCode.getSelectedItemId() == 4 ) code = "Project VIB Spec";
-
-            int equipmentType = (int)spinnerEquipmentType.getSelectedItemId();
-//            if( spinnerEquipmentType.getSelectedItemId() == 0 ) equipmentType = "Horizontal (BB&OH)";
-//            else if( spinnerEquipmentType.getSelectedItemId() == 1 ) equipmentType = "Vertical (VS)";
-//            else if( spinnerEquipmentType.getSelectedItemId() == 2 ) equipmentType = "ETC";
-
-            int bearingType = (int)spinnerBearingType.getSelectedItemId();
-//            if( spinnerBearingType.getSelectedItemId() == 0 ) bearingType = "Ball";
-//            else if( spinnerBearingType.getSelectedItemId() == 1 ) bearingType = "Roller";
-//            else if( spinnerBearingType.getSelectedItemId() == 2 ) bearingType = "Journal";
-//            else if( spinnerBearingType.getSelectedItemId() == 3 ) bearingType = "ETC";
-
-            int lineFrequency = (int)spinnerLineFrequency.getSelectedItemId();// == 0 ? 50 : 60;
-
-            int projectVibSpec = Integer.parseInt(editTextProjectVibSpec.getText().toString());
-            String siteCode = editTextSiteCode.getText().toString();
-            String equipmentName = editTextEquipmentName.getText().toString();
-            String tagNo = editTextTagNo.getText().toString();
-            int inputPower = Integer.parseInt(editTextInputPower.getText().toString());
-            int equipmentRpm = Integer.parseInt(editTextEquipmentRpm.getText().toString());
-            int bladeVane = Integer.parseInt(editTextBladeVane.getText().toString());
-            int noOfBalls = Integer.parseInt(editTextNoOfBalls.getText().toString());
-            int pitchDiameter = Integer.parseInt(editTextPitchDiameter.getText().toString());
-            int ballDiameter = Integer.parseInt(editTextBallDiameter.getText().toString());
-            int rps = Integer.parseInt(editTextRps.getText().toString());
-            int contactAngle = Integer.parseInt(editTextContactAngle.getText().toString());
-
-            presetEntity.setCode(code);
-            presetEntity.setEquipmentType(equipmentType);
-            presetEntity.setBearingType(bearingType);
-            presetEntity.setLineFreq(lineFrequency);
-            presetEntity.setProjectVibSpec(projectVibSpec);
-            presetEntity.setSiteCode(siteCode);
-            presetEntity.setEquipmentName(equipmentName);
-            presetEntity.setTagNo(tagNo);
-            presetEntity.setInputPower(inputPower);
-            presetEntity.setRpm(equipmentRpm);
-            presetEntity.setBladeCount(bladeVane);
-            presetEntity.setBallCount(noOfBalls);
-            presetEntity.setPitchDiameter(pitchDiameter);
-            presetEntity.setBallDiameter(ballDiameter);
-            presetEntity.setRps(rps);
-            presetEntity.setContactAngle(contactAngle);
-
-
-            //기록
-            DatabaseUtil.transaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-
-                    int no = 0;
-                    if( "0".equals(bModeCreate) ) {
-                        no = analysisData.getNo();
-                    }
-                    else {  // 추가일 경우 index값 증가
-                        Number currentNo = realm.where(PresetEntity.class).max("no");
-
-                        if (currentNo == null) {
-                            no = 1;
-                        } else {
-                            no = currentNo.intValue() + 1;
-                        }
-                    }
-
-                    presetEntity.setNo(no);
-                    realm.copyToRealmOrUpdate(presetEntity);
-                }
-            });
-
-            //토스트
-            ToastUtil.showShort("Save Success");
-
-            //화면 종료
-            finish();
-        }
-    }
-
-
-    private void dialogSave(){
-
-        DialogUtil.yesNo(this,
-                getResources().getString(R.string.update_screen),
-                "Do you want to save?",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        save();
-                    }
-                },
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-    }
+//    private void dialogSave(){
+//
+//        DialogUtil.yesNo(this,
+//                getResources().getString(R.string.update_screen),
+//                "Do you want to save?",
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//
+//                        save();
+//                    }
+//                },
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        dialog.cancel();
+//                    }
+//                });
+//    }
 
     // 웹서버로 preset 요청
     void getPresetFromServer() {

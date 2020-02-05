@@ -21,4 +21,7 @@
     <dimen name="padding_default">8dp</dimen>
     <dimen name="margin_default">8dp</dimen>
     <dimen name="margin_confirm_top">24dp</dimen>
+
+    <dimen name="chart_height">300dp</dimen>
+    <dimen name="list_height_rms">200dp</dimen>
 </resources>

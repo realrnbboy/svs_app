@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMain"
+    android:orientation="vertical">
+
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/include_view"
+                layout="@layout/app_bar_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.github.mikephil.charting.charts.CombinedChart
+                android:id="@+id/combinedChartRawData"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/chart_height"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/margin_default"
+                    style="@style/row_side_padding_dp_15">
+
+                    <TextView
+                        android:id="@+id/textViewStartd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/myblue"
+                        android:textSize="@dimen/font_midium"
+                        android:text="startd" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/myblue"
+                        android:textSize="@dimen/font_midium"
+                        android:text=" ~ " />
+
+                    <TextView
+                        android:id="@+id/textViewEndd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/myblue"
+                        android:textSize="@dimen/font_midium"
+                        android:text="endd" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+                        <Button
+                            android:id="@+id/buttonToday"
+                            android:layout_width="70dp"
+                            android:layout_height="32dp"
+                            android:textColor="@android:color/white"
+                            android:background="@drawable/btn_primary"
+                            android:layout_toLeftOf="@+id/buttonWeek"
+                            android:text="today"/>
+
+                        <Button
+                            android:id="@+id/buttonWeek"
+                            android:layout_width="70dp"
+                            android:layout_height="32dp"
+                            android:layout_marginLeft="8dp"
+                            android:textColor="@android:color/white"
+                            android:background="@drawable/btn_primary"
+                            android:layout_alignParentRight="true"
+                            android:text="week"/>
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_marginTop="@dimen/margin_default"
+                style="@style/row_side_padding_dp_15">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/myblue"
+                    android:textSize="@dimen/font_midium"
+                    android:text="Defeact cause" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_height_rms"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_default">
+
+                <LinearLayout style="@style/item_sub_layout">
+
+                    <ListView
+                        android:id="@+id/listViewRms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:choiceMode="none"
+                        android:divider="@null"
+                        android:dividerHeight="5dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/colorContent"
+                android:padding="5dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/buttonClose"
+                    style="@style/button_confirm"
+                    android:text="close"/>
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

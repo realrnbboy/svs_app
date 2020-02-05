@@ -85,12 +85,12 @@ public class ResultDiagnosisActivity extends BaseActivity {
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//
-//                // 다음 화면으로 이동
-//                Intent intent = new Intent(getBaseContext(), ResultActivity.class);
-//                intent.putExtra("matrix2", matrix2);
-//                intent.putExtra("analysisData", analysisData);
-//                startActivity(intent);
+
+                // 다음 화면으로 이동
+                Intent intent = new Intent(getBaseContext(), RecordManagerActivity.class);
+                intent.putExtra("matrix2", matrix2);
+                intent.putExtra("analysisData", analysisData);
+                startActivity(intent);
             }
         });
     }

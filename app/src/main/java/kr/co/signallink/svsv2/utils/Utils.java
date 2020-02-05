@@ -5,7 +5,10 @@ import android.preference.PreferenceManager;
 
 import org.json.JSONArray;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -23,6 +26,24 @@ public class Utils {
 
     public static String getCurrentTime(String dateFormat) {
         return getCurrentTime(dateFormat, null);
+    }
+
+    public static String addDateDay(String sourceDate, int addCount, String dateFormat) {
+        Calendar cal = Calendar.getInstance();
+        DateFormat df = new SimpleDateFormat(dateFormat);
+        Date date = null;
+        try {
+            date = df.parse(sourceDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        cal.setTime(date);
+        System.out.println("current: " + df.format(cal.getTime()));
+
+        cal.add(Calendar.DATE, addCount);
+
+        return df.format(cal.getTime());
     }
 
     public static String getCurrentTime(String dateFormat, Locale locale) {

@@ -17,6 +17,7 @@
     <color name="myblue">#8da6d3</color>
     <color name="myBlueLight">#12BBF0</color>
     <color name="mygray">#959ba7</color>
+    <color name="myGrayDark">#808080</color>
     <color name="myred">#f20a0a</color>
     <color name="myyellow">#ffe53d</color>
     <color name="mygreen">#61ff3d</color>

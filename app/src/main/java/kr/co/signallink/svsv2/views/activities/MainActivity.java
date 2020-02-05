@@ -28,6 +28,7 @@ import java.util.List;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -36,6 +37,7 @@ import kr.co.signallink.svsv2.commons.DefBLEdata;
 import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.databases.DatabaseUtil;
 import kr.co.signallink.svsv2.databases.EquipmentEntity;
+import kr.co.signallink.svsv2.databases.SVSEntity;
 import kr.co.signallink.svsv2.databases.dao.RealmDao;
 import kr.co.signallink.svsv2.databases.web.WCompanyEntity;
 import kr.co.signallink.svsv2.databases.web.WEquipmentEntity;
@@ -639,6 +641,19 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                             goIntent(DetailUpdateActivity.class, false, map);
                         }
                         else if( viewIdx == 3 ) {   // added by hslee
+
+                            svs.setLinkedEquipmentUuid(uuid);
+                            svs.setSelectedEquipmentUuid(uuid);
+
+                            equipmentAdapter.setSelectedEquipmentUuid(uuid);
+
+                            RealmList<SVSEntity> svsEntityRealmList = ((EquipmentEntity)svs.getSelectedEquipmentData()).getSvsEntities();
+                            if( svsEntityRealmList == null || svsEntityRealmList.size() != 3 ) {
+                                ToastUtil.showShort("3 sensor required.");
+                                return;
+                            }
+                            goIntent(SVSLocationAutoModeActivity.class);
+
                             goIntent(PresetActivity.class, false);
                         }
                     }

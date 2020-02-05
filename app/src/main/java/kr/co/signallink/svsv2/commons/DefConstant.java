@@ -32,6 +32,7 @@ public class DefConstant {
 
     public static final int REQUEST_SELECT_DEVICE = 1;
     public static final int REQUEST_ENABLE_BT = 2;
+    public static final int REQUEST_SENSING_RESULT = 3;
 
     public static final int UART_PROFILE_CONNECTED = 30;
     public static final int UART_PROFILE_DISCONNECTED = 21;

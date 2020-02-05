@@ -21,12 +21,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.DatabaseUtil;
+import kr.co.signallink.svsv2.databases.EquipmentEntity;
 import kr.co.signallink.svsv2.databases.PresetEntity;
+import kr.co.signallink.svsv2.databases.SVSEntity;
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.dto.MeasureData;
 import kr.co.signallink.svsv2.dto.SVSCode;
@@ -80,6 +83,8 @@ public class PresetActivity extends BaseActivity {
     Spinner spinnerBearingType;
 
     MainData mainData;
+    private SVS svs = SVS.getInstance();
+    private OrderedRealmCollection<SVSEntity> svsEntities;
 
     SendMessageHandler handler;
 
@@ -136,11 +141,6 @@ public class PresetActivity extends BaseActivity {
                 }
             }
         });
-
-
-        SVS svs = SVS.getInstance();
-        ArrayList<MeasureData> measureDatas = svs.getMeasureDatas();
-        SVSParam svsParam = SVS.getInstance().getUploaddata().getSvsParam();
 
         spinnerPreset = findViewById(R.id.spinnerPreset);
         spinnerEquipmentCode = findViewById(R.id.spinnerEquipmentCode);

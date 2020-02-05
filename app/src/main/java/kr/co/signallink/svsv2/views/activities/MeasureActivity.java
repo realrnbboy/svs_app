@@ -1,5 +1,6 @@
 package kr.co.signallink.svsv2.views.activities;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -36,21 +37,26 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.DatabaseUtil;
+import kr.co.signallink.svsv2.databases.EquipmentEntity;
 import kr.co.signallink.svsv2.databases.PresetEntity;
+import kr.co.signallink.svsv2.databases.SVSEntity;
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.dto.MeasureData;
 import kr.co.signallink.svsv2.dto.ResultDiagnosisData;
 import kr.co.signallink.svsv2.dto.SVSCode;
 import kr.co.signallink.svsv2.dto.SVSParam;
+import kr.co.signallink.svsv2.dto.SVSTime;
 import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.MainData;
 import kr.co.signallink.svsv2.services.DiagnosisInfo;
+import kr.co.signallink.svsv2.user.ConnectSVSItem;
 import kr.co.signallink.svsv2.user.SVS;
 import kr.co.signallink.svsv2.utils.DateUtil;
 import kr.co.signallink.svsv2.utils.DialogUtil;
@@ -65,11 +71,14 @@ public class MeasureActivity extends BaseActivity {
 
     AnalysisData analysisData = null;
     MainData mainData = null;   // for test
+    private SVS svs = SVS.getInstance();
+    private OrderedRealmCollection<SVSEntity> svsEntities;
 
     MATRIX_2_Type matrix2;
 
     CombinedChart combinedChartRawData;
-    private SVS svs = SVS.getInstance();
+
+    boolean bMeasure = false;   // 측정했는지 여부
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,16 +120,35 @@ public class MeasureActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                //matrix2 계산
-                makeMatrix2();
+                if( bMeasure ) {
+                    //matrix2 계산
+                    makeMatrix2();
 
-                // 다음 화면으로 이동
-                Intent intent = new Intent(getBaseContext(), ResultActivity.class);
-                intent.putExtra("matrix2", matrix2);
-                intent.putExtra("analysisData", analysisData);
-                startActivity(intent);
+                    // 다음 화면으로 이동
+                    Intent intent = new Intent(getBaseContext(), ResultActivity.class);
+                    intent.putExtra("matrix2", matrix2);
+                    intent.putExtra("analysisData", analysisData);
+                    startActivity(intent);
+                }
+                else {  // 측정을 하지 않은 경우
+                    ToastUtil.showShort("Please measure first");
+                }
             }
         });
+
+        Button buttonMeasure = findViewById(R.id.buttonMeasure);
+        buttonMeasure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // 다음 화면으로 이동
+                Intent intent = new Intent(getBaseContext(), MeasureExeActivity.class);
+
+                intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+                startActivityForResult(intent, DefConstant.REQUEST_SENSING_RESULT);
+            }
+        });
+
     }
 
     private void initChart() {
@@ -335,6 +363,23 @@ public class MeasureActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == DefConstant.REQUEST_SENSING_RESULT) { // 센싱을 정상적으로 실행한 경우
+                bMeasure = true;
+            }
+        }
+        else {
+            if (requestCode == DefConstant.REQUEST_SENSING_RESULT) { // 센싱을 정상적으로 실행하지 않은 경우
+                bMeasure = false;
+            }
+        }
     }
 
 }

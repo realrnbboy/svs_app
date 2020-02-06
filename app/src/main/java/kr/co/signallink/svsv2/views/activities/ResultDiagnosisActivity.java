@@ -12,8 +12,11 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 
+import io.realm.Realm;
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefLog;
+import kr.co.signallink.svsv2.databases.AnalysisEntity;
+import kr.co.signallink.svsv2.databases.DatabaseUtil;
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.CauseModel;
@@ -25,6 +28,7 @@ import kr.co.signallink.svsv2.views.adapters.ResultDiagnosisListAdapter;
 public class ResultDiagnosisActivity extends BaseActivity {
 
     private static final String TAG = "ResultDiagnosisActivity";
+    String equipmentUuid = null;
 
     AnalysisData analysisData = null;
 
@@ -70,10 +74,12 @@ public class ResultDiagnosisActivity extends BaseActivity {
             return;
         }
 
+        equipmentUuid = intent.getStringExtra("equipmentUuid");
+
         // 진단결과 값 추가
         addResultDiagnosisItem();
 
-        listViewResultDiagnosis = findViewById(R.id.listViewResultDiagnosis);
+        listViewResultDiagnosis = findViewById(R.id.listViewCause);
 
         resultDiagnosisListAdapter = new ResultDiagnosisListAdapter(this, R.layout.list_item_result_diagnosis, resultDiagnosisList, getResources());
         listViewResultDiagnosis.setAdapter(resultDiagnosisListAdapter);
@@ -86,11 +92,40 @@ public class ResultDiagnosisActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
+                // db에 진단 결과 데이터 저장
+                save();
+
+
                 // 다음 화면으로 이동
                 Intent intent = new Intent(getBaseContext(), RecordManagerActivity.class);
                 intent.putExtra("matrix2", matrix2);
                 intent.putExtra("analysisData", analysisData);
+                intent.putExtra("equipmentUuid", equipmentUuid);
                 startActivity(intent);
+            }
+        });
+    }
+
+    // db에 진단 결과 데이터 저장
+    void save() {
+        DatabaseUtil.transaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                int id = 0;
+                Number currentNo = realm.where(AnalysisEntity.class).max("id");
+
+                if (currentNo == null) {    // index 값 증가
+                    id = 1;
+                } else {
+                    id = currentNo.intValue() + 1;
+                }
+
+                AnalysisEntity analysisEntity = new AnalysisEntity();
+                analysisEntity.setId(id);
+                //analysisEntity.set
+
+                realm.copyToRealmOrUpdate(analysisEntity);
             }
         });
     }

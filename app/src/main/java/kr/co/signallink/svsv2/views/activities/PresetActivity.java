@@ -74,10 +74,7 @@ public class PresetActivity extends BaseActivity {
     Spinner spinnerEquipmentType;
     Spinner spinnerBearingType;
 
-    MainData mainData;
-    private SVS svs = SVS.getInstance();
-    private OrderedRealmCollection<SVSEntity> svsEntities;
-
+    String equipmentUuid = null;
     SendMessageHandler handler;
 
     private String [][] preset;
@@ -90,6 +87,8 @@ public class PresetActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preset);
+
+        equipmentUuid = getIntent().getStringExtra("equipmentUuid");
 
         handler = new SendMessageHandler(this);
 
@@ -129,6 +128,7 @@ public class PresetActivity extends BaseActivity {
                     // 다음 화면으로 이동
                     Intent intent = new Intent(getBaseContext(), MeasureActivity.class);
                     intent.putExtra("analysisData", analysisData);
+                    intent.putExtra("equipmentUuid", equipmentUuid);
                     startActivity(intent);
                 }
             }

@@ -48,7 +48,7 @@
                 <LinearLayout style="@style/item_sub_layout">
 
                     <ListView
-                        android:id="@+id/listViewResultDiagnosis"
+                        android:id="@+id/listViewCause"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:choiceMode="none"

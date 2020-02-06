@@ -59,8 +59,6 @@ public class MeasureActivity extends BaseActivity {
 
     AnalysisData analysisData = null;
     MainData mainData = null;
-    private SVS svs = SVS.getInstance();
-    private OrderedRealmCollection<SVSEntity> svsEntities;
 
     MATRIX_2_Type matrix2;
 
@@ -71,6 +69,8 @@ public class MeasureActivity extends BaseActivity {
     MeasureData measureDataSensor1 = null;
     MeasureData measureDataSensor2 = null;
     MeasureData measureDataSensor3 = null;
+
+    String equipmentUuid = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,6 +104,8 @@ public class MeasureActivity extends BaseActivity {
             return;
         }
 
+        equipmentUuid = intent.getStringExtra("equipmentUuid");
+
         Button buttonAnalysis = findViewById(R.id.buttonAnalysis);
         buttonAnalysis.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +119,7 @@ public class MeasureActivity extends BaseActivity {
                     Intent intent = new Intent(getBaseContext(), ResultActivity.class);
                     intent.putExtra("matrix2", matrix2);
                     intent.putExtra("analysisData", analysisData);
+                    intent.putExtra("equipmentUuid", equipmentUuid);
                     startActivity(intent);
                 }
                 else {  // 측정을 하지 않은 경우
@@ -284,7 +287,8 @@ public class MeasureActivity extends BaseActivity {
         combinedData.setData(lineData);
 
         XAxis xAxis = combinedChartRawData.getXAxis();
-        xAxis.setAxisMaximum(valueList1.size() - 1);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+        int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
+        xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
 
         combinedChartRawData.setData(combinedData);
         combinedChartRawData.invalidate();

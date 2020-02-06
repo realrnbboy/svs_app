@@ -67,7 +67,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center"
                     android:layout_marginTop="@dimen/margin_default"
                     style="@style/row_side_padding_dp_15">
 
@@ -93,15 +92,17 @@
                         android:textColor="@color/myblue"
                         android:textSize="@dimen/font_midium"
                         android:text="endd" />
+                </LinearLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        style="@style/row_side_padding_dp_15">
                         <Button
                             android:id="@+id/buttonToday"
                             android:layout_width="70dp"
-                            android:layout_height="32dp"
+                            android:layout_height="24dp"
                             android:textColor="@android:color/white"
                             android:background="@drawable/btn_primary"
                             android:layout_toLeftOf="@+id/buttonWeek"
@@ -110,14 +111,13 @@
                         <Button
                             android:id="@+id/buttonWeek"
                             android:layout_width="70dp"
-                            android:layout_height="32dp"
+                            android:layout_height="24dp"
                             android:layout_marginLeft="8dp"
                             android:textColor="@android:color/white"
                             android:background="@drawable/btn_primary"
                             android:layout_alignParentRight="true"
                             android:text="week"/>
                     </RelativeLayout>
-                </LinearLayout>
 
             </LinearLayout>
 
@@ -153,12 +153,12 @@
                         style="@style/item_sub_layout">
 
                         <ListView
-                            android:id="@+id/listViewRms"
+                            android:id="@+id/listViewCause"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:dividerHeight="0dp"
+                            android:choiceMode="none"
                             android:divider="@null"
-                            android:choiceMode="none"/>
+                            android:dividerHeight="5dp" />
 
                     </LinearLayout>
 

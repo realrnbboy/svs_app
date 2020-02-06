@@ -145,7 +145,9 @@
     <string-array name="custom_list_dialog_equipment">
         <item>Sensors</item>
         <item>Detail \u0026 Update</item>
-        <item>Diagnostic analysis </item>
+        <item>Diagnostic analysis</item>
+        <item>Analysis History</item>
+        <item>TEST DATA</item>
     </string-array>
 
     <string-array name="custom_list_dialog_svslocation">

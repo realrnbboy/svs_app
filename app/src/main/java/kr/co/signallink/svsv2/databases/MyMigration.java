@@ -2,14 +2,20 @@ package kr.co.signallink.svsv2.databases;
 
 import android.util.Log;
 
+import java.util.Date;
+
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
 import io.realm.FieldAttribute;
+import io.realm.RealmList;
 import io.realm.RealmMigration;
 import io.realm.RealmResults;
 import io.realm.RealmSchema;
 import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.databases.web.WebLoginEntity;
+import kr.co.signallink.svsv2.dto.AnalysisData;
+import kr.co.signallink.svsv2.dto.MeasureData;
+import kr.co.signallink.svsv2.dto.ResultDiagnosisData;
 import kr.co.signallink.svsv2.utils.AESUtil;
 
 public class MyMigration implements RealmMigration {
@@ -171,25 +177,17 @@ public class MyMigration implements RealmMigration {
             //버전 14으로 마이그레이션 : AnalysisEntity 추가
             if( step == 13 ) {
                 schema.create("AnalysisEntity")
-                        .addField("no", int.class)
-                        .addPrimaryKey("no")
-                        .addField("name", String.class)
-                        .addField("code", int.class)
-                        .addField("projectVibSpec", int.class)
-                        .addField("siteCode", String.class)
-                        .addField("equipmentName", String.class)
-                        .addField("tagNo", String.class)
-                        .addField("inputPower", int.class)
-                        .addField("lineFreq", int.class)
-                        .addField("equipmentType", int.class)
-                        .addField("rpm", int.class)
-                        .addField("bladeCount", int.class)
-                        .addField("bearingType", int.class)
-                        .addField("ballCount", int.class)
-                        .addField("pitchDiameter", int.class)
-                        .addField("ballDiameter", int.class)
-                        .addField("rps", int.class)
-                        .addField("contactAngle", int.class);
+                        .addField("id", int.class)
+                        .addPrimaryKey("id")
+                        .addField("equipmentUuid", String.class)
+                        .addField("created", long.class)
+                        .addField("rms1", float.class)
+                        .addField("rms2", float.class)
+                        .addField("rms3", float.class)
+                        .addRealmListField("cause", String.class)
+                        .addRealmListField("causeDesc", String.class)
+                        .addRealmListField("rank", Double.class)
+                        .addRealmListField("ratio", Double.class);
             }
 
         }

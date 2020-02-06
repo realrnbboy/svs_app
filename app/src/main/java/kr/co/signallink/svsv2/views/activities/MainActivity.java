@@ -23,6 +23,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,6 +38,7 @@ import io.realm.Sort;
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefBLEdata;
 import kr.co.signallink.svsv2.commons.DefConstant;
+import kr.co.signallink.svsv2.databases.AnalysisEntity;
 import kr.co.signallink.svsv2.databases.DatabaseUtil;
 import kr.co.signallink.svsv2.databases.EquipmentEntity;
 import kr.co.signallink.svsv2.databases.SVSEntity;
@@ -55,6 +59,7 @@ import kr.co.signallink.svsv2.utils.ItemClickUtil;
 import kr.co.signallink.svsv2.utils.SharedUtil;
 import kr.co.signallink.svsv2.utils.StringUtil;
 import kr.co.signallink.svsv2.utils.ToastUtil;
+import kr.co.signallink.svsv2.utils.Utils;
 import kr.co.signallink.svsv2.views.adapters.EquipmentAdapter;
 import kr.co.signallink.svsv2.user.SVS;
 import kr.co.signallink.svsv2.utils.DialogUtil;
@@ -653,7 +658,21 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                                 return;
                             }
 
-                            goIntent(PresetActivity.class, false);
+                            Intent intent = new Intent(getBaseContext(), PresetActivity.class);
+                            intent.putExtra("equipmentUuid", uuid);
+                            startActivity(intent);
+                        }
+                        else if( viewIdx == 4 ) {// added by hslee for test
+
+                            // 다음 화면으로 이동
+                            Intent intent = new Intent(getBaseContext(), RecordManagerActivity.class);
+                            intent.putExtra("equipmentUuid", uuid);
+                            startActivity(intent);
+                        }
+                        else if( viewIdx == 5 ) {// added by hslee for test
+
+                            // 테스트 데이터 추가
+                            save(uuid);
                         }
                     }
 
@@ -728,6 +747,75 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         }
     };
 
+    // db에 진단 결과 데이터 저장
+    void save(final String uuid) {   // FOR TEST
+        DatabaseUtil.transaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                int id = 0;
+                Number currentNo = realm.where(AnalysisEntity.class).max("id");
+
+                if (currentNo == null) {    // index 값 증가
+                    id = 1;
+                } else {
+                    id = currentNo.intValue() + 1;
+                }
+
+                AnalysisEntity analysisEntity = new AnalysisEntity();
+                analysisEntity.setId(id);
+                analysisEntity.setEquipmentUuid(uuid);
+
+                //String tCreated = Utils.getCurrentTime("yyyy-MM-dd HH:mm:ss");
+                String tCreated = "2020-02-03 16:11:05";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date created = null;
+                try {
+                    created = simpleDateFormat.parse(tCreated);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                long createdLong = created.getTime();
+
+                analysisEntity.setCreated(2);
+
+                analysisEntity.setRms1(20.1f);
+                analysisEntity.setRms2(21.1f);
+                analysisEntity.setRms3(22.1f);
+
+                RealmList<String> cause = new RealmList<>();
+                cause.add("test1");
+                cause.add("test2");
+                cause.add("test3");
+                cause.add("test4");
+                analysisEntity.setCause(cause);
+
+                RealmList<String> causeDesc = new RealmList<>();
+                causeDesc.add("causeDesctest1");
+                causeDesc.add("causeDesctest2");
+                causeDesc.add("causeDesctest3");
+                causeDesc.add("causeDesctest4");
+                analysisEntity.setCauseDesc(causeDesc);
+
+                RealmList<Double> rank = new RealmList<>();
+                rank.add(1.0);
+                rank.add(4.0);
+                rank.add(3.0);
+                rank.add(2.0);
+                analysisEntity.setRank(rank);
+
+                RealmList<Double> ratio = new RealmList<>();
+                ratio.add(80.1);
+                ratio.add(4.0);
+                ratio.add(23.2);
+                ratio.add(52.3);
+                analysisEntity.setRatio(ratio);
+
+                realm.copyToRealmOrUpdate(analysisEntity);
+            }
+        });
+    }
 
     @Override
     public void onRefresh() {

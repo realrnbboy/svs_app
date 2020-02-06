@@ -54,6 +54,8 @@ public class ResultActivity extends BaseActivity {
 
     CombinedChart combinedChartRawData;
 
+    String equipmentUuid = null;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +99,8 @@ public class ResultActivity extends BaseActivity {
             ToastUtil.showShort("matrix2 data is null");
             return;
         }
+
+        equipmentUuid = intent.getStringExtra("equipmentUuid");
 
         TextView textViewCode = findViewById(R.id.textViewCode);
         String code;
@@ -148,6 +152,7 @@ public class ResultActivity extends BaseActivity {
                 Intent intent = new Intent(getBaseContext(), ResultDiagnosisActivity.class);
                 intent.putExtra("analysisData", analysisData);
                 intent.putExtra("matrix2", matrix2);
+                intent.putExtra("equipmentUuid", equipmentUuid);
                 startActivity(intent);
             }
         });
@@ -341,7 +346,8 @@ public class ResultActivity extends BaseActivity {
         combinedData.setData(lineData);
 
         XAxis xAxis = combinedChartRawData.getXAxis();
-        xAxis.setAxisMaximum(valueList1.size() - 1);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+        int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
+        xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
 
         combinedChartRawData.setData(combinedData);
         combinedChartRawData.invalidate();

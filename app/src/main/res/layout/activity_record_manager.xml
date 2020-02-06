@@ -26,10 +26,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <com.github.mikephil.charting.charts.CombinedChart
-                android:id="@+id/combinedChartRawData"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/chart_height"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/margin_default"
+                style="@style/row_side_padding_dp_15">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/myblue"
+                    android:textSize="@dimen/font_midium"
+                    android:text="Overall trend" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_default"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    style="@style/item_sub_layout"
+                    android:layout_marginTop="@dimen/margin_default">
+
+                    <com.github.mikephil.charting.charts.CombinedChart
+                        android:id="@+id/combinedChartRawData"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/chart_height"/>
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -95,39 +122,47 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearLayoutDefectCause"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="1"
-                android:layout_marginTop="@dimen/margin_default"
-                style="@style/row_side_padding_dp_15">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/myblue"
-                    android:textSize="@dimen/font_midium"
-                    android:text="Defeact cause" />
-            </LinearLayout>
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:layout_marginTop="@dimen/preset_item_other_contents"
+                    style="@style/row_side_padding_dp_15">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_height_rms"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_default">
-
-                <LinearLayout style="@style/item_sub_layout">
-
-                    <ListView
-                        android:id="@+id/listViewRms"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:choiceMode="none"
-                        android:divider="@null"
-                        android:dividerHeight="5dp" />
-
+                        android:textColor="@color/myblue"
+                        android:textSize="@dimen/font_midium"
+                        android:text="Defect cause" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/list_height_rms"
+                    android:padding="@dimen/padding_default"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        style="@style/item_sub_layout">
+
+                        <ListView
+                            android:id="@+id/listViewRms"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:dividerHeight="0dp"
+                            android:divider="@null"
+                            android:choiceMode="none"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout

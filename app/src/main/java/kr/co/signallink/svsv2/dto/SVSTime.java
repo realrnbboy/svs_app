@@ -1,10 +1,12 @@
 package kr.co.signallink.svsv2.dto;
 
+import java.io.Serializable;
+
 /**
  * Created by nspil on 2018-02-09.
  */
 
-public class SVSTime {
+public class SVSTime implements Serializable {
     private float dPeak;
     private float	dRms;
     private float	dCrf;

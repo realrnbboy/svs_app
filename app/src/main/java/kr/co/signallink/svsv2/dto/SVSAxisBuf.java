@@ -1,9 +1,11 @@
 package kr.co.signallink.svsv2.dto;
 
+import java.io.Serializable;
+
 import static kr.co.signallink.svsv2.commons.DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX;
 import static kr.co.signallink.svsv2.commons.DefCMDOffset.MEASURE_AXIS_TIME_ELE_MAX;
 
-public class SVSAxisBuf {
+public class SVSAxisBuf implements Serializable {
 
     private float [] fTime = new float[MEASURE_AXIS_TIME_ELE_MAX];
     private float [] fFreq = new float[MEASURE_AXIS_FREQ_ELE_MAX];

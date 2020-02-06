@@ -11,12 +11,16 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -24,6 +28,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +49,7 @@ import kr.co.signallink.svsv2.services.DiagnosisInfo;
 import kr.co.signallink.svsv2.user.SVS;
 import kr.co.signallink.svsv2.utils.MyValueFormatter;
 import kr.co.signallink.svsv2.utils.ToastUtil;
+import kr.co.signallink.svsv2.utils.Utils;
 
 // added by hslee 2020-01-29
 // 측정 화면
@@ -52,7 +58,7 @@ public class MeasureActivity extends BaseActivity {
     private static final String TAG = "MeasureActivity";
 
     AnalysisData analysisData = null;
-    MainData mainData = null;   // for test
+    MainData mainData = null;
     private SVS svs = SVS.getInstance();
     private OrderedRealmCollection<SVSEntity> svsEntities;
 
@@ -61,6 +67,10 @@ public class MeasureActivity extends BaseActivity {
     CombinedChart combinedChartRawData;
 
     boolean bMeasure = false;   // 측정했는지 여부
+
+    MeasureData measureDataSensor1 = null;
+    MeasureData measureDataSensor2 = null;
+    MeasureData measureDataSensor3 = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,9 +91,6 @@ public class MeasureActivity extends BaseActivity {
 
         initView();
         initChart();
-
-        drawChart();
-
     }
 
     void initView() {
@@ -102,7 +109,7 @@ public class MeasureActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if( !bMeasure ) {   // !!!!! 원래 !없음
+                if( bMeasure ) {
                     //matrix2 계산
                     makeMatrix2();
 
@@ -136,13 +143,14 @@ public class MeasureActivity extends BaseActivity {
     private void initChart() {
         combinedChartRawData = findViewById(R.id.combinedChartRawData);
         combinedChartRawData.getDescription().setEnabled(false);
-        combinedChartRawData.setBackgroundColor(getResources().getColor(R.color.colorContent));
+        combinedChartRawData.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorContent));
         combinedChartRawData.setOnChartGestureListener(OCGL);
         combinedChartRawData.setMaxVisibleValueCount(20);
-        combinedChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
+        //combinedChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
+        combinedChartRawData.setNoDataText("no data. please measure");
 
         Legend l = combinedChartRawData.getLegend();
-        l.setTextColor(Color.WHITE);
+        l.setTextColor(Color.WHITE);    // 범례 글자 색
         l.setWordWrapEnabled(false);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
@@ -150,9 +158,10 @@ public class MeasureActivity extends BaseActivity {
         l.setDrawInside(false);
 
         YAxis rightAxis = combinedChartRawData.getAxisRight();
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setAxisMinimum(10);
-        rightAxis.setTextColor(Color.WHITE);
+        rightAxis.setEnabled(false);
+//        rightAxis.setDrawGridLines(false);
+//        rightAxis.setAxisMinimum(10);
+//        rightAxis.setTextColor(Color.RED);
 
         YAxis leftAxis = combinedChartRawData.getAxisLeft();
         leftAxis.setDrawGridLines(false);
@@ -162,26 +171,26 @@ public class MeasureActivity extends BaseActivity {
         XAxis xAxis = combinedChartRawData.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
         xAxis.setDrawGridLines(false);
-        xAxis.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-
-                int index = (int)value;
-
-                String str = "test";
-                try {
-                    //Date date = svs.getMeasureDatas().get(index).getCaptureTime();
-                    //str = DateUtil.convertDefaultDetailDate(date);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return str;
-            }
-        });
+//        xAxis.setValueFormatter(new IAxisValueFormatter() {
+//            @Override
+//            public String getFormattedValue(float value, AxisBase axis) {
+//
+//                int index = (int)value;
+//
+//                String str = "test";
+//                try {
+//                    //Date date = svs.getMeasureDatas().get(index).getCaptureTime();
+//                    //str = DateUtil.convertDefaultDetailDate(date);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                return str;
+//            }
+//        });
 
         xAxis.setAxisMinimum(0);
         //xAxis.setAxisMaximum(svs.getMeasureDatas().size()-1);
-        xAxis.setAxisMaximum(210);
+        //xAxis.setAxisMaximum(80);
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
     }
@@ -229,56 +238,73 @@ public class MeasureActivity extends BaseActivity {
     };
 
 
-
-    private void drawChart() {
+    private void drawChart(float[] data1, float[] data2, float[] data3) throws Exception{
 
         LineData lineData = new LineData();
 
-        ArrayList<Float> valueList = new ArrayList<>();
-        ArrayList<MeasureData> measuredatas = svs.getRecordMeasureDatas();
+        ArrayList<Float> valueList1 = new ArrayList<>();
+        ArrayList<Float> valueList2 = new ArrayList<>();
+        ArrayList<Float> valueList3 = new ArrayList<>();
 
         try {
-//            for(int i=0; i<measuredatas.size(); i++){
-//                valueList.add(measuredatas.get(i).getSvsTime().getdRms());
-//            }
 
-            valueList.add((float) 3.1);
-            valueList.add((float) 14.1);
-            valueList.add((float) 25.1);
-            lineData.addDataSet(generateLineData(valueList, Color.GREEN));
-            //lineData.addDataSet(generateLineData(true, svsCode.getTimeWrn().getdRms()));
-            //lineData.addDataSet(generateLineData(false, svsCode.getTimeDan().getdRms()));
+            if( data1 != null ) {
+                for (float v : data1) {
+                    valueList1.add(v);
+                }
+            }
+
+            lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
+
+            if( data2 != null ) {
+                for (float v : data2) {
+                    valueList2.add(v);
+                }
+            }
+
+            lineData.addDataSet(generateLineData("pt2", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
+
+            if( data3 != null ) {
+                for (float v : data3) {
+                    valueList3.add(v);
+                }
+            }
+
+            lineData.addDataSet(generateLineData("pt3", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
         } catch (Exception ex) {
             return;
         }
 
-        valueList.clear();
+       // valueList.clear();
 
         CombinedData combinedData = new CombinedData();
+
         lineData.setDrawValues(true);
+
         combinedData.setData(lineData);
+
+        XAxis xAxis = combinedChartRawData.getXAxis();
+        xAxis.setAxisMaximum(valueList1.size() - 1);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
 
         combinedChartRawData.setData(combinedData);
         combinedChartRawData.invalidate();
     }
 
-    private LineDataSet generateLineData(ArrayList<Float> valueList, int lineColor){
+    private LineDataSet generateLineData(String label, ArrayList<Float> valueList, int lineColor){
         ArrayList<Entry> entries = new ArrayList<>();
 
         for(int i=0; i<valueList.size(); i++){
             entries.add(new Entry(i, valueList.get(i)));
         }
 
-        LineDataSet lineDataSet = new LineDataSet(entries, "what???");
+        LineDataSet lineDataSet = new LineDataSet(entries, label);
+
         lineDataSet.setDrawCircleHole(false);
         lineDataSet.setDrawCircles(false);
-        lineDataSet.setColor(lineColor);
-        lineDataSet.setDrawFilled(true);
         lineDataSet.setValueTextColor(Color.WHITE);
-        lineDataSet.setDrawValues(true);
-        lineDataSet.setValueTextSize(10f);
-        lineDataSet.setValueFormatter(new MyValueFormatter());
-        lineDataSet.setFillDrawable(getResources().getDrawable(R.drawable.trend_gradient));
+        lineDataSet.setHighlightEnabled(false);
+
+        lineDataSet.setColor(lineColor);
 
         return lineDataSet;
     }
@@ -354,7 +380,31 @@ public class MeasureActivity extends BaseActivity {
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == DefConstant.REQUEST_SENSING_RESULT) { // 센싱을 정상적으로 실행한 경우
+
+                measureDataSensor1 = (MeasureData) data.getSerializableExtra("measureDataSensor1");
+                measureDataSensor2 = (MeasureData) data.getSerializableExtra("measureDataSensor2");
+                measureDataSensor3 = (MeasureData) data.getSerializableExtra("measureDataSensor3");
+
+                if( measureDataSensor1 == null || measureDataSensor2 == null || measureDataSensor3 == null ) {
+                    ToastUtil.showShort("failed to measure data trans");
+                    return;
+                }
+
+                analysisData.setMeasureData1(measureDataSensor1);
+                analysisData.setMeasureData2(measureDataSensor2);
+                analysisData.setMeasureData3(measureDataSensor3);
+
                 bMeasure = true;
+
+                float [] data1 = measureDataSensor1.getAxisBuf().getfTime();
+                float [] data2 = measureDataSensor2.getAxisBuf().getfTime();
+                float [] data3 = measureDataSensor3.getAxisBuf().getfTime();
+
+                try {
+                    drawChart(data1, data2, data3);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         else {

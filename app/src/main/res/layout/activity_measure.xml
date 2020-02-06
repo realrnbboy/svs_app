@@ -24,11 +24,35 @@
             android:layout_height="wrap_content"
             android:src="@drawable/equipment"/>
 
-        <com.github.mikephil.charting.charts.CombinedChart
-            android:id="@+id/combinedChartRawData"
-            android:layout_weight="1"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/preset_item_other_contents"
+            android:orientation="horizontal"
+            style="@style/row_side_padding_dp_15">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/myblue"
+                android:textSize="@dimen/font_midium"
+                android:text="FFT result" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/item_sub_layout"
+            android:layout_weight="1"
+            android:padding="@dimen/padding_default"
+            android:layout_marginTop="@dimen/margin_default">
+
+            <com.github.mikephil.charting.charts.CombinedChart
+                android:id="@+id/combinedChartRawData"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/padding_default"/>
+
+        </LinearLayout>
 
 
         <LinearLayout

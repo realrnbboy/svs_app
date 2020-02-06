@@ -1,10 +1,12 @@
 package kr.co.signallink.svsv2.dto;
 
+import java.io.Serializable;
+
 /**
  * Created by nspil on 2018-02-09.
  */
 
-public class SVSFreq {
+public class SVSFreq implements Serializable {
 
     private float   dPeak;
     private float	dBnd;

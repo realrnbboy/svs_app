@@ -54,22 +54,24 @@ public class RmsListAdapter extends ArrayAdapter<RmsModel> {
         String rmsString;
         String statusString;
 
+        float rms = Float.parseFloat(String.format("%.04f", rmsModel.getRms())); // 소수점 자르기
+
         if( rmsModel.getRms() >= rmsModel.getDanger() ) {
             rmsColor = ContextCompat.getColor(context, R.color.myred);
             statusColor = ContextCompat.getColor(context, R.color.myred);
-            rmsString = rmsModel.getRms() + "mm/s" + " (" + rmsModel.getDanger() + ")";
+            rmsString = rms + "mm/s" + " (" + rmsModel.getDanger() + ")";
             statusString = "PROBLEM";
         }
         else if( rmsModel.getRms() >= rmsModel.getWarning() ) {
             rmsColor = ContextCompat.getColor(context, R.color.myblue);
             statusColor = ContextCompat.getColor(context, R.color.myorange);
-            rmsString = rmsModel.getRms() + "mm/s" + " (" + rmsModel.getWarning() + ")";
+            rmsString = rms + "mm/s" + " (" + rmsModel.getWarning() + ")";
             statusString = "CONCERN";
         }
         else {
             rmsColor = ContextCompat.getColor(context, R.color.myblue);
             statusColor = ContextCompat.getColor(context, R.color.mygreen);
-            rmsString = rmsModel.getRms() + "mm/s";
+            rmsString = rms + "mm/s";
             statusString = "GOOD";
         }
 

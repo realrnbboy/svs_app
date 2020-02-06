@@ -1,5 +1,6 @@
 package kr.co.signallink.svsv2.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import kr.co.signallink.svsv2.commons.DefCMDOffset;
@@ -8,7 +9,7 @@ import kr.co.signallink.svsv2.commons.DefCMDOffset;
  * Created by nspil on 2018-02-09.
  */
 
-public class MeasureData {
+public class MeasureData implements Serializable {
 
     private byte[] rawData;
 
@@ -22,6 +23,9 @@ public class MeasureData {
     private long	lTempCur;
     private SVSTime timeCur = new SVSTime();
     private SVSFreq[] freqCur = new SVSFreq[DefCMDOffset.BAND_MAX];
+
+    private float rmsWarning;   // added by hslee
+    private float rmsDanger;   // added by hslee
 
     //SVS_Data_Type
     private SVSAxisBuf axisBuf = new SVSAxisBuf();
@@ -104,5 +108,21 @@ public class MeasureData {
 
     public SVSAxisBuf getAxisBuf() {
         return axisBuf;
+    }
+
+    public float getRmsWarning() {
+        return rmsWarning;
+    }
+
+    public void setRmsWarning(float rmsWarning) {
+        this.rmsWarning = rmsWarning;
+    }
+
+    public float getRmsDanger() {
+        return rmsDanger;
+    }
+
+    public void setRmsDanger(float rmsDanger) {
+        this.rmsDanger = rmsDanger;
     }
 }

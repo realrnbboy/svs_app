@@ -41,6 +41,9 @@ import kr.co.signallink.svsv2.databases.HistoryData;
 import kr.co.signallink.svsv2.databases.SVSEntity;
 import kr.co.signallink.svsv2.databases.dao.RealmDao;
 import kr.co.signallink.svsv2.dto.MeasureData;
+import kr.co.signallink.svsv2.dto.SVSCode;
+import kr.co.signallink.svsv2.dto.SVSParam;
+import kr.co.signallink.svsv2.dto.SVSTime;
 import kr.co.signallink.svsv2.dto.UploadData;
 import kr.co.signallink.svsv2.services.UartService;
 import kr.co.signallink.svsv2.user.ConnectSVSItem;
@@ -71,6 +74,10 @@ public class MeasureExeActivity extends Activity {
 
     private boolean auto_working = true;
     private int bypassSaveCnt = 0; //기존에 연결되어있던 기기를 끊으면서 저장하지 않는걸 기억하기 위해 존재하는 변수.
+
+    MeasureData measureDataSensor1 = null;
+    MeasureData measureDataSensor2 = null;
+    MeasureData measureDataSensor3 = null;
 
     private final BroadcastReceiver StatusChangeReceiverOnMain = new BroadcastReceiver() {
 
@@ -399,6 +406,27 @@ public class MeasureExeActivity extends Activity {
             {
                 MeasureData measureData = measureDatas.get(0);
 
+
+
+                SVSParam svsParam = SVS.getInstance().getUploaddata().getSvsParam();    // added by hslee
+                SVSCode svsCode = svsParam.getCode();
+                SVSTime svsTimeWarning = svsCode.getTimeWrn();
+                float rmsWarning = svsTimeWarning.getdRms();
+                SVSTime svsTimeDanger = svsCode.getTimeDan();
+                float rmsDanger = svsTimeDanger.getdRms();
+
+                measureData.setRmsWarning(rmsWarning);
+                measureData.setRmsDanger(rmsDanger);
+
+                if( measureDataSensor1 == null )    // added by hslee
+                    measureDataSensor1 = measureData;
+                else if( measureDataSensor2 == null )
+                    measureDataSensor2 = measureData;
+                else
+                    measureDataSensor3 = measureData;
+
+
+
                 Date date = measureData.getCaptureTime();
                 String strDate = DateUtil.getDateStringBySimpleFormat(date);
                 String strTime = DateUtil.getTimeStringBySimpleFormat(date);
@@ -603,6 +631,10 @@ public class MeasureExeActivity extends Activity {
     private void complete() {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
+        returnIntent.putExtra("measureDataSensor1", measureDataSensor1);
+        returnIntent.putExtra("measureDataSensor2", measureDataSensor2);
+        returnIntent.putExtra("measureDataSensor3", measureDataSensor3);
+
         finish();
     }
 }

@@ -5,6 +5,8 @@ import android.preference.PreferenceManager;
 
 import org.json.JSONArray;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -114,5 +116,22 @@ public class Utils {
         }
 
         return null;
+    }
+
+    public static float[] byteToFloat(byte[] bytes) {
+        if( bytes == null )    // 4byte씩 잘라서 사용
+            return null;
+
+        float [] floats = new float[bytes.length];
+
+        int index = 0;
+        for( int i = 0; i<bytes.length; i = i + 4 ) {
+            if( i >= bytes.length || i+1 >= bytes.length || i+2 >= bytes.length || i+3 >= bytes.length)
+                break;
+            byte[] tByte = {bytes[i], bytes[i+1], bytes[i+2], bytes[i+3]};
+            floats[index++] = ByteBuffer.wrap(tByte).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+        }
+
+        return floats;
     }
 }

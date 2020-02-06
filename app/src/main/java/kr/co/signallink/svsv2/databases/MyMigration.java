@@ -168,6 +168,30 @@ public class MyMigration implements RealmMigration {
                         .addField("contactAngle", int.class);
             }
 
+            //버전 14으로 마이그레이션 : AnalysisEntity 추가
+            if( step == 13 ) {
+                schema.create("AnalysisEntity")
+                        .addField("no", int.class)
+                        .addPrimaryKey("no")
+                        .addField("name", String.class)
+                        .addField("code", int.class)
+                        .addField("projectVibSpec", int.class)
+                        .addField("siteCode", String.class)
+                        .addField("equipmentName", String.class)
+                        .addField("tagNo", String.class)
+                        .addField("inputPower", int.class)
+                        .addField("lineFreq", int.class)
+                        .addField("equipmentType", int.class)
+                        .addField("rpm", int.class)
+                        .addField("bladeCount", int.class)
+                        .addField("bearingType", int.class)
+                        .addField("ballCount", int.class)
+                        .addField("pitchDiameter", int.class)
+                        .addField("ballDiameter", int.class)
+                        .addField("rps", int.class)
+                        .addField("contactAngle", int.class);
+            }
+
         }
     }
 }

@@ -39,6 +39,10 @@ public class AnalysisData implements Serializable {
 
     public DIAGNOSIS_FEATURES_Type featureInfos;
 
+    public MeasureData measureData1;
+    public MeasureData measureData2;
+    public MeasureData measureData3;
+
     public AnalysisData(){
     }
 
@@ -240,5 +244,29 @@ public class AnalysisData implements Serializable {
 
     public void setResultDiagnosis(ResultDiagnosisData[] resultDiagnosis) {
         this.resultDiagnosis = resultDiagnosis;
+    }
+
+    public MeasureData getMeasureData1() {
+        return measureData1;
+    }
+
+    public void setMeasureData1(MeasureData measureData1) {
+        this.measureData1 = measureData1;
+    }
+
+    public MeasureData getMeasureData2() {
+        return measureData2;
+    }
+
+    public void setMeasureData2(MeasureData measureData2) {
+        this.measureData2 = measureData2;
+    }
+
+    public MeasureData getMeasureData3() {
+        return measureData3;
+    }
+
+    public void setMeasureData3(MeasureData measureData3) {
+        this.measureData3 = measureData3;
     }
 }

@@ -152,22 +152,49 @@
                 android:layout_height="@dimen/list_height_rms"
                 android:padding="@dimen/padding_default"
                 android:orientation="vertical">
+
                 <LinearLayout
                     style="@style/item_sub_layout">
+
                     <ListView
                         android:id="@+id/listViewRms"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:divider="@null"
                         android:dividerHeight="0dp"
+                        android:divider="@null"
                         android:choiceMode="none"/>
+
                 </LinearLayout>
             </LinearLayout>
 
-            <com.github.mikephil.charting.charts.CombinedChart
-                android:id="@+id/combinedChartRawData"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/chart_height"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/preset_item_other_contents"
+                android:orientation="horizontal"
+                style="@style/row_side_padding_dp_15">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/myblue"
+                    android:textSize="@dimen/font_midium"
+                    android:text="FFT result" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_default"
+                android:orientation="vertical">
+                <LinearLayout
+                    style="@style/item_sub_layout">
+                        <com.github.mikephil.charting.charts.CombinedChart
+                            android:id="@+id/combinedChartRawData"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/chart_height"/>
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

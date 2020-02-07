@@ -52,7 +52,7 @@
                     android:layout_marginTop="@dimen/margin_default">
 
                     <com.github.mikephil.charting.charts.CombinedChart
-                        android:id="@+id/combinedChartRawData"
+                        android:id="@+id/combinedChartRms"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/chart_height"/>
                 </LinearLayout>

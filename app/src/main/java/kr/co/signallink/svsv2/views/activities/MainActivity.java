@@ -671,8 +671,13 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                         }
                         else if( viewIdx == 5 ) {// added by hslee for test
 
+
                             // 테스트 데이터 추가
-                            save(uuid);
+                            save(uuid, 10.0f,11.0f,12.0f,"2020-02-01 16:11:05");
+                            save(uuid, 110.0f,111.0f,112.0f,"2020-02-01 16:12:05");
+                            save(uuid, 20.0f,21.0f,22.0f,"2020-02-02 16:11:05");
+                            save(uuid, 70.0f,71.0f,72.0f,"2020-02-03 16:11:05");
+                            save(uuid, 40.0f,41.0f,42.0f,"2020-02-04 16:11:05");
                         }
                     }
 
@@ -748,7 +753,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     };
 
     // db에 진단 결과 데이터 저장
-    void save(final String uuid) {   // FOR TEST
+    void save(final String uuid, final float rms1, final float rms2, final float rms3, final String tCreated) {   // FOR TEST
         DatabaseUtil.transaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -767,7 +772,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 analysisEntity.setEquipmentUuid(uuid);
 
                 //String tCreated = Utils.getCurrentTime("yyyy-MM-dd HH:mm:ss");
-                String tCreated = "2020-02-03 16:11:05";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date created = null;
                 try {
@@ -778,11 +782,11 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
                 long createdLong = created.getTime();
 
-                analysisEntity.setCreated(2);
+                analysisEntity.setCreated(createdLong);
 
-                analysisEntity.setRms1(20.1f);
-                analysisEntity.setRms2(21.1f);
-                analysisEntity.setRms3(22.1f);
+                analysisEntity.setRms1(rms1);
+                analysisEntity.setRms2(rms2);
+                analysisEntity.setRms3(rms3);
 
                 RealmList<String> cause = new RealmList<>();
                 cause.add("test1");

@@ -102,8 +102,8 @@ public class SendPost extends Thread {
                     return;
             }
 
-            //urlStr = DefConstant.WEB_URL + urlStr;
-            urlStr = "http://192.168.1.133" + urlStr;
+            urlStr = DefConstant.WEB_URL + urlStr;
+            //urlStr = "http://192.168.1.133" + urlStr;
 
             URL url = new URL(urlStr);
             HttpURLConnection httpCon = (HttpURLConnection)url.openConnection();

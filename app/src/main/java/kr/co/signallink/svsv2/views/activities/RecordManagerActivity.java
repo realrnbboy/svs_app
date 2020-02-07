@@ -2,6 +2,7 @@ package kr.co.signallink.svsv2.views.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,11 +44,16 @@ import kr.co.signallink.svsv2.model.CauseModel;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.RmsModel;
 import kr.co.signallink.svsv2.user.SVS;
+import kr.co.signallink.svsv2.utils.DateUtil;
 import kr.co.signallink.svsv2.utils.MyValueFormatter;
+import kr.co.signallink.svsv2.utils.SizeUtil;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 import kr.co.signallink.svsv2.utils.Utils;
 import kr.co.signallink.svsv2.views.adapters.ResultDiagnosisListAdapter;
 import kr.co.signallink.svsv2.views.adapters.RmsListAdapter;
+
+import static kr.co.signallink.svsv2.commons.DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX;
+import static kr.co.signallink.svsv2.commons.DefConstant.TrendValue.RAW_TIME;
 
 // added by hslee 2020-01-29
 // 진단분석 결과1 화면
@@ -64,8 +70,10 @@ public class RecordManagerActivity extends BaseActivity {
     ResultDiagnosisListAdapter resultDiagnosisListAdapter;
     ArrayList<CauseModel> resultDiagnosisList = new ArrayList<>();
 
-    CombinedChart combinedChartRawData;
+    CombinedChart combinedChartRms;
     RealmResults<AnalysisEntity> analysisEntityList;
+    ArrayList<Date> xDataList = new ArrayList<>();
+    private final float XAXIS_LABEL_DEFAULT_ROATION = 70f;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -170,7 +178,8 @@ public class RecordManagerActivity extends BaseActivity {
                     .between("created", startLong, endLong)
                     .equalTo("equipmentUuid", equipmentUuid)
                     .findAll()
-                    .sort("created", Sort.DESCENDING);
+                    //.sort("created", Sort.DESCENDING);
+                    .sort("created", Sort.ASCENDING);
 
             if( analysisEntityList != null ) {
                 drawChart(false);
@@ -208,15 +217,15 @@ public class RecordManagerActivity extends BaseActivity {
     }
 
     private void initChart() {
-        combinedChartRawData = findViewById(R.id.combinedChartRawData);
-        combinedChartRawData.getDescription().setEnabled(false);
-        combinedChartRawData.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorContent));
-        combinedChartRawData.setOnChartGestureListener(OCGL);
-        combinedChartRawData.setMaxVisibleValueCount(20);
-        //combinedChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
-        combinedChartRawData.setNoDataText("no data. please select today or week");
+        combinedChartRms = findViewById(R.id.combinedChartRms);
+        combinedChartRms.getDescription().setEnabled(false);
+        combinedChartRms.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorContent));
+        combinedChartRms.setOnChartGestureListener(OCGL);
+        combinedChartRms.setMaxVisibleValueCount(20);
+        //combinedChartRms.setNoDataText(getResources().getString(R.string.recordingchartdata));
+        combinedChartRms.setNoDataText("no data. please select today or week");
 
-        Legend l = combinedChartRawData.getLegend();
+        Legend l = combinedChartRms.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
         l.setWordWrapEnabled(false);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
@@ -224,30 +233,33 @@ public class RecordManagerActivity extends BaseActivity {
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
 
-        YAxis rightAxis = combinedChartRawData.getAxisRight();
+        YAxis rightAxis = combinedChartRms.getAxisRight();
         rightAxis.setEnabled(false);
 //        rightAxis.setDrawGridLines(false);
 //        rightAxis.setAxisMinimum(10);
 //        rightAxis.setTextColor(Color.RED);
 
-        YAxis leftAxis = combinedChartRawData.getAxisLeft();
-        leftAxis.setDrawGridLines(false);
+        YAxis leftAxis = combinedChartRms.getAxisLeft();
+        //leftAxis.setDrawGridLines(false);
         leftAxis.setAxisMinimum(0);
         leftAxis.setTextColor(Color.WHITE);
 
-        XAxis xAxis = combinedChartRawData.getXAxis();
+        XAxis xAxis = combinedChartRms.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
         xAxis.setDrawGridLines(false);
+        //xAxis.setLabelCount(5);
+        //xAxis.setAvoidFirstLastClipping(true); //X 축에서 처음과 끝에 있는 라벨이 짤리는걸 방지해 준다. (index 0번째를 그냥 없앨때도 있다.)
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
 
                 int index = (int)value;
 
-                String str = "test"+value;
+                String str = "";
                 try {
+
                     //Date date = svs.getMeasureDatas().get(index).getCaptureTime();
-                    //str = DateUtil.convertDefaultDetailDate(date);
+                    str = DateUtil.convertDate(xDataList.get(index), "MM-dd HH:mm");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -260,7 +272,71 @@ public class RecordManagerActivity extends BaseActivity {
         //xAxis.setAxisMaximum(80);
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
+        xAxis.setLabelRotationAngle(XAXIS_LABEL_DEFAULT_ROATION); //X축에 있는 라벨의 각도
+        //applyXAxisDefault(xAxis, l);
+        adjustViewportForChart();
     }
+
+
+    // 차트 위치 조정
+    private void adjustViewportForChart(){
+
+        //X축 라벨 사이즈의 최대 높이
+        Rect rectByText = SizeUtil.getTextRect(DateUtil.convertDate(new Date(), "MM-dd HH:mm"), combinedChartRms.getXAxis().getTypeface(), combinedChartRms.getXAxis().getTextSize());
+        float textYSize = rectByText.height();
+
+        //회전 한 width, height <<회전변환 공식 참고>>
+        double radian = Math.toRadians(XAXIS_LABEL_DEFAULT_ROATION);
+        double rotWidth = (rectByText.width() * Math.cos(radian)) - (rectByText.height() * Math.sin(radian));
+        double rotHeight = (rectByText.width() * Math.sin(radian)) + (rectByText.height() * Math.cos(radian));
+
+
+        //빗변 계산
+        double hypotenuse = Math.sqrt(Math.pow(rotWidth, 2) + Math.pow(rotHeight, 2)); //최대길이
+
+        //대입
+        textYSize = (float)hypotenuse;
+
+        //레전드의 높이
+        float legendSize = combinedChartRms.getLegend().mNeededHeight + combinedChartRms.getLegend().getYOffset();
+
+        //뷰포트 offset
+        float offsetLeft = combinedChartRms.getViewPortHandler().offsetLeft();
+        float offsetRight = combinedChartRms.getViewPortHandler().offsetRight();
+        float offsetSide = (offsetLeft > offsetRight) ? offsetLeft : offsetRight;
+        float offsetBottom = textYSize + legendSize + SizeUtil.dpToPx(5); //15 is Padding
+
+        combinedChartRms.setViewPortOffsets(offsetSide+50,SizeUtil.dpToPx(5), offsetSide+50, offsetBottom+30);
+        combinedChartRms.invalidate();
+    }
+
+    private void applyXAxisDefault(XAxis xAxis, Legend l){
+
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+
+        xAxis.setGranularity(1.0f);
+        xAxis.setAxisMinimum(0);
+        //xAxis.setAxisMaximum(SVS.getInstance().getMeasureDatas().size()-1);
+        xAxis.setDrawGridLines(false);
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+
+                int index = (int)value;
+
+                String str = "";
+                try {
+                    str = DateUtil.convertDate(xDataList.get(index), "yyyy-MM-dd HH");
+                } catch (Exception e) {
+                    DefLog.d(TAG, e.toString());
+                }
+
+                return str;
+            }
+        });
+    }
+
 
     private OnChartGestureListener OCGL = new OnChartGestureListener() {
         @Override
@@ -275,7 +351,7 @@ public class RecordManagerActivity extends BaseActivity {
 
         @Override
         public void onChartLongPressed(MotionEvent me) {
-            combinedChartRawData.fitScreen();
+            combinedChartRms.fitScreen();
         }
 
         @Override
@@ -286,6 +362,46 @@ public class RecordManagerActivity extends BaseActivity {
         @Override
         public void onChartSingleTapped(MotionEvent me) {
 
+//            int itemCount = xDataList.size();
+//            if( itemCount == 0 )
+//                return;
+//
+//            float layerWidth = combinedChartRms.getWidth() / itemCount;
+//
+//            float [] spaceend = new float[itemCount-1];
+//
+//            for( int i = 0; i < spaceend.length; i++ ) {
+//                if( i == 0 ) {  // 첫번째 구간
+//                    spaceend[i] = layerWidth;
+//                }
+//                else if( i + 1 == spaceend.length ) {   // 마지막 구간
+//                    spaceend[i] = spaceend[i + 1] + layerWidth;
+//                }
+//                else {  // 나머지 구간
+//                    spaceend[i] = layerWidth;
+//                }
+//            }
+//
+//            spaceend[0] = layerWidth + layerWidth/2;
+//            spaceend[1] = spaceend[0] + layerWidth;
+//            spaceend[2] = spaceend[1] + layerWidth;
+//            spaceend[3] = spaceend[2] + layerWidth;
+//            spaceend[4] = spaceend[3] + layerWidth;
+//
+//            String date;
+//            if(me.getX() > 0 && me.getX() < spaceend[0] && svsCode.getFreqEna()[0].getdPeak() != 0){
+//                tappedTrendValue = PEAK1;
+//            }else if(me.getX() > spaceend[0] && me.getX() < spaceend[1] && svsCode.getFreqEna()[1].getdPeak() != 0){
+//                tappedTrendValue = PEAK2;
+//            }else if(me.getX() > spaceend[1] && me.getX() < spaceend[2] && svsCode.getFreqEna()[2].getdPeak() != 0){
+//                tappedTrendValue = PEAK3;
+//            }else if(me.getX() > spaceend[2] && me.getX() < spaceend[3] && svsCode.getFreqEna()[3].getdPeak() != 0){
+//                tappedTrendValue = PEAK4;
+//            }else if(me.getX() > spaceend[3] && me.getX() < spaceend[4] && svsCode.getFreqEna()[4].getdPeak() != 0){
+//                tappedTrendValue = PEAK5;
+//            }else if(me.getX() > spaceend[4] && svsCode.getFreqEna()[5].getdPeak() != 0){
+//                tappedTrendValue = PEAK6;
+//            }
         }
 
         @Override
@@ -309,7 +425,6 @@ public class RecordManagerActivity extends BaseActivity {
 
         LineData lineData = new LineData();
 
-        ArrayList<Date> xDataList = new ArrayList<>();
         ArrayList<Float> yDataList1 = new ArrayList<>();
         ArrayList<Float> yDataList2 = new ArrayList<>();
         ArrayList<Float> yDataList3 = new ArrayList<>();
@@ -334,7 +449,7 @@ public class RecordManagerActivity extends BaseActivity {
                     }
                 }
 
-                lineData.addDataSet(generateLineData("pt1", xDataList, yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
+                lineData.addDataSet(generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
 
                 if (data2 != null) {
                     for (float v : data2) {
@@ -344,7 +459,7 @@ public class RecordManagerActivity extends BaseActivity {
                     }
                 }
 
-                lineData.addDataSet(generateLineData("pt2", xDataList, yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
+                lineData.addDataSet(generateLineData("pt2", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
 
                 if (data3 != null) {
                     for (float v : data3) {
@@ -354,7 +469,7 @@ public class RecordManagerActivity extends BaseActivity {
                     }
                 }
 
-                lineData.addDataSet(generateLineData("pt3", xDataList, yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
+                lineData.addDataSet(generateLineData("pt3", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -371,9 +486,9 @@ public class RecordManagerActivity extends BaseActivity {
                     xDataList.add(created);
                 }
 
-                lineData.addDataSet(generateLineData("pt1", xDataList, yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
-                lineData.addDataSet(generateLineData("pt2", xDataList, yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
-                lineData.addDataSet(generateLineData("pt3", xDataList, yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
+                lineData.addDataSet(generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
+                lineData.addDataSet(generateLineData("pt2", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
+                lineData.addDataSet(generateLineData("pt3", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -388,28 +503,22 @@ public class RecordManagerActivity extends BaseActivity {
 
             combinedData.setData(lineData);
 
-            XAxis xAxis = combinedChartRawData.getXAxis();
+            XAxis xAxis = combinedChartRms.getXAxis();
             int xAxisMaximum = yDataList1.size() <= 0 ? 0 : yDataList1.size() - 1;
             xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
 
-            combinedChartRawData.setData(combinedData);
-            combinedChartRawData.invalidate();
+            combinedChartRms.setData(combinedData);
+            combinedChartRms.invalidate();
         }
     }
 
-    private LineDataSet generateLineData(String label, ArrayList<Date> xDataList, ArrayList<Float> yDataList, int lineColor){
+    private LineDataSet generateLineData(String label, ArrayList<Float> yDataList, int lineColor){
         ArrayList<Entry> entries = new ArrayList<>();
         LineDataSet lineDataSet = null;
         try {
 
             for(int i=0; i<yDataList.size(); i++) {
-
-                // Entry가 float만 입력받기 때문에
-                // xDataList를 숫자로 변경 하여 입력
-                Date xDate = xDataList.get(i);
-                long xLong = xDate.getTime();
-
-                entries.add(new Entry(xLong, yDataList.get(i)));
+                entries.add(new Entry(i, yDataList.get(i)));
             }
 
             lineDataSet = new LineDataSet(entries, label);

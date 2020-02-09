@@ -677,7 +677,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                             save(uuid, 110.0f,111.0f,112.0f,"2020-02-01 16:12:05");
                             save(uuid, 20.0f,21.0f,22.0f,"2020-02-02 16:11:05");
                             save(uuid, 70.0f,71.0f,72.0f,"2020-02-03 16:11:05");
-                            save(uuid, 40.0f,41.0f,42.0f,"2020-02-04 16:11:05");
+                            save(uuid, 10.0f,31.0f,52.0f,"2020-02-04 16:11:05");
+                            save(uuid, 40.0f,41.0f,42.0f,"2020-02-07 16:11:05");
                         }
                     }
 
@@ -789,10 +790,10 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 analysisEntity.setRms3(rms3);
 
                 RealmList<String> cause = new RealmList<>();
-                cause.add("test1");
-                cause.add("test2");
-                cause.add("test3");
-                cause.add("test4");
+                cause.add("test1"+tCreated);
+                cause.add("test2"+tCreated);
+                cause.add("test3"+tCreated);
+                cause.add("test4"+tCreated);
                 analysisEntity.setCause(cause);
 
                 RealmList<String> causeDesc = new RealmList<>();
@@ -804,16 +805,16 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
                 RealmList<Double> rank = new RealmList<>();
                 rank.add(1.0);
-                rank.add(4.0);
-                rank.add(3.0);
                 rank.add(2.0);
+                rank.add(3.0);
+                rank.add(4.0);
                 analysisEntity.setRank(rank);
 
                 RealmList<Double> ratio = new RealmList<>();
-                ratio.add(80.1);
-                ratio.add(4.0);
-                ratio.add(23.2);
-                ratio.add(52.3);
+                ratio.add(0.08);
+                ratio.add(0.052);
+                ratio.add(0.04);
+                ratio.add(0.023);
                 analysisEntity.setRatio(ratio);
 
                 realm.copyToRealmOrUpdate(analysisEntity);

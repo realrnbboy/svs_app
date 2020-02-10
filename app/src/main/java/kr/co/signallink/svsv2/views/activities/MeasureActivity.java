@@ -148,8 +148,7 @@ public class MeasureActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                //if( bMeasure )
-                {
+                if( bMeasure )                {
                     bTestData = true;
                     makeMatrix2();
 
@@ -160,9 +159,9 @@ public class MeasureActivity extends BaseActivity {
                     intent.putExtra("equipmentUuid", equipmentUuid);
                     startActivity(intent);
                 }
-//                else {  // 측정을 하지 않은 경우
-//                    ToastUtil.showShort("Please measure first");
-//                }
+                else {  // 측정을 하지 않은 경우
+                    ToastUtil.showShort("Please measure first");
+                }
             }
         });
 

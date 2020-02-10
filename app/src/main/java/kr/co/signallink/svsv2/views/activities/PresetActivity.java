@@ -140,7 +140,7 @@ public class PresetActivity extends BaseActivity {
         spinnerEquipmentType = findViewById(R.id.spinnerEquipmentType);
         spinnerBearingType = findViewById(R.id.spinnerBearingType);
 
-        initDefaultValue();
+        initDefaultItem();
 
         arrayAdapterPreset = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListPreset);
         ArrayAdapter arrayAdapterEquipmentCode = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListEquipmentCode);
@@ -282,7 +282,7 @@ public class PresetActivity extends BaseActivity {
     }
 
 
-    void initDefaultValue() {
+    void initDefaultItem() {
 
         final String strDate = Utils.getCurrentTime("dd-MMM-yyyy HH:mm", new Locale("en", "US"));
 

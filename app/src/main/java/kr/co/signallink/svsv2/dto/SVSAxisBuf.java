@@ -21,6 +21,14 @@ public class SVSAxisBuf implements Serializable {
         return fFreq;
     }
 
+    public void setfTime(float[] fTime) {   // added by hslee
+        this.fTime = fTime;
+    }
+
+    public void setfFreq(float[] fFreq) {   // added by hslee
+        this.fFreq = fFreq;
+    }
+
     public int getInputTimeLength() {
         return inputTimeLength;
     }

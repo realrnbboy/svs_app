@@ -198,10 +198,9 @@ public class ResultActivity extends BaseActivity {
         combinedChartRawData = findViewById(R.id.combinedChartRawData);
         combinedChartRawData.getDescription().setEnabled(false);
         combinedChartRawData.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorContent));
-        combinedChartRawData.setOnChartGestureListener(OCGL);
         combinedChartRawData.setMaxVisibleValueCount(20);
         //combinedChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
-        combinedChartRawData.setNoDataText("no data. please measure");
+        combinedChartRawData.setNoDataText("no data.");
 
         Legend l = combinedChartRawData.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
@@ -225,22 +224,6 @@ public class ResultActivity extends BaseActivity {
         XAxis xAxis = combinedChartRawData.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
         xAxis.setDrawGridLines(false);
-//        xAxis.setValueFormatter(new IAxisValueFormatter() {
-//            @Override
-//            public String getFormattedValue(float value, AxisBase axis) {
-//
-//                int index = (int)value;
-//
-//                String str = "test";
-//                try {
-//                    //Date date = svs.getMeasureDatas().get(index).getCaptureTime();
-//                    //str = DateUtil.convertDefaultDetailDate(date);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                return str;
-//            }
-//        });
 
         xAxis.setAxisMinimum(0);
         //xAxis.setAxisMaximum(svs.getMeasureDatas().size()-1);
@@ -248,48 +231,6 @@ public class ResultActivity extends BaseActivity {
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
     }
-
-    private OnChartGestureListener OCGL = new OnChartGestureListener() {
-        @Override
-        public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-        }
-
-        @Override
-        public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-        }
-
-        @Override
-        public void onChartLongPressed(MotionEvent me) {
-            combinedChartRawData.fitScreen();
-        }
-
-        @Override
-        public void onChartDoubleTapped(MotionEvent me) {
-
-        }
-
-        @Override
-        public void onChartSingleTapped(MotionEvent me) {
-
-        }
-
-        @Override
-        public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
-        }
-
-        @Override
-        public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
-        }
-
-        @Override
-        public void onChartTranslate(MotionEvent me, float dX, float dY) {
-
-        }
-    };
 
 
     private void drawChart() throws Exception {

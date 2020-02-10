@@ -8,8 +8,10 @@ package kr.co.signallink.svsv2.model;
         public float fSamplingRate;
         public float fRMS;
         //[MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.FREQ_ELE)]
-        public double[] dFreq;
+        //public double[] dFreq;
+        public float[] dFreq;  // added by hslee
         //[MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.FREQ_ELE)]
-        public double[] dPwrSpectrum;
+        //public double[] dPwrSpectrum;
+        public float[] dPwrSpectrum;   // added by hslee
     }
     //#endregion [HDEC 자료 구조 정의]

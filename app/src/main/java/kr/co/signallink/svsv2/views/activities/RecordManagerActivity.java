@@ -19,14 +19,11 @@ import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.ChartTouchListener;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.text.SimpleDateFormat;
@@ -103,14 +100,8 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
             Thread t = new Thread() {
                 public void run() {
 
-                    try {
-                        Thread.sleep(1000); // 차트 초기화 시간 - 추가 안하면 정상적으로 표시 안됨.
-
-                        // 차트 그리기
-                        drawChart(true);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    // 차트 그리기
+                    drawChart(true);
                 }
             };
 
@@ -219,6 +210,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                     .sort("created", Sort.ASCENDING);
 
             if( analysisEntityList != null ) {
+                // 차트 그리기
                 drawChart(false);
             }
 
@@ -367,11 +359,17 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         float offsetSide = (offsetLeft > offsetRight) ? offsetLeft : offsetRight;
         float offsetBottom = textYSize + legendSize + SizeUtil.dpToPx(5); //15 is Padding
 
-        lineChartRms.setViewPortOffsets(offsetSide+50,SizeUtil.dpToPx(5), offsetSide+50, offsetBottom+30);
+        lineChartRms.setViewPortOffsets(offsetSide+100,SizeUtil.dpToPx(5), offsetSide+50, offsetBottom+30);
         //lineChartRms.invalidate();
     }
 
     private void drawChart(boolean bUsePreviousActivityData) {
+
+        try {
+            Thread.sleep(1000); // 차트 초기화 시간 - 추가 안하면 정상적으로 표시 안됨.
+        }
+        catch (Exception e) {
+        }
 
         LineData lineData = new LineData();
 

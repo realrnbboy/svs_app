@@ -65,6 +65,7 @@ public class MeasureActivity extends BaseActivity {
     CombinedChart combinedChartRawData;
 
     boolean bMeasure = false;   // 측정했는지 여부
+    boolean bTestData = false;  // 테스트데이터 사용 여부
 
     MeasureData measureDataSensor1 = null;
     MeasureData measureDataSensor2 = null;
@@ -87,15 +88,9 @@ public class MeasureActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         findViewById(R.id.button_record).setVisibility(View.GONE);  // 안쓰는 버튼 숨김
 
-        mainData = new MainData(this);
-
-        initView();
-        initChart();
-    }
-
-    void initView() {
-
         Intent intent = getIntent();
+
+        equipmentUuid = intent.getStringExtra("equipmentUuid");
 
         // 이전 Activity 에서 전달받은 데이터 가져오기
         analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");
@@ -104,7 +99,14 @@ public class MeasureActivity extends BaseActivity {
             return;
         }
 
-        equipmentUuid = intent.getStringExtra("equipmentUuid");
+        mainData = new MainData(this);
+        mainData.init(analysisData.getDiagVar1());
+
+        initView();
+        initChart();
+    }
+
+    void initView() {
 
         Button buttonAnalysis = findViewById(R.id.buttonAnalysis);
         buttonAnalysis.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +140,29 @@ public class MeasureActivity extends BaseActivity {
 
                 intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
                 startActivityForResult(intent, DefConstant.REQUEST_SENSING_RESULT);
+            }
+        });
+
+        Button buttonTestData = findViewById(R.id.buttonTestData);
+        buttonTestData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //if( bMeasure )
+                {
+                    bTestData = true;
+                    makeMatrix2();
+
+                    // 다음 화면으로 이동
+                    Intent intent = new Intent(getBaseContext(), ResultActivity.class);
+                    intent.putExtra("matrix2", matrix2);
+                    intent.putExtra("analysisData", analysisData);
+                    intent.putExtra("equipmentUuid", equipmentUuid);
+                    startActivity(intent);
+                }
+//                else {  // 측정을 하지 않은 경우
+//                    ToastUtil.showShort("Please measure first");
+//                }
             }
         });
 
@@ -327,9 +352,37 @@ public class MeasureActivity extends BaseActivity {
         DiagnosisInfo diagnosis = new DiagnosisInfo(analysisData);
 
         //DIAGNOSIS_DATA_Type[] rawData = analysisData.fnGetRawDatas();   // 센서의 rawdata로 변경 해야함.
-        DIAGNOSIS_DATA_Type[] rawData = mainData.fnGetRawDatas();   // 임시데이터
 
-        matrix2 = diagnosis.fnMakeMatrix2(rawData[0], rawData[1], rawData[2]);
+        if( bTestData ) {
+            DIAGNOSIS_DATA_Type[] rawData = mainData.fnGetRawDatas();   // 임시데이터
+            matrix2 = diagnosis.fnMakeMatrix2(rawData[0], rawData[1], rawData[2]);
+
+            analysisData.getMeasureData1().getAxisBuf().setfFreq(rawData[0].dFreq);
+            analysisData.getMeasureData2().getAxisBuf().setfFreq(rawData[1].dFreq);
+            analysisData.getMeasureData3().getAxisBuf().setfFreq(rawData[2].dFreq);
+
+            analysisData.getMeasureData1().getAxisBuf().setfTime(rawData[0].dPwrSpectrum);
+            analysisData.getMeasureData2().getAxisBuf().setfTime(rawData[1].dPwrSpectrum);
+            analysisData.getMeasureData3().getAxisBuf().setfTime(rawData[2].dPwrSpectrum);
+        }
+        else {
+            DIAGNOSIS_DATA_Type rawData1 = new DIAGNOSIS_DATA_Type();
+            rawData1.fSamplingRate = (float) 1.338975e+03;
+            rawData1.dFreq = analysisData.getMeasureData1().getAxisBuf().getfFreq();
+            rawData1.dPwrSpectrum = analysisData.getMeasureData1().getAxisBuf().getfTime();
+
+            DIAGNOSIS_DATA_Type rawData2 = new DIAGNOSIS_DATA_Type();
+            rawData2.fSamplingRate = (float) 1.386214e+03;
+            rawData2.dFreq = analysisData.getMeasureData2().getAxisBuf().getfFreq();
+            rawData2.dPwrSpectrum = analysisData.getMeasureData2().getAxisBuf().getfTime();
+
+            DIAGNOSIS_DATA_Type rawData3 = new DIAGNOSIS_DATA_Type();
+            rawData3.fSamplingRate = (float) 1.384258e+03;
+            rawData3.dFreq = analysisData.getMeasureData3().getAxisBuf().getfFreq();
+            rawData3.dPwrSpectrum = analysisData.getMeasureData3().getAxisBuf().getfTime();
+
+            matrix2 = diagnosis.fnMakeMatrix2(rawData1, rawData2, rawData3);
+        }
 
         double [][] tResultDiagnosis = diagnosis.resultDiagnosis;
         if( tResultDiagnosis != null ) {

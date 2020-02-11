@@ -348,8 +348,11 @@ public class MeasureExeActivity extends Activity {
 
 
             //화면에 보인 순서와 다르게, SVS_LOCATION 이름순으로 AutoProcessing 시작.
-            OrderedRealmCollection<SVSEntity> orderedSvsEntities = svsEntities.sort("SVS_LOCATION"); //Location 정렬..
+            final OrderedRealmCollection<SVSEntity> orderedSvsEntities = svsEntities.sort("SVS_LOCATION"); //Location 정렬..
 
+            DatabaseUtil.transaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
             for(SVSEntity svsEntity : orderedSvsEntities)
             {
                 if(svsEntity.isValid())
@@ -358,6 +361,8 @@ public class MeasureExeActivity extends Activity {
                     connectSVSItem.setSvsUuid(svsEntity.getUuid());
                     connectSVSItem.setAddress(svsEntity.getAddress());
                     connectSVSItem.setSvsLocation(svsEntity.getSvsLocation());
+                    svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_TIME_FREQ); //강제 All
+                    svsEntity.setMeasureOptionCount(1);
 
                     connectSVSItems.add(connectSVSItem);
                 }
@@ -366,6 +371,9 @@ public class MeasureExeActivity extends Activity {
                     ToastUtil.showShort(R.string.notSVSLocationName);
                 }
             }
+
+                }
+            });
 
 
             if(connectSVSItems.getIndex_connecting() < connectSVSItems.size())

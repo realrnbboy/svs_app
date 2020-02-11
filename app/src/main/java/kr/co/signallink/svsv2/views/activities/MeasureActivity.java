@@ -148,7 +148,7 @@ public class MeasureActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                //if( bMeasure )
+                if( bMeasure )
                 {
                     bTestData = true;
                     makeMatrix2();
@@ -160,9 +160,9 @@ public class MeasureActivity extends BaseActivity {
                     intent.putExtra("equipmentUuid", equipmentUuid);
                     startActivity(intent);
                 }
-//                else {  // 측정을 하지 않은 경우
-//                    ToastUtil.showShort("Please measure first");
-//                }
+                else {  // 측정을 하지 않은 경우
+                    ToastUtil.showShort("Please measure first");
+                }
             }
         });
 
@@ -367,17 +367,17 @@ public class MeasureActivity extends BaseActivity {
         }
         else {
             DIAGNOSIS_DATA_Type rawData1 = new DIAGNOSIS_DATA_Type();
-            rawData1.fSamplingRate = (float) 1.338975e+03;
+            rawData1.fSamplingRate = analysisData.getMeasureData1().getfSplFreqMes();
             rawData1.dFreq = analysisData.getMeasureData1().getAxisBuf().getfFreq();
             rawData1.dPwrSpectrum = analysisData.getMeasureData1().getAxisBuf().getfTime();
 
             DIAGNOSIS_DATA_Type rawData2 = new DIAGNOSIS_DATA_Type();
-            rawData2.fSamplingRate = (float) 1.386214e+03;
+            rawData2.fSamplingRate = analysisData.getMeasureData2().getfSplFreqMes();
             rawData2.dFreq = analysisData.getMeasureData2().getAxisBuf().getfFreq();
             rawData2.dPwrSpectrum = analysisData.getMeasureData2().getAxisBuf().getfTime();
 
             DIAGNOSIS_DATA_Type rawData3 = new DIAGNOSIS_DATA_Type();
-            rawData3.fSamplingRate = (float) 1.384258e+03;
+            rawData3.fSamplingRate = analysisData.getMeasureData3().getfSplFreqMes();
             rawData3.dFreq = analysisData.getMeasureData3().getAxisBuf().getfFreq();
             rawData3.dPwrSpectrum = analysisData.getMeasureData3().getAxisBuf().getfTime();
 

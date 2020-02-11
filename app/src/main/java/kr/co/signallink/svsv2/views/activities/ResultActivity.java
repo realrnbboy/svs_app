@@ -3,7 +3,6 @@ package kr.co.signallink.svsv2.views.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -14,7 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.charts.CombinedChart;
-import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -22,20 +21,14 @@ import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.listener.ChartTouchListener;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
 
 import java.util.ArrayList;
 
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.dto.AnalysisData;
-import kr.co.signallink.svsv2.dto.MeasureData;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.RmsModel;
-import kr.co.signallink.svsv2.user.SVS;
-import kr.co.signallink.svsv2.utils.MyValueFormatter;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 import kr.co.signallink.svsv2.views.adapters.RmsListAdapter;
 
@@ -52,7 +45,7 @@ public class ResultActivity extends BaseActivity {
     RmsListAdapter rmsListAdapter;
     ArrayList<RmsModel> rmsList = new ArrayList<>();
 
-    CombinedChart combinedChartRawData;
+    LineChart lineChartRawData;
 
     String equipmentUuid = null;
 
@@ -195,14 +188,14 @@ public class ResultActivity extends BaseActivity {
     }
 
     private void initChart() {
-        combinedChartRawData = findViewById(R.id.combinedChartRawData);
-        combinedChartRawData.getDescription().setEnabled(false);
-        combinedChartRawData.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorContent));
-        combinedChartRawData.setMaxVisibleValueCount(20);
-        //combinedChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
-        combinedChartRawData.setNoDataText("no data.");
+        lineChartRawData = findViewById(R.id.lineChartRawData);
+        lineChartRawData.getDescription().setEnabled(false);
+        lineChartRawData.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorContent));
+        lineChartRawData.setMaxVisibleValueCount(20);
+        //lineChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
+        lineChartRawData.setNoDataText("no data.");
 
-        Legend l = combinedChartRawData.getLegend();
+        Legend l = lineChartRawData.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
         l.setWordWrapEnabled(false);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
@@ -210,18 +203,18 @@ public class ResultActivity extends BaseActivity {
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
 
-        YAxis rightAxis = combinedChartRawData.getAxisRight();
+        YAxis rightAxis = lineChartRawData.getAxisRight();
         rightAxis.setEnabled(false);
 //        rightAxis.setDrawGridLines(false);
 //        rightAxis.setAxisMinimum(10);
 //        rightAxis.setTextColor(Color.RED);
 
-        YAxis leftAxis = combinedChartRawData.getAxisLeft();
+        YAxis leftAxis = lineChartRawData.getAxisLeft();
         leftAxis.setDrawGridLines(false);
         leftAxis.setAxisMinimum(0);
         leftAxis.setTextColor(Color.WHITE);
 
-        XAxis xAxis = combinedChartRawData.getXAxis();
+        XAxis xAxis = lineChartRawData.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
         xAxis.setDrawGridLines(false);
 
@@ -280,18 +273,14 @@ public class ResultActivity extends BaseActivity {
 
         // valueList.clear();
 
-        CombinedData combinedData = new CombinedData();
-
         lineData.setDrawValues(true);
 
-        combinedData.setData(lineData);
-
-        XAxis xAxis = combinedChartRawData.getXAxis();
+        XAxis xAxis = lineChartRawData.getXAxis();
         int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
         xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
 
-        combinedChartRawData.setData(combinedData);
-        combinedChartRawData.invalidate();
+        lineChartRawData.setData(lineData);
+        lineChartRawData.invalidate();
     }
 
     private LineDataSet generateLineData(String label, ArrayList<Float> valueList, int lineColor){
@@ -303,12 +292,20 @@ public class ResultActivity extends BaseActivity {
 
         LineDataSet lineDataSet = new LineDataSet(entries, label);
 
+//        lineDataSet.setDrawCircleHole(false);
+//        lineDataSet.setDrawCircles(false);
+//        lineDataSet.setValueTextColor(Color.WHITE);
+//        lineDataSet.setHighlightEnabled(false);
+//
+//        lineDataSet.setColor(lineColor);
+
         lineDataSet.setDrawCircleHole(false);
         lineDataSet.setDrawCircles(false);
-        lineDataSet.setValueTextColor(Color.WHITE);
-        lineDataSet.setHighlightEnabled(false);
-
         lineDataSet.setColor(lineColor);
+        lineDataSet.setDrawFilled(true);
+        lineDataSet.setValueTextColor(Color.WHITE);
+        lineDataSet.setDrawValues(true);
+        lineDataSet.setValueTextSize(10f);
 
         return lineDataSet;
     }

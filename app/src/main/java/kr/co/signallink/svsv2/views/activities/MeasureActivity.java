@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -62,7 +63,7 @@ public class MeasureActivity extends BaseActivity {
 
     MATRIX_2_Type matrix2;
 
-    CombinedChart combinedChartRawData;
+    LineChart lineChartRawData;
 
     boolean bMeasure = false;   // 측정했는지 여부
     boolean bTestData = false;  // 테스트데이터 사용 여부
@@ -168,15 +169,14 @@ public class MeasureActivity extends BaseActivity {
     }
 
     private void initChart() {
-        combinedChartRawData = findViewById(R.id.combinedChartRawData);
-        combinedChartRawData.getDescription().setEnabled(false);
-        combinedChartRawData.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorContent));
-        combinedChartRawData.setOnChartGestureListener(OCGL);
-        combinedChartRawData.setMaxVisibleValueCount(20);
-        //combinedChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
-        combinedChartRawData.setNoDataText("no data. please measure");
+        lineChartRawData = findViewById(R.id.lineChartRawData);
+        lineChartRawData.getDescription().setEnabled(false);
+        lineChartRawData.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorContent));
+        //lineChartRawData.setMaxVisibleValueCount(20);
+        //lineChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
+        lineChartRawData.setNoDataText("no data. please select today or week");
 
-        Legend l = combinedChartRawData.getLegend();
+        Legend l = lineChartRawData.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
         l.setWordWrapEnabled(false);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
@@ -184,42 +184,28 @@ public class MeasureActivity extends BaseActivity {
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
 
-        YAxis rightAxis = combinedChartRawData.getAxisRight();
+        YAxis rightAxis = lineChartRawData.getAxisRight();
         rightAxis.setEnabled(false);
 //        rightAxis.setDrawGridLines(false);
 //        rightAxis.setAxisMinimum(10);
 //        rightAxis.setTextColor(Color.RED);
 
-        YAxis leftAxis = combinedChartRawData.getAxisLeft();
-        leftAxis.setDrawGridLines(false);
+        YAxis leftAxis = lineChartRawData.getAxisLeft();
+        //leftAxis.setDrawGridLines(false);
         leftAxis.setAxisMinimum(0);
         leftAxis.setTextColor(Color.WHITE);
 
-        XAxis xAxis = combinedChartRawData.getXAxis();
+        XAxis xAxis = lineChartRawData.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
         xAxis.setDrawGridLines(false);
-//        xAxis.setValueFormatter(new IAxisValueFormatter() {
-//            @Override
-//            public String getFormattedValue(float value, AxisBase axis) {
-//
-//                int index = (int)value;
-//
-//                String str = "test";
-//                try {
-//                    //Date date = svs.getMeasureDatas().get(index).getCaptureTime();
-//                    //str = DateUtil.convertDefaultDetailDate(date);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                return str;
-//            }
-//        });
+        //xAxis.setAvoidFirstLastClipping(true); //X 축에서 처음과 끝에 있는 라벨이 짤리는걸 방지해 준다. (index 0번째를 그냥 없앨때도 있다.)
 
-        xAxis.setAxisMinimum(0);
+        //xAxis.setAxisMinimum(0);
         //xAxis.setAxisMaximum(svs.getMeasureDatas().size()-1);
         //xAxis.setAxisMaximum(80);
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
+        //applyXAxisDefault(xAxis, l);
     }
 
     private OnChartGestureListener OCGL = new OnChartGestureListener() {
@@ -235,7 +221,7 @@ public class MeasureActivity extends BaseActivity {
 
         @Override
         public void onChartLongPressed(MotionEvent me) {
-            combinedChartRawData.fitScreen();
+            lineChartRawData.fitScreen();
         }
 
         @Override
@@ -303,19 +289,14 @@ public class MeasureActivity extends BaseActivity {
         }
 
        // valueList.clear();
-
-        CombinedData combinedData = new CombinedData();
-
         lineData.setDrawValues(true);
 
-        combinedData.setData(lineData);
-
-        XAxis xAxis = combinedChartRawData.getXAxis();
+        XAxis xAxis = lineChartRawData.getXAxis();
         int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
         xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
 
-        combinedChartRawData.setData(combinedData);
-        combinedChartRawData.invalidate();
+        lineChartRawData.setData(lineData);
+        lineChartRawData.invalidate();
     }
 
     private LineDataSet generateLineData(String label, ArrayList<Float> valueList, int lineColor){
@@ -327,12 +308,20 @@ public class MeasureActivity extends BaseActivity {
 
         LineDataSet lineDataSet = new LineDataSet(entries, label);
 
+//        lineDataSet.setDrawCircleHole(false);
+//        lineDataSet.setDrawCircles(false);
+//        lineDataSet.setValueTextColor(Color.WHITE);
+//        lineDataSet.setHighlightEnabled(false);
+//
+//        lineDataSet.setColor(lineColor);
+
         lineDataSet.setDrawCircleHole(false);
         lineDataSet.setDrawCircles(false);
-        lineDataSet.setValueTextColor(Color.WHITE);
-        lineDataSet.setHighlightEnabled(false);
-
         lineDataSet.setColor(lineColor);
+        lineDataSet.setDrawFilled(true);
+        lineDataSet.setValueTextColor(Color.WHITE);
+        lineDataSet.setDrawValues(true);
+        lineDataSet.setValueTextSize(10f);
 
         return lineDataSet;
     }
@@ -452,9 +441,9 @@ public class MeasureActivity extends BaseActivity {
 
                 bMeasure = true;
 
-                float [] data1 = measureDataSensor1.getAxisBuf().getfTime();
-                float [] data2 = measureDataSensor2.getAxisBuf().getfTime();
-                float [] data3 = measureDataSensor3.getAxisBuf().getfTime();
+                float [] data1 = measureDataSensor1.getAxisBuf().getfFreq();
+                float [] data2 = measureDataSensor2.getAxisBuf().getfFreq();
+                float [] data3 = measureDataSensor3.getAxisBuf().getfFreq();
 
                 try {
                     drawChart(data1, data2, data3);

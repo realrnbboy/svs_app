@@ -347,25 +347,34 @@ public class MeasureExeActivity extends Activity {
             connectSVSItems.setAutoSaveMode(true);
 
 
-            //화면에 보인 순서와 다르게, SVS_LOCATION 이름순으로 AutoProcessing 시작.
-            OrderedRealmCollection<SVSEntity> orderedSvsEntities = svsEntities.sort("SVS_LOCATION"); //Location 정렬..
+            //Request RawData by Option.
+            DatabaseUtil.transaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                //화면에 보인 순서와 다르게, SVS_LOCATION 이름순으로 AutoProcessing 시작.
+                OrderedRealmCollection<SVSEntity> orderedSvsEntities = svsEntities.sort("SVS_LOCATION"); //Location 정렬..
 
-            for(SVSEntity svsEntity : orderedSvsEntities)
-            {
-                if(svsEntity.isValid())
+                for(SVSEntity svsEntity : orderedSvsEntities)
                 {
-                    ConnectSVSItem connectSVSItem = new ConnectSVSItem();
-                    connectSVSItem.setSvsUuid(svsEntity.getUuid());
-                    connectSVSItem.setAddress(svsEntity.getAddress());
-                    connectSVSItem.setSvsLocation(svsEntity.getSvsLocation());
+                    if(svsEntity.isValid())
+                    {
+                        ConnectSVSItem connectSVSItem = new ConnectSVSItem();
+                        connectSVSItem.setSvsUuid(svsEntity.getUuid());
+                        connectSVSItem.setAddress(svsEntity.getAddress());
+                        connectSVSItem.setSvsLocation(svsEntity.getSvsLocation());
 
-                    connectSVSItems.add(connectSVSItem);
+                        svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_TIME_FREQ);  // added by hslee
+                        svsEntity.setMeasureOptionCount(1); // added by hslee
+
+                        connectSVSItems.add(connectSVSItem);
+                    }
+                    else
+                    {
+                        ToastUtil.showShort(R.string.notSVSLocationName);
+                    }
                 }
-                else
-                {
-                    ToastUtil.showShort(R.string.notSVSLocationName);
                 }
-            }
+            });
 
 
             if(connectSVSItems.getIndex_connecting() < connectSVSItems.size())

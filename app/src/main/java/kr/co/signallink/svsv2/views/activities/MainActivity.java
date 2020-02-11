@@ -274,7 +274,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 //        });
 
         Button btn_select_mode = findViewById(R.id.btn_select_mode);
-        btn_select_mode.setVisibility(View.VISIBLE);
+        //btn_select_mode.setVisibility(View.VISIBLE);  // added by hslee signallink의 요청으로 삭제
         btn_select_mode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

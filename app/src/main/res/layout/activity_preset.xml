@@ -321,7 +321,7 @@
                     <TextView
                         android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
                         style="@style/preset_item_textview"
-                        android:text="Project VIB spec:"/>
+                        android:text="Project VIB spec :"/>
 
                     <EditText
                         android:id="@+id/editTextProjectVibSpec"
@@ -350,7 +350,7 @@
                     <TextView
                         android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
                         style="@style/preset_item_textview"
-                        android:text="Pitch diameter:"/>
+                        android:text="Pitch diameter :"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -376,7 +376,7 @@
                     <TextView
                         android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
                         style="@style/preset_item_textview"
-                        android:text="Ball diameter:"/>
+                        android:text="Ball diameter :"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -402,7 +402,7 @@
                     <TextView
                         android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
                         style="@style/preset_item_textview"
-                        android:text="RPS:"/>
+                        android:text="RPS :"/>
 
                     <EditText
                         android:id="@+id/editTextRps"
@@ -417,7 +417,7 @@
                     <TextView
                         android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
                         style="@style/preset_item_textview"
-                        android:text="Contact angle:"/>
+                        android:text="Contact angle :"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"

@@ -31,6 +31,7 @@ import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.RmsModel;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 import kr.co.signallink.svsv2.views.adapters.RmsListAdapter;
+import kr.co.signallink.svsv2.views.interfaces.RmsListClickListener;
 
 // added by hslee 2020-01-29
 // 진단분석 결과1 화면
@@ -48,6 +49,10 @@ public class ResultActivity extends BaseActivity {
     LineChart lineChartRawData;
 
     String equipmentUuid = null;
+
+    boolean bRmsResultGood1 = false;    // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
+    boolean bRmsResultGood2 = false;    // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
+    boolean bRmsResultGood3 = false;    // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,7 +138,20 @@ public class ResultActivity extends BaseActivity {
 
         listViewRms = findViewById(R.id.listViewRms);
 
-        rmsListAdapter = new RmsListAdapter(this, R.layout.list_item_rms, rmsList, getResources());
+        rmsListAdapter = new RmsListAdapter(this, R.layout.list_item_rms, rmsList, getResources(), new RmsListClickListener() {
+            @Override
+            public void setRmsStatus(int position, boolean bGood) {
+                switch(position) {
+                    case 0 :
+                        bRmsResultGood1 = bGood; break;
+                    case 1 :
+                        bRmsResultGood2 = bGood; break;
+                    case 2 :
+                        bRmsResultGood3 = bGood; break;
+
+                }
+            }
+        });
         listViewRms.setAdapter(rmsListAdapter);
 
         Button buttonNext = findViewById(R.id.buttonNext);
@@ -142,7 +160,14 @@ public class ResultActivity extends BaseActivity {
             public void onClick(View v) {
 
                 // 다음 화면으로 이동
-                Intent intent = new Intent(getBaseContext(), ResultDiagnosisActivity.class);
+                Intent intent;
+                if( bRmsResultGood1 && bRmsResultGood2 && bRmsResultGood3 ) {   // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
+                    intent = new Intent(getBaseContext(), RecordManagerActivity.class);
+                }
+                else {
+                    intent = new Intent(getBaseContext(), ResultDiagnosisActivity.class);
+                }
+
                 intent.putExtra("analysisData", analysisData);
                 intent.putExtra("matrix2", matrix2);
                 intent.putExtra("equipmentUuid", equipmentUuid);

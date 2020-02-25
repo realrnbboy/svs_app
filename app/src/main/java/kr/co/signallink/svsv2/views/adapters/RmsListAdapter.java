@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.model.RmsModel;
+import kr.co.signallink.svsv2.views.interfaces.RmsListClickListener;
 
 
 /**
@@ -23,16 +24,18 @@ import kr.co.signallink.svsv2.model.RmsModel;
 public class RmsListAdapter extends ArrayAdapter<RmsModel> {
     private Context context;
     private int itemLayoutResource;
+    RmsListClickListener rmsListClickListener;
 
     Resources resouces = null;
 
     View mainView;
 
-    public RmsListAdapter(Context context, int itemLayoutResource, ArrayList<RmsModel> rmsModel, Resources resouces) {
+    public RmsListAdapter(Context context, int itemLayoutResource, ArrayList<RmsModel> rmsModel, Resources resouces, RmsListClickListener rmsListClickListener) {
         super(context, itemLayoutResource, rmsModel);
         this.itemLayoutResource = itemLayoutResource;
         this.context = context;
         this.resouces = resouces;
+        this.rmsListClickListener = rmsListClickListener;
     }
 
 
@@ -74,6 +77,7 @@ public class RmsListAdapter extends ArrayAdapter<RmsModel> {
             rmsString = rms + "mm/s";
             statusString = "GOOD";
         }
+        statusString = "PROBLEM";   // for test
 
         TextView textViewName = view.findViewById(R.id.textViewName);
         TextView textViewRms = view.findViewById(R.id.textViewRms);
@@ -85,6 +89,7 @@ public class RmsListAdapter extends ArrayAdapter<RmsModel> {
         textViewStatus.setText(statusString);
         textViewStatus.setTextColor(statusColor);
 
+        rmsListClickListener.setRmsStatus( position, "GOOD".equals(statusString) );
         return view;
     }
 }

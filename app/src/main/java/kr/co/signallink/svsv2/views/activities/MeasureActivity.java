@@ -481,7 +481,7 @@ public class MeasureActivity extends BaseActivity {
         }
         else {
             if (requestCode == DefConstant.REQUEST_SENSING_RESULT) { // 센싱을 정상적으로 실행하지 않은 경우
-                bMeasure = false;
+                //bMeasure = false; // 추가하면 센싱 중 취소 시, 처음부터 다시 해야됨.
             }
         }
     }

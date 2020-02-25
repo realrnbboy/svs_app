@@ -10,9 +10,11 @@ import java.nio.ByteOrder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import kr.co.signallink.svsv2.services.MyApplication;
 
@@ -116,6 +118,42 @@ public class Utils {
         }
 
         return null;
+    }
+
+    public static void setFloatArrayPref(String key, float[] values) {
+        if( values == null )
+            return;
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MyApplication.getInstance().getAppContext());
+        SharedPreferences.Editor editor = prefs.edit();
+
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < values.length; i++) {
+            str.append(values[i]).append(",");
+        }
+
+        editor.putString(key, str.toString());
+        editor.apply();
+    }
+
+    public static float[] getFloatArrayPref(String key) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MyApplication.getInstance().getAppContext());
+        String savedString = prefs.getString(key, null);
+        if( savedString == null )
+            return null;
+
+        StringTokenizer st = new StringTokenizer(savedString, ",");
+        ArrayList<Float> resultArray = new ArrayList<>();
+        while (st.hasMoreTokens()) {
+            resultArray.add(Float.parseFloat(st.nextToken()));
+        }
+
+        float[] result = new float[resultArray.size()];
+        for (int i = 0; i<resultArray.size(); i++ ) {
+            result[i] = resultArray.get(i);
+        }
+
+        return result;
     }
 
     public static float[] byteToFloat(byte[] bytes) {

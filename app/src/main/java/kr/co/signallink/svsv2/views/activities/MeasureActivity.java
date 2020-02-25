@@ -13,33 +13,23 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
-import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import io.realm.OrderedRealmCollection;
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.commons.DefLog;
-import kr.co.signallink.svsv2.databases.SVSEntity;
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.dto.MeasureData;
 import kr.co.signallink.svsv2.dto.ResultDiagnosisData;
@@ -47,8 +37,6 @@ import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.MainData;
 import kr.co.signallink.svsv2.services.DiagnosisInfo;
-import kr.co.signallink.svsv2.user.SVS;
-import kr.co.signallink.svsv2.utils.MyValueFormatter;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 import kr.co.signallink.svsv2.utils.Utils;
 
@@ -74,6 +62,10 @@ public class MeasureActivity extends BaseActivity {
 
     String equipmentUuid = null;
 
+    float [] measuredFreq1 = null;  // measureActivity에서 측정된 데이터
+    float [] measuredFreq2 = null;  // measureActivity에서 측정된 데이터
+    float [] measuredFreq3 = null;  // measureActivity에서 측정된 데이터
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +84,9 @@ public class MeasureActivity extends BaseActivity {
         Intent intent = getIntent();
 
         equipmentUuid = intent.getStringExtra("equipmentUuid");
+        measuredFreq1 = (float[]) intent.getSerializableExtra("measuredFreq1");
+        measuredFreq2 = (float[]) intent.getSerializableExtra("measuredFreq2");
+        measuredFreq3 = (float[]) intent.getSerializableExtra("measuredFreq3");
 
         // 이전 Activity 에서 전달받은 데이터 가져오기
         analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");
@@ -206,6 +201,10 @@ public class MeasureActivity extends BaseActivity {
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
         //applyXAxisDefault(xAxis, l);
+
+        if( !(measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null) ) { // 기존에 측정한 데이터가 있으면 표시
+            drawChart(measuredFreq1, measuredFreq2, measuredFreq3);
+        }
     }
 
     private OnChartGestureListener OCGL = new OnChartGestureListener() {
@@ -251,7 +250,13 @@ public class MeasureActivity extends BaseActivity {
     };
 
 
-    private void drawChart(float[] data1, float[] data2, float[] data3) throws Exception{
+    private void drawChart(float[] data1, float[] data2, float[] data3){
+
+        try {
+            //Thread.sleep(1000); // 차트 초기화 시간 - 추가 안하면 정상적으로 표시 안될 수 있음.
+        }
+        catch (Exception e) {
+        }
 
         LineData lineData = new LineData();
 
@@ -414,8 +419,25 @@ public class MeasureActivity extends BaseActivity {
     }
 
     @Override
+    public void finish() {
+        setReturnIntent();
+
+        super.finish();
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    private void setReturnIntent() {
+
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("measuredFreq1", measuredFreq1);
+        returnIntent.putExtra("measuredFreq2", measuredFreq2);
+        returnIntent.putExtra("measuredFreq3", measuredFreq3);
+
+        setResult(Activity.RESULT_OK, returnIntent);
     }
 
     @Override
@@ -441,12 +463,12 @@ public class MeasureActivity extends BaseActivity {
 
                 bMeasure = true;
 
-                float [] data1 = measureDataSensor1.getAxisBuf().getfFreq();
-                float [] data2 = measureDataSensor2.getAxisBuf().getfFreq();
-                float [] data3 = measureDataSensor3.getAxisBuf().getfFreq();
+                measuredFreq1 = measureDataSensor1.getAxisBuf().getfFreq();
+                measuredFreq2 = measureDataSensor2.getAxisBuf().getfFreq();
+                measuredFreq3 = measureDataSensor3.getAxisBuf().getfFreq();
 
                 try {
-                    drawChart(data1, data2, data3);
+                    drawChart(measuredFreq1, measuredFreq2, measuredFreq3);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

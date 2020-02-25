@@ -1,5 +1,6 @@
 package kr.co.signallink.svsv2.views.activities;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,21 +22,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import io.realm.OrderedRealmCollection;
-import io.realm.Realm;
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.commons.DefLog;
-import kr.co.signallink.svsv2.databases.DatabaseUtil;
-import kr.co.signallink.svsv2.databases.PresetEntity;
-import kr.co.signallink.svsv2.databases.SVSEntity;
 import kr.co.signallink.svsv2.dto.AnalysisData;
-import kr.co.signallink.svsv2.model.MainData;
 import kr.co.signallink.svsv2.model.VARIABLES_1_Type;
 import kr.co.signallink.svsv2.server.SendPost;
 import kr.co.signallink.svsv2.services.SendMessageHandler;
-import kr.co.signallink.svsv2.user.SVS;
-import kr.co.signallink.svsv2.utils.DialogUtil;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 import kr.co.signallink.svsv2.utils.Utils;
 
@@ -44,10 +37,6 @@ import kr.co.signallink.svsv2.utils.Utils;
 public class PresetActivity extends BaseActivity {
 
     private static final String TAG = "PresetActivity";
-
-    //String bModeCreate = "1"; // create or update
-
-    //AnalysisData analysisData = null;
 
     ArrayList arrayListPreset = new ArrayList<>();
     ArrayList arrayListEquipmentCode = new ArrayList<>();
@@ -82,6 +71,10 @@ public class PresetActivity extends BaseActivity {
     public boolean bResponsePreset = false;
 
     ArrayAdapter arrayAdapterPreset;
+
+    float [] measuredFreq1 = null;  // measureActivity에서 측정된 데이터
+    float [] measuredFreq2 = null;  // measureActivity에서 측정된 데이터
+    float [] measuredFreq3 = null;  // measureActivity에서 측정된 데이터
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,7 +122,11 @@ public class PresetActivity extends BaseActivity {
                     Intent intent = new Intent(getBaseContext(), MeasureActivity.class);
                     intent.putExtra("analysisData", analysisData);
                     intent.putExtra("equipmentUuid", equipmentUuid);
-                    startActivity(intent);
+                    intent.putExtra("measuredFreq1", measuredFreq1);
+                    intent.putExtra("measuredFreq2", measuredFreq2);
+                    intent.putExtra("measuredFreq3", measuredFreq3);
+                    startActivityForResult(intent, DefConstant.REQUEST_MEASUREACTIVITY_RESULT);
+                    //startActivity(intent);
                 }
             }
         });
@@ -647,5 +644,19 @@ public class PresetActivity extends BaseActivity {
         spinnerBearingType.setSelection(bearingType);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+
+            if (requestCode == DefConstant.REQUEST_MEASUREACTIVITY_RESULT) {
+                measuredFreq1 = (float[]) data.getSerializableExtra("measuredFreq1");
+                measuredFreq2 = (float[]) data.getSerializableExtra("measuredFreq2");
+                measuredFreq3 = (float[]) data.getSerializableExtra("measuredFreq3");
+            }
+        }
+    }
 
 }

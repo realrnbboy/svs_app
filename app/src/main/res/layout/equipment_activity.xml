@@ -88,7 +88,8 @@
         android:padding="5dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:background="@color/colorContent">
+        android:visibility="gone"
+        android:background="@color/colorContent"><!--// added by hslee-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -114,7 +115,8 @@
         android:padding="5dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:background="@color/colorContent">
+        android:visibility="gone"
+        android:background="@color/colorContent"><!--// added by hslee-->
 
         <TextView
             android:layout_width="wrap_content"

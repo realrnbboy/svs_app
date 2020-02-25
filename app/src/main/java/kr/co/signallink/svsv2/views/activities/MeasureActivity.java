@@ -38,7 +38,6 @@ import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.MainData;
 import kr.co.signallink.svsv2.services.DiagnosisInfo;
 import kr.co.signallink.svsv2.utils.ToastUtil;
-import kr.co.signallink.svsv2.utils.Utils;
 
 // added by hslee 2020-01-29
 // 측정 화면
@@ -87,6 +86,10 @@ public class MeasureActivity extends BaseActivity {
         measuredFreq1 = (float[]) intent.getSerializableExtra("measuredFreq1");
         measuredFreq2 = (float[]) intent.getSerializableExtra("measuredFreq2");
         measuredFreq3 = (float[]) intent.getSerializableExtra("measuredFreq3");
+
+        if( !(measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null) ) { // 기존에 측정한 데이터가 있으면
+            bMeasure = true;    // 측정된 상태로 표시
+        }
 
         // 이전 Activity 에서 전달받은 데이터 가져오기
         analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");
@@ -436,6 +439,8 @@ public class MeasureActivity extends BaseActivity {
         returnIntent.putExtra("measuredFreq1", measuredFreq1);
         returnIntent.putExtra("measuredFreq2", measuredFreq2);
         returnIntent.putExtra("measuredFreq3", measuredFreq3);
+
+        returnIntent.putExtra("analysisData", analysisData);
 
         setResult(Activity.RESULT_OK, returnIntent);
     }

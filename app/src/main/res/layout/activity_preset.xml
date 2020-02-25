@@ -116,6 +116,22 @@
                         android:id="@+id/spinnerEquipmentCode"
                         style="@style/preset_item_spinner"/>
                 </LinearLayout>
+
+                <LinearLayout
+                    style="@style/item_sub_layout"
+                    android:layout_marginTop="@dimen/margin_default">
+
+                    <TextView
+                        android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                        style="@style/preset_item_textview"
+                        android:text="Project VIB spec :"/>
+
+                    <EditText
+                        android:id="@+id/editTextProjectVibSpec"
+                        android:text="1"
+                        android:inputType="numberDecimal"
+                        style="@style/preset_item_edittext"/>
+                </LinearLayout>
             </LinearLayout>
 
 
@@ -309,25 +325,6 @@
                             style="@style/preset_item_textview"
                             android:text=" EA"/>
                     </LinearLayout>
-                </LinearLayout>
-
-
-
-
-                <LinearLayout
-                    style="@style/item_sub_layout"
-                    android:layout_marginTop="@dimen/margin_default">
-
-                    <TextView
-                        android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
-                        style="@style/preset_item_textview"
-                        android:text="Project VIB spec :"/>
-
-                    <EditText
-                        android:id="@+id/editTextProjectVibSpec"
-                        android:text="1"
-                        android:inputType="numberDecimal"
-                        style="@style/preset_item_edittext"/>
                 </LinearLayout>
                 <LinearLayout
                     style="@style/item_sub_layout"

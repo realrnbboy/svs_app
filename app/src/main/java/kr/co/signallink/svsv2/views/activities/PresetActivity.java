@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,6 +31,7 @@ import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.VARIABLES_1_Type;
 import kr.co.signallink.svsv2.server.SendPost;
 import kr.co.signallink.svsv2.services.SendMessageHandler;
+import kr.co.signallink.svsv2.utils.DialogUtil;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 import kr.co.signallink.svsv2.utils.Utils;
 
@@ -75,6 +78,9 @@ public class PresetActivity extends BaseActivity {
     float [] measuredFreq1 = null;  // measureActivity에서 측정된 데이터
     float [] measuredFreq2 = null;  // measureActivity에서 측정된 데이터
     float [] measuredFreq3 = null;  // measureActivity에서 측정된 데이터
+    AnalysisData m_analysisData = null;
+
+    boolean bRemeasure = true;  // measureActivity 화면에서 다시 측정해야 할지 여부, 값을 변경하면 측정을 다시해야 함.
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,6 +114,19 @@ public class PresetActivity extends BaseActivity {
         editTextContactAngle = findViewById(R.id.editTextContactAngle);
         editTextProjectVibSpec = findViewById(R.id.editTextProjectVibSpec);
 
+        editTextSiteCode.addTextChangedListener(textWatcherInput);
+        editTextEquipmentName.addTextChangedListener(textWatcherInput);
+        editTextInputPower.addTextChangedListener(textWatcherInput);
+        editTextEquipmentRpm.addTextChangedListener(textWatcherInput);
+        editTextBladeVane.addTextChangedListener(textWatcherInput);
+        editTextNoOfBalls.addTextChangedListener(textWatcherInput);
+        editTextTagNo.addTextChangedListener(textWatcherInput);
+        editTextPitchDiameter.addTextChangedListener(textWatcherInput);
+        editTextBallDiameter.addTextChangedListener(textWatcherInput);
+        editTextRps.addTextChangedListener(textWatcherInput);
+        editTextContactAngle.addTextChangedListener(textWatcherInput);
+        editTextProjectVibSpec.addTextChangedListener(textWatcherInput);
+
         Button buttonNext = findViewById(R.id.buttonNext);
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +135,13 @@ public class PresetActivity extends BaseActivity {
                 if( validateForm() ) {
 
                     // 수정된 preset 확인 및 세팅
-                    AnalysisData analysisData = setAnalysisData();
+                    AnalysisData analysisData;
+                    if( bRemeasure ) {  // 다시 측정할 경우, 세팅값 다시 계산
+                        analysisData = setAnalysisData();
+                    }
+                    else {  // 아니면 기존 값 사용
+                        analysisData = m_analysisData;
+                    }
 
                     // 다음 화면으로 이동
                     Intent intent = new Intent(getBaseContext(), MeasureActivity.class);
@@ -655,8 +680,56 @@ public class PresetActivity extends BaseActivity {
                 measuredFreq1 = (float[]) data.getSerializableExtra("measuredFreq1");
                 measuredFreq2 = (float[]) data.getSerializableExtra("measuredFreq2");
                 measuredFreq3 = (float[]) data.getSerializableExtra("measuredFreq3");
+
+                m_analysisData = (AnalysisData) data.getSerializableExtra("analysisData");
+
+                if( measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null ) { // 측정된 데이터가 없는 경우
+                    bRemeasure = true;
+                }
+                else {  // 측정된 데이터가 있는 경우
+                    bRemeasure = false;
+                }
             }
         }
     }
+
+    TextWatcher textWatcherInput = new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // TODO Auto-generated method stub
+
+            // 기존에 측정한 데이터가 있고, 재측정을 안해도 되는 상태인데 값을 변경한 경우
+            if( !(measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null) && bRemeasure == false ) {
+                DialogUtil.yesNo(PresetActivity.this,
+                        "info",
+                        "If you change the value you will have to re-measure.",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                measuredFreq1 = null;
+                                measuredFreq2 = null;
+                                measuredFreq3 = null;
+
+                                m_analysisData = null;
+
+                                bRemeasure = true;
+                            }
+                        },
+                        null
+                );
+            }
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // TODO Auto-generated method stub
+        }
+    };
 
 }

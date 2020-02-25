@@ -66,6 +66,12 @@ public class PresetActivity extends BaseActivity {
     Spinner spinnerEquipmentType;
     Spinner spinnerBearingType;
 
+    int previousPositionSpinnerPreset = 0;
+    int previousPositionSpinnerEquipmentCode = 0;
+    int previousPositionSpinnerLineFrequency = 0;
+    int previousPositionSpinnerEquipmentType = 0;
+    int previousPositionSpinnerBearingType = 0;
+
     String equipmentUuid = null;
     SendMessageHandler handler;
 
@@ -162,6 +168,107 @@ public class PresetActivity extends BaseActivity {
         spinnerEquipmentType = findViewById(R.id.spinnerEquipmentType);
         spinnerBearingType = findViewById(R.id.spinnerBearingType);
 
+        spinnerPreset.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, final View view, final int position, final long id) {
+
+                if( previousPositionSpinnerPreset != position ) {
+                    DialogInterface.OnClickListener cancel = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            setPreviousAnalysisData();  // 취소할 경우 원래의 값으로 변경
+                        }
+                    };
+                    valueChanged(cancel);
+
+                    previousPositionSpinnerPreset = position;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+        spinnerEquipmentCode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, final View view, final int position, final long id) {
+
+                if( previousPositionSpinnerEquipmentCode != position ) {
+                    DialogInterface.OnClickListener cancel = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            setPreviousAnalysisData();  // 취소할 경우 원래의 값으로 변경
+                        }
+                    };
+                    valueChanged(cancel);
+
+                    previousPositionSpinnerEquipmentCode = position;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+        spinnerLineFrequency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, final View view, final int position, final long id) {
+
+                if( previousPositionSpinnerLineFrequency != position ) {
+                    DialogInterface.OnClickListener cancel = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            setPreviousAnalysisData();  // 취소할 경우 원래의 값으로 변경
+                        }
+                    };
+                    valueChanged(cancel);
+
+                    previousPositionSpinnerLineFrequency = position;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+        spinnerEquipmentType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, final View view, final int position, final long id) {
+
+                if( previousPositionSpinnerEquipmentType != position ) {
+                    DialogInterface.OnClickListener cancel = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            setPreviousAnalysisData();  // 취소할 경우 원래의 값으로 변경
+                        }
+                    };
+                    valueChanged(cancel);
+
+                    previousPositionSpinnerEquipmentType = position;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+        spinnerBearingType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, final View view, final int position, final long id) {
+
+                if( previousPositionSpinnerBearingType != position ) {
+                    DialogInterface.OnClickListener cancel = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            setPreviousAnalysisData();  // 취소할 경우 원래의 값으로 변경
+                        }
+                    };
+                    valueChanged(cancel);
+
+                    previousPositionSpinnerBearingType = position;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
         initDefaultItem();
 
         arrayAdapterPreset = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListPreset);
@@ -181,51 +288,6 @@ public class PresetActivity extends BaseActivity {
         spinnerLineFrequency.setAdapter(arrayAdapterLineFrequency);
         spinnerEquipmentType.setAdapter(arrayAdapterEquipmentType);
         spinnerBearingType.setAdapter(arrayAdapterBearingType);
-
-        spinnerPreset.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                setViewData(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
-            }
-
-        });
-
-//        bModeCreate = intent.getStringExtra("bModeCreate");
-//        if( "0".equals(bModeCreate) ) {    // update 모드이면 이름 입력 부분 숨김
-//            //findViewById(R.id.linearLayoutPresetName).setVisibility(View.GONE);
-//            toolbarTitle.setText("Preset Update");
-//
-//            // PresetListActivity 에서 전달받은 데이터 가져오기
-//            analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");
-//            if( analysisData != null ) {
-//                editTextPresetName.setText(analysisData.getName());
-//                editTextSiteCode.setText(analysisData.getSiteCode());
-//                editTextEquipmentName.setText(analysisData.getEquipmentName());
-//                editTextInputPower.setText(String.valueOf(analysisData.getInputPower()));
-//                editTextEquipmentRpm.setText(String.valueOf(analysisData.getRpm()));
-//                editTextBladeVane.setText(String.valueOf(analysisData.getBladeCount()));
-//                editTextNoOfBalls.setText(String.valueOf(analysisData.getBallCount()));
-//                editTextTagNo.setText(analysisData.getTagNo());
-//                editTextPitchDiameter.setText(String.valueOf(analysisData.getPitchDiameter()));
-//                editTextBallDiameter.setText(String.valueOf(analysisData.getBallDiameter()));
-//                editTextRps.setText(String.valueOf(analysisData.getRps()));
-//                editTextContactAngle.setText(String.valueOf(analysisData.getContactAngle()));
-//                editTextProjectVibSpec.setText(String.valueOf(analysisData.getProjectVibSpec()));
-//
-//                spinnerEquipmentCode.setSelection(analysisData.getCode());
-//                spinnerLineFrequency.setSelection(analysisData.getLineFreq());
-//                spinnerEquipmentType.setSelection(analysisData.getEquipmentType());
-//                spinnerBearingType.setSelection(analysisData.getBearingType());
-//            }
-//            else {
-//                ToastUtil.showShort("failed to preset data load");
-//            }
-//        }
 
         // 서버에서 preset 정보 불러오기
         getPresetFromServer();
@@ -301,6 +363,35 @@ public class PresetActivity extends BaseActivity {
 //        analysisData.setFeatureInfos(mainData.featureInfos);
 
         return analysisData;
+    }
+
+    // 값 변경하기 전의 데이터로 변경
+    void setPreviousAnalysisData() {
+        if( m_analysisData == null )
+            m_analysisData = setAnalysisData();
+
+        spinnerEquipmentCode.setSelection(m_analysisData.getDiagVar1().nCode);
+        spinnerEquipmentType.setSelection(m_analysisData.getDiagVar1().nEquipType);
+        spinnerBearingType.setSelection(m_analysisData.getDiagVar1().nBearingType);
+        spinnerLineFrequency.setSelection(m_analysisData.getDiagVar1().nLineFreq);
+
+        previousPositionSpinnerEquipmentCode = spinnerEquipmentCode.getSelectedItemPosition();
+        previousPositionSpinnerEquipmentType = spinnerEquipmentType.getSelectedItemPosition();
+        previousPositionSpinnerBearingType = spinnerBearingType.getSelectedItemPosition();
+        previousPositionSpinnerLineFrequency = spinnerLineFrequency.getSelectedItemPosition();
+
+        editTextProjectVibSpec.setText(String.valueOf(m_analysisData.getDiagVar1().nPrjVibSpec));
+        editTextSiteCode.setText(String.valueOf(m_analysisData.getDiagVar1().strSiteCode));
+        editTextEquipmentName.setText(String.valueOf(m_analysisData.getDiagVar1().strEquipName));
+        editTextTagNo.setText(String.valueOf(m_analysisData.getDiagVar1().strTagNo));
+        editTextInputPower.setText(String.valueOf(m_analysisData.getDiagVar1().nInputPower));
+        editTextEquipmentRpm.setText(String.valueOf(m_analysisData.getDiagVar1().nRPM));
+        editTextBladeVane.setText(String.valueOf(m_analysisData.getDiagVar1().nBladeCount));
+        editTextNoOfBalls.setText(String.valueOf(m_analysisData.getDiagVar1().nBallCount));
+        editTextPitchDiameter.setText(String.valueOf(m_analysisData.getDiagVar1().nPitchDiameter));
+        editTextBallDiameter.setText(String.valueOf(m_analysisData.getDiagVar1().nBallDiameter));
+        editTextRps.setText(String.valueOf(m_analysisData.getDiagVar1().nRPS));
+        editTextContactAngle.setText(String.valueOf(m_analysisData.getDiagVar1().nContactAngle));
     }
 
 
@@ -699,26 +790,7 @@ public class PresetActivity extends BaseActivity {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             // TODO Auto-generated method stub
 
-            // 기존에 측정한 데이터가 있고, 재측정을 안해도 되는 상태인데 값을 변경한 경우
-            if( !(measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null) && bRemeasure == false ) {
-                DialogUtil.yesNo(PresetActivity.this,
-                        "info",
-                        "If you change the value you will have to re-measure.",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                measuredFreq1 = null;
-                                measuredFreq2 = null;
-                                measuredFreq3 = null;
-
-                                m_analysisData = null;
-
-                                bRemeasure = true;
-                            }
-                        },
-                        null
-                );
-            }
+           // valueChanged(null);
         }
 
         @Override
@@ -732,4 +804,28 @@ public class PresetActivity extends BaseActivity {
         }
     };
 
+    public void valueChanged(DialogInterface.OnClickListener cancel) {
+
+        // 기존에 측정한 데이터가 있고, 재측정을 안해도 되는 상태인데 값을 변경한 경우
+        if( !(measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null) && bRemeasure == false )
+        {
+            DialogUtil.yesNo(PresetActivity.this,
+                    "info",
+                    "If you change the value you will have to re-measure.",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            measuredFreq1 = null;
+                            measuredFreq2 = null;
+                            measuredFreq3 = null;
+
+                            m_analysisData = null;
+
+                            bRemeasure = true;
+                        }
+                    },
+                    cancel
+            );
+        }
+    }
 }

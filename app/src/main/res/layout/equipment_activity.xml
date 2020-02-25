@@ -96,7 +96,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/color1"
             android:textSize="@dimen/font_midium"
-            android:text="Current Sensor"/>
+            android:text="Current Sensor11"/>
 
 
         <ImageView

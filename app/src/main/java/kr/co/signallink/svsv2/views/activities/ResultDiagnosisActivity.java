@@ -107,21 +107,6 @@ public class ResultDiagnosisActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-
-        Button buttonSave = findViewById(R.id.buttonSave);
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // db에 진단 결과 데이터 저장
-                if( bSaved ) {
-                    ToastUtil.showShort("already saved.");
-                }
-                else {
-                    save();
-                }
-            }
-        });
     }
 
     // db에 진단 결과 데이터 저장

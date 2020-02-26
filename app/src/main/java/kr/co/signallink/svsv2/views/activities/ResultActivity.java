@@ -24,12 +24,17 @@ import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
 
+import io.realm.Realm;
+import io.realm.RealmList;
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefLog;
+import kr.co.signallink.svsv2.databases.AnalysisEntity;
+import kr.co.signallink.svsv2.databases.DatabaseUtil;
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.RmsModel;
 import kr.co.signallink.svsv2.utils.ToastUtil;
+import kr.co.signallink.svsv2.utils.Utils;
 import kr.co.signallink.svsv2.views.adapters.RmsListAdapter;
 import kr.co.signallink.svsv2.views.interfaces.RmsListClickListener;
 
@@ -53,6 +58,8 @@ public class ResultActivity extends BaseActivity {
     boolean bRmsResultGood1 = false;    // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
     boolean bRmsResultGood2 = false;    // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
     boolean bRmsResultGood3 = false;    // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
+
+    boolean bSaved = false; // 저장여부
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -172,6 +179,110 @@ public class ResultActivity extends BaseActivity {
                 intent.putExtra("matrix2", matrix2);
                 intent.putExtra("equipmentUuid", equipmentUuid);
                 startActivity(intent);
+            }
+        });
+
+        Button buttonSaveDb = findViewById(R.id.buttonSaveDb);
+        buttonSaveDb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // db에 진단 결과 데이터 저장
+                if( bSaved ) {
+                    ToastUtil.showShort("already saved.");
+                }
+                else {
+                    save();
+                }
+            }
+        });
+
+        Button buttonSaveCsv = findViewById(R.id.buttonSaveCsv);
+        buttonSaveCsv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                float [] data1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
+                float [] data2 = analysisData.getMeasureData2().getAxisBuf().getfFreq();
+                float [] data3 = analysisData.getMeasureData3().getAxisBuf().getfFreq();
+
+                // csv로 raw data 데이터 저장
+                String fileName = Utils.createCsv(new String [] {"PT1", "PT2", "PT3"}, data1, data2, data3);
+                if( fileName == null ) {
+                    ToastUtil.showShort("failed to save csv.");
+                }
+                else {
+                    ToastUtil.showLong("saved as \"/SVSdata/csv/" + fileName + "\"");
+                }
+
+            }
+        });
+    }
+
+    // db에 진단 결과 데이터 저장
+    void save() {
+        DatabaseUtil.transaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                int id = 0;
+                Number currentNo = realm.where(AnalysisEntity.class).max("id");
+
+                if (currentNo == null) {    // index 값 증가
+                    id = 1;
+                } else {
+                    id = currentNo.intValue() + 1;
+                }
+
+                try {
+                    AnalysisEntity analysisEntity = new AnalysisEntity();
+                    analysisEntity.setId(id);
+                    analysisEntity.setEquipmentUuid(equipmentUuid);
+
+                    //String tCreated = Utils.getCurrentTime("yyyy-MM-dd HH:mm:ss");
+                    //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    //Date created = simpleDateFormat.parse(tCreated);
+                    //long createdLong = created.getTime(); // 현재 시간으로 저장하기
+                    long createdLong = analysisData.getMeasureData1().getCaptureTime().getTime();   // 측정된 시간으로 저장하기
+                    analysisEntity.setCreated(createdLong);
+
+                    float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();
+                    float rms2 = analysisData.getMeasureData2().getSvsTime().getdRms();
+                    float rms3 = analysisData.getMeasureData3().getSvsTime().getdRms();
+
+                    analysisEntity.setRms1(rms1);
+                    analysisEntity.setRms2(rms2);
+                    analysisEntity.setRms3(rms3);
+
+                    RealmList<String> cause = new RealmList<>();
+                    RealmList<String> causeDesc = new RealmList<>();
+                    RealmList<Double> rank = new RealmList<>();
+                    RealmList<Double> ratio = new RealmList<>();
+
+                    for( int i = 0; i<analysisData.resultDiagnosis.length && i < 5; i++ ) {
+
+                        cause.add(analysisData.resultDiagnosis[i].cause);
+                        causeDesc.add(analysisData.resultDiagnosis[i].desc);
+                        rank.add(analysisData.resultDiagnosis[i].rank);
+                        ratio.add(analysisData.resultDiagnosis[i].ratio);
+                    }
+
+                    analysisEntity.setCause(cause);
+                    analysisEntity.setCauseDesc(causeDesc);
+                    analysisEntity.setRank(rank);
+                    analysisEntity.setRatio(ratio);
+
+                    AnalysisEntity result = realm.copyToRealmOrUpdate(analysisEntity);
+                    if( result != null ) {
+                        ToastUtil.showShort("save success.");
+                        bSaved = true;
+                    }
+                    else {
+                        ToastUtil.showShort("failed to save.");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

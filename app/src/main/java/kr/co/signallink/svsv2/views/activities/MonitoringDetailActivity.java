@@ -849,7 +849,6 @@ public class MonitoringDetailActivity extends BaseActivity implements OnChartVal
 
         @Override
         public void onChartSingleTapped(MotionEvent me) {
-
         }
 
         @Override

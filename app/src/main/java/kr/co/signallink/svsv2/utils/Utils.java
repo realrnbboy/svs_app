@@ -1,10 +1,14 @@
 package kr.co.signallink.svsv2.utils;
 
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 
 import org.json.JSONArray;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.text.DateFormat;
@@ -171,5 +175,59 @@ public class Utils {
         }
 
         return floats;
+    }
+
+    // csv 파일 저장
+    public static String createCsv(String [] title, float [] data1, float [] data2, float [] data3) {
+        if( !(data1.length == data2.length || data2.length == data3.length) ) {    // 데이터 사이즈가 맞지 않은 경우
+            return null;
+        }
+
+        String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "SVSdata" + File.separator + "csv" + File.separator;
+
+        File dir = new File(path);
+        if( !dir.exists() ) {   // 폴더 없으면 생성
+            dir.mkdirs();
+        }
+
+        // 현재 시간 가져오기
+        String fileName = getCurrentTime("yyyyMMddHHmmss") + ".csv";
+
+        try{
+            BufferedWriter fw = new BufferedWriter(new FileWriter(path + fileName, false));
+
+            // 제목 추가
+            if( title != null ) {
+                for( int i = 0; i<title.length; i++ ) {
+                    fw.write(title[i]);
+
+                    if( (i + 1) != title.length ) { // 마지막은 , 붙이지 않음
+                        fw.write(",");
+                    }
+                }
+
+                fw.newLine();
+            }
+
+            // 실 데이터 추가
+            for( int i = 0; i<data1.length; i++ ) {
+
+                fw.write(String.valueOf(data1[i]));
+                fw.write(",");
+                fw.write(String.valueOf(data2[i]));
+                fw.write(",");
+                fw.write(String.valueOf(data3[i]));
+
+                fw.newLine();
+            }
+
+            fw.flush();
+            fw.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return fileName;
     }
 }

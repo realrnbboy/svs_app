@@ -65,6 +65,8 @@ public class MeasureActivity extends BaseActivity {
     float [] measuredFreq2 = null;  // measureActivity에서 측정된 데이터
     float [] measuredFreq3 = null;  // measureActivity에서 측정된 데이터
 
+    Button buttonLegendOn;
+    Button buttonLegendOff;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +105,23 @@ public class MeasureActivity extends BaseActivity {
 
         initView();
         initChart();
+
+        buttonLegendOn = findViewById(R.id.buttonLegendOn);
+        buttonLegendOn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                drawChart(measuredFreq1, measuredFreq2, measuredFreq3, true);
+            }
+        });
+        buttonLegendOff = findViewById(R.id.buttonLegendOff);
+        buttonLegendOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                drawChart(measuredFreq1, measuredFreq2, measuredFreq3, false);
+            }
+        });
     }
 
     void initView() {
@@ -206,7 +225,7 @@ public class MeasureActivity extends BaseActivity {
         //applyXAxisDefault(xAxis, l);
 
         if( !(measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null) ) { // 기존에 측정한 데이터가 있으면 표시
-            drawChart(measuredFreq1, measuredFreq2, measuredFreq3);
+            drawChart(measuredFreq1, measuredFreq2, measuredFreq3, true);
         }
     }
 
@@ -253,7 +272,7 @@ public class MeasureActivity extends BaseActivity {
     };
 
 
-    private void drawChart(float[] data1, float[] data2, float[] data3){
+    private void drawChart(float[] data1, float[] data2, float[] data3, boolean onOff){
 
         try {
             //Thread.sleep(1000); // 차트 초기화 시간 - 추가 안하면 정상적으로 표시 안될 수 있음.
@@ -268,14 +287,16 @@ public class MeasureActivity extends BaseActivity {
         ArrayList<Float> valueList3 = new ArrayList<>();
 
         try {
+            if( onOff ) {
 
-            if( data1 != null ) {
-                for (float v : data1) {
-                    valueList1.add(v);
+                if (data1 != null) {
+                    for (float v : data1) {
+                        valueList1.add(v);
+                    }
                 }
-            }
 
-            lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
+                lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
+            }
 
             if( data2 != null ) {
                 for (float v : data2) {
@@ -300,7 +321,7 @@ public class MeasureActivity extends BaseActivity {
         lineData.setDrawValues(true);
 
         XAxis xAxis = lineChartRawData.getXAxis();
-        int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
+        int xAxisMaximum = valueList2.size() <= 0 ? 0 : valueList2.size() - 1;
         xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
 
         lineChartRawData.setData(lineData);
@@ -473,7 +494,7 @@ public class MeasureActivity extends BaseActivity {
                 measuredFreq3 = measureDataSensor3.getAxisBuf().getfFreq();
 
                 try {
-                    drawChart(measuredFreq1, measuredFreq2, measuredFreq3);
+                    drawChart(measuredFreq1, measuredFreq2, measuredFreq3, true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -77,7 +77,7 @@ public class RmsListAdapter extends ArrayAdapter<RmsModel> {
             rmsString = rms + "mm/s";
             statusString = "GOOD";
         }
-        statusString = "PROBLEM";   // for test
+        //statusString = "PROBLEM";   // for test
 
         TextView textViewName = view.findViewById(R.id.textViewName);
         TextView textViewRms = view.findViewById(R.id.textViewRms);
@@ -90,6 +90,7 @@ public class RmsListAdapter extends ArrayAdapter<RmsModel> {
         textViewStatus.setTextColor(statusColor);
 
         rmsListClickListener.setRmsStatus( position, "GOOD".equals(statusString) );
+
         return view;
     }
 }

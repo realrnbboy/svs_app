@@ -71,6 +71,20 @@
                 android:text="measure"/>
 
             <Button
+                android:id="@+id/buttonLegendOn"
+                style="@style/button_confirm"
+                android:layout_weight="1"
+                android:background="@drawable/btn_red_round"
+                android:text="legend on"/>
+
+            <Button
+                android:id="@+id/buttonLegendOff"
+                style="@style/button_confirm"
+                android:layout_weight="1"
+                android:background="@drawable/btn_red_round"
+                android:text="legend off"/>
+
+            <Button
                 android:id="@+id/buttonTestData"
                 style="@style/button_confirm"
                 android:layout_marginLeft="5dp"

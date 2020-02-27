@@ -74,6 +74,7 @@
                 android:id="@+id/buttonLegendOn"
                 style="@style/button_confirm"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:background="@drawable/btn_red_round"
                 android:text="legend on"/>
 
@@ -81,6 +82,7 @@
                 android:id="@+id/buttonLegendOff"
                 style="@style/button_confirm"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:background="@drawable/btn_red_round"
                 android:text="legend off"/>
 

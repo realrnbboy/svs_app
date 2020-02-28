@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -42,6 +44,7 @@ import kr.co.signallink.svsv2.model.CauseModel;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.utils.DateUtil;
 import kr.co.signallink.svsv2.utils.SizeUtil;
+import kr.co.signallink.svsv2.utils.ToastUtil;
 import kr.co.signallink.svsv2.utils.Utils;
 import kr.co.signallink.svsv2.views.adapters.ResultDiagnosisListAdapter;
 
@@ -65,7 +68,12 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
     ArrayList<Date> xDataList = new ArrayList<>();
     private final float XAXIS_LABEL_DEFAULT_ROATION = 70f;
 
+    boolean bUsePreviousActivityData = false;
     boolean bShowPreviousData = true;   // 이전 화면에서 전달한 데이터를 사용할 경우, 아이템 클릭시 널포인트 오류가 나는 부분이 있음, 이를 구분하기 위해 사용
+
+    boolean bShowChartPt1 = true; // 차트의 pt1 표시 여부
+    boolean bShowChartPt2 = true; // 차트의 pt2 표시 여부
+    boolean bShowChartPt3 = true; // 차트의 pt3 표시 여부
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,7 +109,8 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                 public void run() {
 
                     // 차트 그리기
-                    drawChart(true);
+                    bUsePreviousActivityData = true;
+                    drawChart();
                 }
             };
 
@@ -169,6 +178,48 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                 startActivity(intent);
             }
         });
+
+        final ImageView imageViewPt1 = findViewById(R.id.imageViewPt1);
+        imageViewPt1.setSelected(true);// 초기값은 선택되있음.
+        LinearLayout linearLayoutPt1 = findViewById(R.id.linearLayoutPt1);
+        linearLayoutPt1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bShowChartPt1 = !bShowChartPt1;
+
+                imageViewPt1.setSelected(bShowChartPt1);
+
+                drawChart();
+            }
+        });
+
+        final ImageView imageViewPt2 = findViewById(R.id.imageViewPt2);
+        imageViewPt2.setSelected(true);// 초기값은 선택되있음.
+        LinearLayout linearLayoutPt2 = findViewById(R.id.linearLayoutPt2);
+        linearLayoutPt2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bShowChartPt2 = !bShowChartPt2;
+
+                imageViewPt2.setSelected(bShowChartPt2);
+
+                drawChart();
+            }
+        });
+
+        final ImageView imageViewPt3 = findViewById(R.id.imageViewPt3);
+        imageViewPt3.setSelected(true);// 초기값은 선택되있음.
+        LinearLayout linearLayoutPt3 = findViewById(R.id.linearLayoutPt3);
+        linearLayoutPt3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bShowChartPt3 = !bShowChartPt3;
+
+                imageViewPt3.setSelected(bShowChartPt3);
+
+                drawChart();
+            }
+        });
     }
 
     // db에서 날짜에 맞는 데이터 가져오기
@@ -211,7 +262,11 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
 
             if( analysisEntityList != null ) {
                 // 차트 그리기
-                drawChart(false);
+                bUsePreviousActivityData = false;
+                drawChart();
+            }
+            else {
+                ToastUtil.showShort("no data.");
             }
 
         }
@@ -363,7 +418,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         //lineChartRms.invalidate();
     }
 
-    private void drawChart(boolean bUsePreviousActivityData) {
+    private void drawChart() {
 
         try {
             Thread.sleep(1000); // 차트 초기화 시간 - 추가 안하면 정상적으로 표시 안됨.
@@ -388,23 +443,29 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                 float rms2 = analysisData.getMeasureData2().getSvsTime().getdRms();
                 float rms3 = analysisData.getMeasureData3().getSvsTime().getdRms();
 
-                yDataList1.add(rms1);
+                if( bShowChartPt1 ) {
+                    yDataList1.add(rms1);
 
-                LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen));
-                if( lineDataSet1 != null )
-                    lineData.addDataSet(lineDataSet1);
+                    LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen));
+                    if (lineDataSet1 != null)
+                        lineData.addDataSet(lineDataSet1);
+                }
 
-                yDataList2.add(rms2);
+                if( bShowChartPt2 ) {
+                    yDataList2.add(rms2);
 
-                LineDataSet lineDataSet2 = generateLineData("pt2", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange));
-                if( lineDataSet2 != null )
-                    lineData.addDataSet(lineDataSet2);
+                    LineDataSet lineDataSet2 = generateLineData("pt2", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange));
+                    if (lineDataSet2 != null)
+                        lineData.addDataSet(lineDataSet2);
+                }
 
-                yDataList3.add(rms3);
+                if( bShowChartPt3 ) {
+                    yDataList3.add(rms3);
 
-                LineDataSet lineDataSet3 = generateLineData("pt3", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue));
-                if( lineDataSet3 != null )
-                    lineData.addDataSet(lineDataSet3);
+                    LineDataSet lineDataSet3 = generateLineData("pt3", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue));
+                    if (lineDataSet3 != null)
+                        lineData.addDataSet(lineDataSet3);
+                }
 
                 xDataList.add(analysisData.getMeasureData1().getCaptureTime());
 
@@ -424,15 +485,24 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                     xDataList.add(created);
                 }
 
-                LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen));
-                if( lineDataSet1 != null )
-                    lineData.addDataSet(lineDataSet1);
-                LineDataSet lineDataSet2 = generateLineData("pt2", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange));
-                if( lineDataSet2 != null )
-                    lineData.addDataSet(lineDataSet2);
-                LineDataSet lineDataSet3 = generateLineData("pt3", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue));
-                if( lineDataSet3 != null )
-                    lineData.addDataSet(lineDataSet3);
+
+                if( bShowChartPt1 ) {
+                    LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen));
+                    if (lineDataSet1 != null)
+                        lineData.addDataSet(lineDataSet1);
+                }
+
+                if( bShowChartPt2 ) {
+                    LineDataSet lineDataSet2 = generateLineData("pt2", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange));
+                    if (lineDataSet2 != null)
+                        lineData.addDataSet(lineDataSet2);
+                }
+
+                if( bShowChartPt3 ) {
+                    LineDataSet lineDataSet3 = generateLineData("pt3", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue));
+                    if (lineDataSet3 != null)
+                        lineData.addDataSet(lineDataSet3);
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();

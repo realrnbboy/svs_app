@@ -492,7 +492,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             swipe.setEnabled(false);
 
             //현재 모드 상태 뷰
-            llCurrentLocalMode.setVisibility(View.VISIBLE);
+            //llCurrentLocalMode.setVisibility(View.VISIBLE);
+            llCurrentLocalMode.setVisibility(View.GONE); // added by hslee
             llCurrentWebMode.setVisibility(View.GONE);
         }
         else if(svs.getScreenMode() == DefConstant.SCREEN_MODE.WEB)

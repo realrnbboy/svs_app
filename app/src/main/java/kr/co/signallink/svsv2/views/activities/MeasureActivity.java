@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -65,8 +67,10 @@ public class MeasureActivity extends BaseActivity {
     float [] measuredFreq2 = null;  // measureActivity에서 측정된 데이터
     float [] measuredFreq3 = null;  // measureActivity에서 측정된 데이터
 
-    Button buttonLegendOn;
-    Button buttonLegendOff;
+    boolean bShowChartPt1 = true; // 차트의 pt1 표시 여부
+    boolean bShowChartPt2 = true; // 차트의 pt2 표시 여부
+    boolean bShowChartPt3 = true; // 차트의 pt3 표시 여부
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,23 +109,6 @@ public class MeasureActivity extends BaseActivity {
 
         initView();
         initChart();
-
-        buttonLegendOn = findViewById(R.id.buttonLegendOn);
-        buttonLegendOn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                drawChart(measuredFreq1, measuredFreq2, measuredFreq3, true);
-            }
-        });
-        buttonLegendOff = findViewById(R.id.buttonLegendOff);
-        buttonLegendOff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                drawChart(measuredFreq1, measuredFreq2, measuredFreq3, false);
-            }
-        });
     }
 
     void initView() {
@@ -183,6 +170,48 @@ public class MeasureActivity extends BaseActivity {
             }
         });
 
+        final ImageView imageViewPt1 = findViewById(R.id.imageViewPt1);
+        imageViewPt1.setSelected(true);// 초기값은 선택되있음.
+        LinearLayout linearLayoutPt1 = findViewById(R.id.linearLayoutPt1);
+        linearLayoutPt1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bShowChartPt1 = !bShowChartPt1;
+
+                imageViewPt1.setSelected(bShowChartPt1);
+
+                drawChart(measuredFreq1, measuredFreq2, measuredFreq3);
+            }
+        });
+
+        final ImageView imageViewPt2 = findViewById(R.id.imageViewPt2);
+        imageViewPt2.setSelected(true);// 초기값은 선택되있음.
+        LinearLayout linearLayoutPt2 = findViewById(R.id.linearLayoutPt2);
+        linearLayoutPt2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bShowChartPt2 = !bShowChartPt2;
+
+                imageViewPt2.setSelected(bShowChartPt2);
+
+                drawChart(measuredFreq1, measuredFreq2, measuredFreq3);
+            }
+        });
+
+        final ImageView imageViewPt3 = findViewById(R.id.imageViewPt3);
+        imageViewPt3.setSelected(true);// 초기값은 선택되있음.
+        LinearLayout linearLayoutPt3 = findViewById(R.id.linearLayoutPt3);
+        linearLayoutPt3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bShowChartPt3 = !bShowChartPt3;
+
+                imageViewPt3.setSelected(bShowChartPt3);
+
+                drawChart(measuredFreq1, measuredFreq2, measuredFreq3);
+            }
+        });
+
     }
 
     private void initChart() {
@@ -225,7 +254,7 @@ public class MeasureActivity extends BaseActivity {
         //applyXAxisDefault(xAxis, l);
 
         if( !(measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null) ) { // 기존에 측정한 데이터가 있으면 표시
-            drawChart(measuredFreq1, measuredFreq2, measuredFreq3, true);
+            drawChart(measuredFreq1, measuredFreq2, measuredFreq3);
         }
     }
 
@@ -272,7 +301,7 @@ public class MeasureActivity extends BaseActivity {
     };
 
 
-    private void drawChart(float[] data1, float[] data2, float[] data3, boolean onOff){
+    private void drawChart(float[] data1, float[] data2, float[] data3){
 
         try {
             //Thread.sleep(1000); // 차트 초기화 시간 - 추가 안하면 정상적으로 표시 안될 수 있음.
@@ -287,7 +316,7 @@ public class MeasureActivity extends BaseActivity {
         ArrayList<Float> valueList3 = new ArrayList<>();
 
         try {
-            if( onOff ) {
+            if( bShowChartPt1 ) {
 
                 if (data1 != null) {
                     for (float v : data1) {
@@ -298,21 +327,25 @@ public class MeasureActivity extends BaseActivity {
                 lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
             }
 
-            if( data2 != null ) {
-                for (float v : data2) {
-                    valueList2.add(v);
+            if( bShowChartPt2 ) {
+                if (data2 != null) {
+                    for (float v : data2) {
+                        valueList2.add(v);
+                    }
                 }
+
+                lineData.addDataSet(generateLineData("pt2", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
             }
 
-            lineData.addDataSet(generateLineData("pt2", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
-
-            if( data3 != null ) {
-                for (float v : data3) {
-                    valueList3.add(v);
+            if( bShowChartPt3 ) {
+                if (data3 != null) {
+                    for (float v : data3) {
+                        valueList3.add(v);
+                    }
                 }
-            }
 
-            lineData.addDataSet(generateLineData("pt3", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
+                lineData.addDataSet(generateLineData("pt3", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
+            }
         } catch (Exception ex) {
             return;
         }
@@ -321,7 +354,10 @@ public class MeasureActivity extends BaseActivity {
         lineData.setDrawValues(true);
 
         XAxis xAxis = lineChartRawData.getXAxis();
-        int xAxisMaximum = valueList2.size() <= 0 ? 0 : valueList2.size() - 1;
+        int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
+        xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
+        xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
+
         xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
 
         lineChartRawData.setData(lineData);
@@ -494,7 +530,7 @@ public class MeasureActivity extends BaseActivity {
                 measuredFreq3 = measureDataSensor3.getAxisBuf().getfFreq();
 
                 try {
-                    drawChart(measuredFreq1, measuredFreq2, measuredFreq3, true);
+                    drawChart(measuredFreq1, measuredFreq2, measuredFreq3);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

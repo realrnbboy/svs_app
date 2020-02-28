@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -60,6 +62,10 @@ public class ResultActivity extends BaseActivity {
     boolean bRmsResultGood3 = false;    // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
 
     boolean bSaved = false; // 저장여부
+
+    boolean bShowChartPt1 = true; // 차트의 pt1 표시 여부
+    boolean bShowChartPt2 = true; // 차트의 pt2 표시 여부
+    boolean bShowChartPt3 = true; // 차트의 pt3 표시 여부
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -217,6 +223,48 @@ public class ResultActivity extends BaseActivity {
 
             }
         });
+
+        final ImageView imageViewPt1 = findViewById(R.id.imageViewPt1);
+        imageViewPt1.setSelected(true);// 초기값은 선택되있음.
+        LinearLayout linearLayoutPt1 = findViewById(R.id.linearLayoutPt1);
+        linearLayoutPt1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bShowChartPt1 = !bShowChartPt1;
+
+                imageViewPt1.setSelected(bShowChartPt1);
+
+                drawChart();
+            }
+        });
+
+        final ImageView imageViewPt2 = findViewById(R.id.imageViewPt2);
+        imageViewPt2.setSelected(true);// 초기값은 선택되있음.
+        LinearLayout linearLayoutPt2 = findViewById(R.id.linearLayoutPt2);
+        linearLayoutPt2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bShowChartPt2 = !bShowChartPt2;
+
+                imageViewPt2.setSelected(bShowChartPt2);
+
+                drawChart();
+            }
+        });
+
+        final ImageView imageViewPt3 = findViewById(R.id.imageViewPt3);
+        imageViewPt3.setSelected(true);// 초기값은 선택되있음.
+        LinearLayout linearLayoutPt3 = findViewById(R.id.linearLayoutPt3);
+        linearLayoutPt3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bShowChartPt3 = !bShowChartPt3;
+
+                imageViewPt3.setSelected(bShowChartPt3);
+
+                drawChart();
+            }
+        });
     }
 
     // db에 진단 결과 데이터 저장
@@ -362,7 +410,7 @@ public class ResultActivity extends BaseActivity {
     }
 
 
-    private void drawChart() throws Exception {
+    private void drawChart() {
 
         if( analysisData == null ) {
             return;
@@ -380,29 +428,35 @@ public class ResultActivity extends BaseActivity {
 
         try {
 
-            if( data1 != null ) {
-                for (float v : data1) {
-                    valueList1.add(v);
+            if( bShowChartPt1 ) {
+                if (data1 != null) {
+                    for (float v : data1) {
+                        valueList1.add(v);
+                    }
                 }
+
+                lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
             }
 
-            lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
-
-            if( data2 != null ) {
-                for (float v : data2) {
-                    valueList2.add(v);
+            if( bShowChartPt2 ) {
+                if (data2 != null) {
+                    for (float v : data2) {
+                        valueList2.add(v);
+                    }
                 }
+
+                lineData.addDataSet(generateLineData("pt2", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
             }
 
-            lineData.addDataSet(generateLineData("pt2", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
-
-            if( data3 != null ) {
-                for (float v : data3) {
-                    valueList3.add(v);
+            if( bShowChartPt3 ) {
+                if (data3 != null) {
+                    for (float v : data3) {
+                        valueList3.add(v);
+                    }
                 }
-            }
 
-            lineData.addDataSet(generateLineData("pt3", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
+                lineData.addDataSet(generateLineData("pt3", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
+            }
         } catch (Exception ex) {
             return;
         }
@@ -413,6 +467,8 @@ public class ResultActivity extends BaseActivity {
 
         XAxis xAxis = lineChartRawData.getXAxis();
         int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
+        xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
+        xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
         xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
 
         lineChartRawData.setData(lineData);

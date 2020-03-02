@@ -422,17 +422,17 @@ public class MeasureActivity extends BaseActivity {
             DIAGNOSIS_DATA_Type rawData1 = new DIAGNOSIS_DATA_Type();
             rawData1.fSamplingRate = (float) 1.338975e+03;
             rawData1.dFreq = analysisData.getMeasureData1().getAxisBuf().getfFreq();
-            rawData1.dPwrSpectrum = analysisData.getMeasureData1().getAxisBuf().getfTime();
+            rawData1.dPwrSpectrum = analysisData.getMeasureData1().getAxisBuf().getfFreq();
 
             DIAGNOSIS_DATA_Type rawData2 = new DIAGNOSIS_DATA_Type();
             rawData2.fSamplingRate = (float) 1.386214e+03;
             rawData2.dFreq = analysisData.getMeasureData2().getAxisBuf().getfFreq();
-            rawData2.dPwrSpectrum = analysisData.getMeasureData2().getAxisBuf().getfTime();
+            rawData2.dPwrSpectrum = analysisData.getMeasureData2().getAxisBuf().getfFreq();
 
             DIAGNOSIS_DATA_Type rawData3 = new DIAGNOSIS_DATA_Type();
             rawData3.fSamplingRate = (float) 1.384258e+03;
             rawData3.dFreq = analysisData.getMeasureData3().getAxisBuf().getfFreq();
-            rawData3.dPwrSpectrum = analysisData.getMeasureData3().getAxisBuf().getfTime();
+            rawData3.dPwrSpectrum = analysisData.getMeasureData3().getAxisBuf().getfFreq();
 
             matrix2 = diagnosis.fnMakeMatrix2(rawData1, rawData2, rawData3);
         }

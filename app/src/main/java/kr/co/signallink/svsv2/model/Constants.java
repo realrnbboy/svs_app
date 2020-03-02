@@ -28,7 +28,8 @@ public class Constants {
     public static final int MAX_SVS = 3;
     public static final int AXIS_MAX = 1;
     public static final int BAND_MAX = 6;
-    public static final int FFT_NUM = 1024;
+    public static final int FFT_NUM = 2048; // added by hslee for svs 60
+    //public static final int FFT_NUM = 1024; // added by hslee for svs 40
     public static final int TIME_ELE = FFT_NUM;
     public static final int FREQ_ELE = FFT_NUM / 2;
 

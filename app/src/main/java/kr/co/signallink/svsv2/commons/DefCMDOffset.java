@@ -10,8 +10,10 @@ public class DefCMDOffset {
     public static final int EVENTDATA_WARNING = 0;
     public static final int EVENTDATA_DANGER = 1;
     public static final int MEASURE_AXIS_RATIO = 1;
-    public static final int MEASURE_AXIS_TIME_ELE_MAX = 1024;
-    public static final int MEASURE_AXIS_FREQ_ELE_MAX = 512;
+    public static final int MEASURE_AXIS_TIME_ELE_MAX = 2048;   // added by hslee svs 60
+    public static final int MEASURE_AXIS_FREQ_ELE_MAX = 1024;    // added by hslee for svs 60
+//    public static final int MEASURE_AXIS_TIME_ELE_MAX = 1024;
+//    public static final int MEASURE_AXIS_FREQ_ELE_MAX = 512;
     public static final int CMD_HEAD_LENGTH = 4;
     public static final int CMD_LENGTH_OFFSET = 2;
     public static final int CMD_LENGTH_SIZE = 2;

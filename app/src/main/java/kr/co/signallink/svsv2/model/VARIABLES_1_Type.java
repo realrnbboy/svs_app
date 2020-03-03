@@ -7,8 +7,10 @@ import java.util.Date;
     //[StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class VARIABLES_1_Type implements Serializable
     {
+        public int presetId;   // added by hslee
         public Date datetime;
         public int nCode;   // 0:ANSI HI 9.6.4, 1:API 610, 2:ISO 10816 Cat.1, 3:ISO 10816 Cat.2, 4:Project VIB Spec.
+        public int nSubCode;   // added by hslee
         public int nPrjVibSpec;
         public String strSiteCode;
         public String strEquipName; // Pump, Pipe Name

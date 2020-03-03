@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -43,6 +44,7 @@ public class PresetActivity extends BaseActivity {
 
     ArrayList arrayListPreset = new ArrayList<>();
     ArrayList arrayListEquipmentCode = new ArrayList<>();
+    ArrayList arrayListEquipmentSubCode = new ArrayList<>();
     ArrayList arrayListLineFrequency = new ArrayList<>();
     ArrayList arrayListEquipmentType = new ArrayList<>();
     ArrayList arrayListBearingType = new ArrayList<>();
@@ -62,12 +64,15 @@ public class PresetActivity extends BaseActivity {
 
     Spinner spinnerPreset;
     Spinner spinnerEquipmentCode;
+    Spinner spinnerEquipmentSubCode;
     Spinner spinnerLineFrequency;
     Spinner spinnerEquipmentType;
     Spinner spinnerBearingType;
 
     int previousPositionSpinnerPreset = 0;
     int previousPositionSpinnerEquipmentCode = 0;
+    int previousPositionSpinnerEquipmentSubCode = 0;
+    int previous2PositionSpinnerEquipmentSubCode = -1;   // 이전이전의 선택된 값 - 중복 alert 방지
     int previousPositionSpinnerLineFrequency = 0;
     int previousPositionSpinnerEquipmentType = 0;
     int previousPositionSpinnerBearingType = 0;
@@ -80,6 +85,11 @@ public class PresetActivity extends BaseActivity {
     public boolean bResponsePreset = false;
 
     ArrayAdapter arrayAdapterPreset;
+    ArrayAdapter arrayAdapterEquipmentCode;
+    ArrayAdapter arrayAdapterEquipmentSubCode;
+    ArrayAdapter arrayAdapterLineFrequency;
+    ArrayAdapter arrayAdapterEquipmentType;
+    ArrayAdapter arrayAdapterBearingType;
 
     float [] measuredFreq1 = null;  // measureActivity에서 측정된 데이터
     float [] measuredFreq2 = null;  // measureActivity에서 측정된 데이터
@@ -87,6 +97,11 @@ public class PresetActivity extends BaseActivity {
     AnalysisData m_analysisData = null;
 
     boolean bRemeasure = true;  // measureActivity 화면에서 다시 측정해야 할지 여부, 값을 변경하면 측정을 다시해야 함.
+    boolean bAutoChangeSpinnerCode = false;
+    boolean bAutoChangeSpinnerSubCode = false;
+    boolean bAutoChangeSpinnerLineFreq = false;
+    boolean bAutoChangeSpinnerBearingType = false;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -164,6 +179,7 @@ public class PresetActivity extends BaseActivity {
 
         spinnerPreset = findViewById(R.id.spinnerPreset);
         spinnerEquipmentCode = findViewById(R.id.spinnerEquipmentCode);
+        spinnerEquipmentSubCode = findViewById(R.id.spinnerEquipmentSubCode);
         spinnerLineFrequency = findViewById(R.id.spinnerLineFrequency);
         spinnerEquipmentType = findViewById(R.id.spinnerEquipmentType);
         spinnerBearingType = findViewById(R.id.spinnerBearingType);
@@ -202,6 +218,33 @@ public class PresetActivity extends BaseActivity {
                     valueChanged(cancel);
 
                     previousPositionSpinnerEquipmentCode = position;
+
+                    setDefaultSubCodeItem(position);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+        spinnerEquipmentSubCode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, final View view, final int position, final long id) {
+
+                if(bAutoChangeSpinnerSubCode) {
+                    bAutoChangeSpinnerSubCode = false;
+                    return;
+                }
+
+                if( previousPositionSpinnerEquipmentSubCode != position ) {
+                    DialogInterface.OnClickListener cancel = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            setPreviousAnalysisData();  // 취소할 경우 원래의 값으로 변경
+                        }
+                    };
+                    valueChanged(cancel);
+
+                    previousPositionSpinnerEquipmentSubCode = position;
                 }
             }
 
@@ -211,6 +254,11 @@ public class PresetActivity extends BaseActivity {
         spinnerLineFrequency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, final View view, final int position, final long id) {
+
+                if(bAutoChangeSpinnerLineFreq) {
+                    bAutoChangeSpinnerLineFreq = false;
+                    return;
+                }
 
                 if( previousPositionSpinnerLineFrequency != position ) {
                     DialogInterface.OnClickListener cancel = new DialogInterface.OnClickListener() {
@@ -252,6 +300,11 @@ public class PresetActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, final View view, final int position, final long id) {
 
+                if(bAutoChangeSpinnerBearingType) {
+                    bAutoChangeSpinnerBearingType = false;
+                    return;
+                }
+
                 if( previousPositionSpinnerBearingType != position ) {
                     DialogInterface.OnClickListener cancel = new DialogInterface.OnClickListener() {
                         @Override
@@ -272,19 +325,22 @@ public class PresetActivity extends BaseActivity {
         initDefaultItem();
 
         arrayAdapterPreset = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListPreset);
-        ArrayAdapter arrayAdapterEquipmentCode = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListEquipmentCode);
-        ArrayAdapter arrayAdapterLineFrequency = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListLineFrequency);
-        ArrayAdapter arrayAdapterEquipmentType = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListEquipmentType);
-        ArrayAdapter arrayAdapterBearingType = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListBearingType);
+        arrayAdapterEquipmentCode = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListEquipmentCode);
+        arrayAdapterEquipmentSubCode = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListEquipmentSubCode);
+        arrayAdapterLineFrequency = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListLineFrequency);
+        arrayAdapterEquipmentType = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListEquipmentType);
+        arrayAdapterBearingType = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, arrayListBearingType);
 
         arrayAdapterPreset.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         arrayAdapterEquipmentCode.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        arrayAdapterEquipmentSubCode.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         arrayAdapterLineFrequency.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         arrayAdapterEquipmentType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         arrayAdapterBearingType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerPreset.setAdapter(arrayAdapterPreset);
         spinnerEquipmentCode.setAdapter(arrayAdapterEquipmentCode);
+        spinnerEquipmentSubCode.setAdapter(arrayAdapterEquipmentSubCode);
         spinnerLineFrequency.setAdapter(arrayAdapterLineFrequency);
         spinnerEquipmentType.setAdapter(arrayAdapterEquipmentType);
         spinnerBearingType.setAdapter(arrayAdapterBearingType);
@@ -299,7 +355,9 @@ public class PresetActivity extends BaseActivity {
     AnalysisData setAnalysisData() {
         AnalysisData analysisData = new AnalysisData();
 
+        int presetId = (int)spinnerPreset.getSelectedItemId();
         int code = (int)spinnerEquipmentCode.getSelectedItemId();
+        int subCode = (int)spinnerEquipmentSubCode.getSelectedItemId();
         int equipmentType = (int)spinnerEquipmentType.getSelectedItemId();
         int bearingType = (int)spinnerBearingType.getSelectedItemId();
         int lineFrequency = (int)spinnerLineFrequency.getSelectedItemId();// == 0 ? 50 : 60;
@@ -338,7 +396,9 @@ public class PresetActivity extends BaseActivity {
 
         VARIABLES_1_Type diagVar1 = new VARIABLES_1_Type();
 
+        diagVar1.presetId = presetId;
         diagVar1.nCode = code;
+        diagVar1.nSubCode = subCode;
         diagVar1.nEquipType = equipmentType;
         diagVar1.nBearingType = bearingType;
         diagVar1.nLineFreq = lineFrequency;
@@ -370,15 +430,47 @@ public class PresetActivity extends BaseActivity {
         if( m_analysisData == null )
             m_analysisData = setAnalysisData();
 
+        setDefaultSubCodeItem(m_analysisData.getDiagVar1().nCode);
+
+        spinnerPreset.setSelection(m_analysisData.getDiagVar1().presetId);
         spinnerEquipmentCode.setSelection(m_analysisData.getDiagVar1().nCode);
+        spinnerEquipmentSubCode.setSelection(m_analysisData.getDiagVar1().nSubCode);
         spinnerEquipmentType.setSelection(m_analysisData.getDiagVar1().nEquipType);
         spinnerBearingType.setSelection(m_analysisData.getDiagVar1().nBearingType);
         spinnerLineFrequency.setSelection(m_analysisData.getDiagVar1().nLineFreq);
 
+        previousPositionSpinnerPreset = spinnerPreset.getSelectedItemPosition();
         previousPositionSpinnerEquipmentCode = spinnerEquipmentCode.getSelectedItemPosition();
+        previousPositionSpinnerEquipmentSubCode = spinnerEquipmentSubCode.getSelectedItemPosition();
         previousPositionSpinnerEquipmentType = spinnerEquipmentType.getSelectedItemPosition();
         previousPositionSpinnerBearingType = spinnerBearingType.getSelectedItemPosition();
         previousPositionSpinnerLineFrequency = spinnerLineFrequency.getSelectedItemPosition();
+
+        LinearLayout linearLayoutProjectVibSpec = findViewById(R.id.linearLayoutProjectVibSpec);
+
+        if( m_analysisData.getDiagVar1().nCode == 0 ) { // ANSI HI 9.6.4
+            spinnerEquipmentSubCode.setVisibility(View.VISIBLE);
+            linearLayoutProjectVibSpec.setVisibility(View.GONE);
+        }
+        else if( m_analysisData.getDiagVar1().nCode == 1 ) {    // API 610
+            spinnerEquipmentSubCode.setVisibility(View.GONE);
+            linearLayoutProjectVibSpec.setVisibility(View.GONE);
+        }
+        else if( m_analysisData.getDiagVar1().nCode == 2 || m_analysisData.getDiagVar1().nCode == 3 ) { // ISO 10816 Cat. 1, Cat. 2
+            spinnerEquipmentSubCode.setVisibility(View.VISIBLE);
+            linearLayoutProjectVibSpec.setVisibility(View.GONE);
+        }
+        else {  // Project VIB Spec
+            spinnerEquipmentSubCode.setVisibility(View.GONE);
+            linearLayoutProjectVibSpec.setVisibility(View.VISIBLE);
+        }
+
+        arrayAdapterPreset.notifyDataSetChanged();
+        arrayAdapterEquipmentCode.notifyDataSetChanged();
+        arrayAdapterEquipmentSubCode.notifyDataSetChanged();
+        arrayAdapterLineFrequency.notifyDataSetChanged();
+        arrayAdapterEquipmentType.notifyDataSetChanged();
+        arrayAdapterBearingType.notifyDataSetChanged();
 
         editTextProjectVibSpec.setText(String.valueOf(m_analysisData.getDiagVar1().nPrjVibSpec));
         editTextSiteCode.setText(String.valueOf(m_analysisData.getDiagVar1().strSiteCode));
@@ -392,6 +484,11 @@ public class PresetActivity extends BaseActivity {
         editTextBallDiameter.setText(String.valueOf(m_analysisData.getDiagVar1().nBallDiameter));
         editTextRps.setText(String.valueOf(m_analysisData.getDiagVar1().nRPS));
         editTextContactAngle.setText(String.valueOf(m_analysisData.getDiagVar1().nContactAngle));
+
+        bAutoChangeSpinnerCode = true;
+        bAutoChangeSpinnerSubCode = true;
+        bAutoChangeSpinnerLineFreq = true;
+        bAutoChangeSpinnerBearingType = true;
     }
 
 
@@ -419,6 +516,51 @@ public class PresetActivity extends BaseActivity {
         arrayListBearingType.add("[2] Roller");
         arrayListBearingType.add("[3] Journal");
         arrayListBearingType.add("[4] ETC");
+    }
+
+
+    // EquipmentCode에 따라 subcode 아이템 세팅
+    void setDefaultSubCodeItem(int position) {
+
+        LinearLayout linearLayoutProjectVibSpec = findViewById(R.id.linearLayoutProjectVibSpec);
+
+        arrayListEquipmentSubCode.clear();
+
+        if( position == 0 ) { // ANSI HI 9.6.4
+            spinnerEquipmentSubCode.setVisibility(View.VISIBLE);
+
+            arrayListEquipmentSubCode.add("Factory POR");
+            arrayListEquipmentSubCode.add("Factory AOR");
+            arrayListEquipmentSubCode.add("Field POR");
+            arrayListEquipmentSubCode.add("Field AOR");
+
+            spinnerEquipmentSubCode.setSelection(0);
+            linearLayoutProjectVibSpec.setVisibility(View.GONE);
+        }
+        else if( position == 1 ) {    // API 610
+            spinnerEquipmentSubCode.setVisibility(View.GONE);
+            linearLayoutProjectVibSpec.setVisibility(View.GONE);
+        }
+        else if( position == 2 || position == 3 ) { // ISO 10816 Cat. 1, Cat. 2
+            spinnerEquipmentSubCode.setVisibility(View.VISIBLE);
+
+            arrayListEquipmentSubCode.add("Alarm");
+            arrayListEquipmentSubCode.add("Trip");
+            arrayListEquipmentSubCode.add("SAT POR");
+            arrayListEquipmentSubCode.add("SAT AOR");
+            arrayListEquipmentSubCode.add("FAT POR");
+            arrayListEquipmentSubCode.add("FAT AOR");
+
+            spinnerEquipmentSubCode.setSelection(0);
+            linearLayoutProjectVibSpec.setVisibility(View.GONE);
+        }
+        else {  // Project VIB Spec
+            spinnerEquipmentSubCode.setVisibility(View.GONE);
+            linearLayoutProjectVibSpec.setVisibility(View.VISIBLE);
+        }
+
+        arrayAdapterEquipmentSubCode.notifyDataSetChanged();
+
     }
 
     @Override
@@ -755,9 +897,12 @@ public class PresetActivity extends BaseActivity {
         editTextContactAngle.setText(preset[i][17]);
 
         spinnerEquipmentCode.setSelection(equipmentCode);
+        //spinnerEquipmentSubCode.setSelection(0);
         spinnerLineFrequency.setSelection(lineFrequency);
         spinnerEquipmentType.setSelection(equipmentType);
         spinnerBearingType.setSelection(bearingType);
+
+        setDefaultSubCodeItem(equipmentCode);
     }
 
     @Override
@@ -773,6 +918,11 @@ public class PresetActivity extends BaseActivity {
                 measuredFreq3 = (float[]) data.getSerializableExtra("measuredFreq3");
 
                 m_analysisData = (AnalysisData) data.getSerializableExtra("analysisData");
+
+
+                measuredFreq1 = new float[2048];  // for test
+                measuredFreq2 = new float[2048];  // for test
+                measuredFreq3 = new float[2048];  // for test
 
                 if( measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null ) { // 측정된 데이터가 없는 경우
                     bRemeasure = true;
@@ -807,8 +957,9 @@ public class PresetActivity extends BaseActivity {
     public void valueChanged(DialogInterface.OnClickListener cancel) {
 
         // 기존에 측정한 데이터가 있고, 재측정을 안해도 되는 상태인데 값을 변경한 경우
-        if( !(measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null) && bRemeasure == false )
-        {
+        // 같은 창이 두 번 안뜬 경우
+        if( !(measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null) && !bRemeasure ) {
+
             DialogUtil.yesNo(PresetActivity.this,
                     "info",
                     "If you change the value you will have to re-measure.",

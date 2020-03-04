@@ -920,9 +920,9 @@ public class PresetActivity extends BaseActivity {
                 m_analysisData = (AnalysisData) data.getSerializableExtra("analysisData");
 
 
-                measuredFreq1 = new float[2048];  // for test
-                measuredFreq2 = new float[2048];  // for test
-                measuredFreq3 = new float[2048];  // for test
+//                measuredFreq1 = new float[2048];  // for test
+//                measuredFreq2 = new float[2048];  // for test
+//                measuredFreq3 = new float[2048];  // for test
 
                 if( measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null ) { // 측정된 데이터가 없는 경우
                     bRemeasure = true;

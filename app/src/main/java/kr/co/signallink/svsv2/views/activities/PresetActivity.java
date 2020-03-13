@@ -103,6 +103,23 @@ public class PresetActivity extends BaseActivity {
     boolean bAutoChangeSpinnerBearingType = false;
 
 
+    // ANSI HI 9.6.4
+    float[] fANSI_FactoryPOR = { 4.8f, 5.6f, 4.3f, 5.3f };
+    float[] fANSI_FactoryAOR = { 6.2f, 7.3f, 5.6f, 6.9f };
+    float[] fANSI_FieldPOR = { 3.8f, 4.8f, 3.3f, 4.3f };
+    float[] fANSI_FieldAOR = { 4.9f, 6.2f, 4.3f, 5.6f };
+
+    // API 610
+    float[] fAPI_Overall = { 3.0f, 5.0f };
+
+    // ISO 10816
+    float[] fISOcategory_Alarm = { 5.0f, 6.3f, 6.4f, 7.6f };
+    float[] fISOcategory_Trip = { 8.3f, 9.5f, 10.6f, 11.9f };
+    float[] fISOcategory_SATPOR = { 2.5f, 3.5f, 3.2f, 4.2f };
+    float[] fISOcategory_SATAOR = { 3.4f, 4.4f, 4.2f, 5.2f };
+    float[] fISOcategory_FATPOR = { 3.3f, 4.3f, 4.2f, 5.2f };
+    float[] fISOcategory_FATAOR = { 4.0f, 5.0f, 5.1f, 6.1f };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,6 +213,7 @@ public class PresetActivity extends BaseActivity {
                         }
                     };
                     valueChanged(cancel);
+                    setViewData(position);
 
                     previousPositionSpinnerPreset = position;
                 }
@@ -361,7 +379,7 @@ public class PresetActivity extends BaseActivity {
         int equipmentType = (int)spinnerEquipmentType.getSelectedItemId();
         int bearingType = (int)spinnerBearingType.getSelectedItemId();
         int lineFrequency = (int)spinnerLineFrequency.getSelectedItemId();// == 0 ? 50 : 60;
-        int projectVibSpec = Integer.parseInt(editTextProjectVibSpec.getText().toString());
+        float projectVibSpec = Float.parseFloat(editTextProjectVibSpec.getText().toString());
         String siteCode = editTextSiteCode.getText().toString();
         String equipmentName = editTextEquipmentName.getText().toString();
         String tagNo = editTextTagNo.getText().toString();
@@ -402,7 +420,7 @@ public class PresetActivity extends BaseActivity {
         diagVar1.nEquipType = equipmentType;
         diagVar1.nBearingType = bearingType;
         diagVar1.nLineFreq = lineFrequency;
-        diagVar1.nPrjVibSpec = projectVibSpec;
+        //diagVar1.nPrjVibSpec = projectVibSpec;    // added by hslee 2020.03 아마도 사용 안함
         diagVar1.strSiteCode = siteCode;
         diagVar1.strEquipName = equipmentName;
         diagVar1.strTagNo = tagNo;
@@ -416,6 +434,9 @@ public class PresetActivity extends BaseActivity {
         diagVar1.nContactAngle = contactAngle;
 
         analysisData.setDiagVar1(diagVar1);
+
+        float rmsLimit = fnGetCodeValue();
+        analysisData.rmsLimit = rmsLimit;
 //        analysisData.setValueVar2(mainData.valueVar2);
 //        analysisData.setRangeVar2(mainData.rangeVar2);
 //        analysisData.setLowerVar2(mainData.lowerVar2);
@@ -978,5 +999,242 @@ public class PresetActivity extends BaseActivity {
                     cancel
             );
         }
+    }
+
+    // 2020.03
+    private float fnGetCodeValue() {
+        float fValue = 0;
+
+        //if (tb_Preset_CodeValue.Text == "-")    // 최초 실행 시,
+        //    return fValue;
+
+        int nCodeIdx = (int)spinnerEquipmentCode.getSelectedItemId();
+        int nTypeIdx = (int)spinnerEquipmentSubCode.getSelectedItemId();
+
+        int nEquipTypeIdx = (int)spinnerEquipmentType.getSelectedItemId();
+        int nInputPower = Integer.parseInt(editTextInputPower.getText().toString());
+        int nRPM = Integer.parseInt(editTextEquipmentRpm.getText().toString());
+
+        switch (nCodeIdx)
+        {
+            case 0:     // ANSI HI 9.6.4
+                switch (nTypeIdx)
+                {
+                    case 0:     // Factory POR
+                        if (nEquipTypeIdx == 0)     // Horizontal (BB & OH)
+                        {
+                            if (nInputPower < 200)  // < 200kW
+                                fValue = fANSI_FactoryPOR[0];
+                            else    // >= 200kW
+                                fValue = fANSI_FactoryPOR[1];
+                        }
+                        else if (nEquipTypeIdx == 1)    // Vertical (VS)
+                        {
+                            if (nInputPower < 200)  // < 200kW
+                                fValue = fANSI_FactoryPOR[2];
+                            else    // >= 200kW
+                                fValue = fANSI_FactoryPOR[3];
+                        }
+                        else    // etc
+                        {
+                        }
+                        break;
+
+                    case 1:     // Factory AOR
+                        if (nEquipTypeIdx == 0)     // Horizontal (BB & OH)
+                        {
+                            if (nInputPower < 200)  // < 200kW
+                                fValue = fANSI_FactoryAOR[0];
+                            else    // >= 200kW
+                                fValue = fANSI_FactoryAOR[1];
+                        }
+                        else if (nEquipTypeIdx == 1)    // Vertical (VS)
+                        {
+                            if (nInputPower < 200)  // < 200kW
+                                fValue = fANSI_FactoryAOR[2];
+                            else    // >= 200kW
+                                fValue = fANSI_FactoryAOR[3];
+                        }
+                        else    // etc
+                        {
+                        }
+                        break;
+
+                    case 2:     // Field POR
+                        if (nEquipTypeIdx == 0)     // Horizontal (BB & OH)
+                        {
+                            if (nInputPower < 200)  // < 200kW
+                                fValue = fANSI_FieldPOR[0];
+                            else    // >= 200kW
+                                fValue = fANSI_FieldPOR[1];
+                        }
+                        else if (nEquipTypeIdx == 1)    // Vertical (VS)
+                        {
+                            if (nInputPower < 200)  // < 200kW
+                                fValue = fANSI_FieldPOR[2];
+                            else    // >= 200kW
+                                fValue = fANSI_FieldPOR[3];
+                        }
+                        else    // etc
+                        {
+                        }
+                        break;
+
+                    case 3:     // Field AOR
+                        if (nEquipTypeIdx == 0)     // Horizontal (BB & OH)
+                        {
+                            if (nInputPower < 200)  // < 200kW
+                                fValue = fANSI_FieldAOR[0];
+                            else    // >= 200kW
+                                fValue = fANSI_FieldAOR[1];
+                        }
+                        else if (nEquipTypeIdx == 1)    // Vertical (VS)
+                        {
+                            if (nInputPower < 200)  // < 200kW
+                                fValue = fANSI_FieldAOR[2];
+                            else    // >= 200kW
+                                fValue = fANSI_FieldAOR[3];
+                        }
+                        else    // etc
+                        {
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+                break;
+
+            case 1:     // API 610
+                if (nEquipTypeIdx == 0)     // Horizontal (BB & OH)
+                {
+                    if (nRPM <= 3600 && nInputPower <= 300)
+                        fValue = fAPI_Overall[0];   // 3
+                    else
+                    {
+                        double value1, value2;
+                        value1 = 3 * Math.pow(((double)nRPM / (double)3600), 0.3);
+                        value2 = Math.pow(((double)nInputPower / (double)300), 0.21);
+                        fValue = (float)(value1 * value2);
+                    }
+                }
+                else if (nEquipTypeIdx == 1)    // Vertical (VS)
+                {
+                    fValue = fAPI_Overall[1];   // 5
+                }
+                else    // etc
+                {
+                }
+                break;
+
+            case 2:     // ISO 10816 Cat.1
+                switch (nTypeIdx)
+                {
+                    case 0:     // Alarm
+                        if (nInputPower <= 200)  // <= 200kW
+                            fValue = fISOcategory_Alarm[0];
+                        else    // > 200kW
+                            fValue = fISOcategory_Alarm[1];
+                        break;
+
+                    case 1:     // Trip
+                        if (nInputPower <= 200)  // <= 200kW
+                            fValue = fISOcategory_Trip[0];
+                        else    // > 200kW
+                            fValue = fISOcategory_Trip[1];
+                        break;
+
+                    case 2:     // SAT POR
+                        if (nInputPower <= 200)  // <= 200kW
+                            fValue = fISOcategory_SATPOR[0];
+                        else    // > 200kW
+                            fValue = fISOcategory_SATPOR[1];
+                        break;
+
+                    case 3:     // SAT AOR
+                        if (nInputPower <= 200)  // <= 200kW
+                            fValue = fISOcategory_SATAOR[0];
+                        else    // > 200kW
+                            fValue = fISOcategory_SATAOR[1];
+                        break;
+
+                    case 4:     // FAT POR
+                        if (nInputPower <= 200)  // <= 200kW
+                            fValue = fISOcategory_FATPOR[0];
+                        else    // > 200kW
+                            fValue = fISOcategory_FATPOR[1];
+                        break;
+
+                    case 5:     // FAT AOR
+                        if (nInputPower <= 200)  // <= 200kW
+                            fValue = fISOcategory_FATAOR[0];
+                        else    // > 200kW
+                            fValue = fISOcategory_FATAOR[1];
+                        break;
+
+                    default:
+                        break;
+                }
+                break;
+
+            case 3:     // ISO 10816 Cat.2
+                switch (nTypeIdx)
+                {
+                    case 0:     // Alarm
+                        if (nInputPower <= 200)  // <= 200kW
+                            fValue = fISOcategory_Alarm[2];
+                        else    // > 200kW
+                            fValue = fISOcategory_Alarm[3];
+                        break;
+
+                    case 1:     // Trip
+                        if (nInputPower <= 200)  // <= 200kW
+                            fValue = fISOcategory_Trip[2];
+                        else    // > 200kW
+                            fValue = fISOcategory_Trip[3];
+                        break;
+
+                    case 2:     // SAT POR
+                        if (nInputPower <= 200)  // <= 200kW
+                            fValue = fISOcategory_SATPOR[2];
+                        else    // > 200kW
+                            fValue = fISOcategory_SATPOR[3];
+                        break;
+
+                    case 3:     // SAT AOR
+                        if (nInputPower <= 200)  // <= 200kW
+                            fValue = fISOcategory_SATAOR[2];
+                        else    // > 200kW
+                            fValue = fISOcategory_SATAOR[3];
+                        break;
+
+                    case 4:     // FAT POR
+                        if (nInputPower <= 200)  // <= 200kW
+                            fValue = fISOcategory_FATPOR[2];
+                        else    // > 200kW
+                            fValue = fISOcategory_FATPOR[3];
+                        break;
+
+                    case 5:     // FAT AOR
+                        if (nInputPower <= 200)  // <= 200kW
+                            fValue = fISOcategory_FATAOR[2];
+                        else    // > 200kW
+                            fValue = fISOcategory_FATAOR[3];
+                        break;
+
+                    default:
+                        break;
+                }
+                break;
+
+            case 4:     // Project VIB Spec.
+                fValue = Float.parseFloat(editTextProjectVibSpec.getText().toString()); // added by hslee 2020.03.12
+                break;
+
+            default:
+                break;
+        }
+
+        return fValue;
     }
 }

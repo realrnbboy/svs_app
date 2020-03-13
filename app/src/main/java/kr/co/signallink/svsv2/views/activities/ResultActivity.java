@@ -153,17 +153,29 @@ public class ResultActivity extends BaseActivity {
 
         rmsListAdapter = new RmsListAdapter(this, R.layout.list_item_rms, rmsList, getResources(), new RmsListClickListener() {
             @Override
-            public void setRmsStatus(int position, boolean bGood) {
+            public void setRmsStatus(int position, float rms) {
                 switch(position) {
                     case 0 :
-                        bRmsResultGood1 = bGood; break;
+                        bRmsResultGood1 = !(rms > analysisData.rmsLimit); break;    // 기준값을 넘으면 false
                     case 1 :
-                        bRmsResultGood2 = bGood; break;
+                        bRmsResultGood2 = !(rms > analysisData.rmsLimit); break;    // 기준값을 넘으면 false
                     case 2 :
-                        bRmsResultGood3 = bGood; break;
-
+                        bRmsResultGood3 = !(rms > analysisData.rmsLimit); break;    // 기준값을 넘으면 false
                 }
+
             }
+//            @Override
+//            public void setRmsStatus(int position, boolean bGood) {
+//                switch(position) {
+//                    case 0 :
+//                        bRmsResultGood1 = bGood; break;
+//                    case 1 :
+//                        bRmsResultGood2 = bGood; break;
+//                    case 2 :
+//                        bRmsResultGood3 = bGood; break;
+//
+//                }
+//            }
         });
         listViewRms.setAdapter(rmsListAdapter);
 

@@ -54,6 +54,14 @@ public class DiagnosisInfo {
     private double[][] tableResult; // Matrix2 결과와 tableFeature 연산 결과 저장용 테이블
     private int nCauseCount = 0;
 
+    // 2020.03.10
+    // BPFO 등 설정을 위한 Bearing Freq Table
+    public float fBearingFreq_Cond1;
+    public float fBearingFreq_Cond2;
+    public float fBearingFreq_Cond3;
+    public float[] fBearingFreq_FullEQ = new float[4];
+    public float[] fBearingFreq_SimpleEQ = new float[4];
+
     //MainData mainform;
 
     public DiagnosisInfo(AnalysisData analysisData) {
@@ -82,6 +90,89 @@ public class DiagnosisInfo {
         nCauseCount = analysisData.featureInfos.nCount;
         tableFeature = new double[nCauseCount][Constants.FEATURE_COUNT];
         tableResult = new double[nCauseCount][Constants.FEATURE_COUNT];
+
+        // 2020.03.10, BearingFreq Table 설정
+        if (diagVar1.nBallCount > 0)
+            fBearingFreq_Cond1 = 1;
+        else
+            fBearingFreq_Cond1 = 0;
+
+        if (diagVar1.nBearingType == 0 || diagVar1.nBearingType == 1)   // Ball 또는 Roller
+            fBearingFreq_Cond2 = 1;
+        else
+            fBearingFreq_Cond2 = 0;
+
+        if (diagVar1.nPitchDiameter * diagVar1.nBallDiameter * diagVar1.nRPS * diagVar1.nContactAngle > 0)
+            fBearingFreq_Cond3 = 1;
+        else
+            fBearingFreq_Cond3 = 0;
+
+        // FULL EQ
+        if (fBearingFreq_Cond3 > 0)
+        {
+            fBearingFreq_FullEQ[0] = (float)(diagVar1.nBallCount / 2 * diagVar1.nRPS * (1 - diagVar1.nBallDiameter / diagVar1.nPitchDiameter * Math.cos(diagVar1.nContactAngle)) * fBearingFreq_Cond2);
+            fBearingFreq_FullEQ[1] = (float)(diagVar1.nBallCount / 2 * diagVar1.nRPS * (1 + diagVar1.nBallDiameter / diagVar1.nPitchDiameter * Math.cos(diagVar1.nContactAngle)) * fBearingFreq_Cond2);
+            fBearingFreq_FullEQ[2] = (float)(diagVar1.nPitchDiameter / 2 / diagVar1.nBallDiameter * diagVar1.nRPS * (1 - Math.pow((double)(diagVar1.nBallDiameter / diagVar1.nPitchDiameter), 2) * Math.pow((double)Math.cos(diagVar1.nContactAngle), 2) * fBearingFreq_Cond2));
+            fBearingFreq_FullEQ[3] = (float)(diagVar1.nRPS / 2 * (1 - diagVar1.nBallDiameter / diagVar1.nPitchDiameter * Math.cos(diagVar1.nContactAngle))) * fBearingFreq_Cond2;
+        }
+        else
+        {
+            fBearingFreq_FullEQ[0] = 0;
+            fBearingFreq_FullEQ[1] = 0;
+            fBearingFreq_FullEQ[2] = 0;
+            fBearingFreq_FullEQ[3] = 0;
+        }
+
+        // Simple EQ
+        fBearingFreq_SimpleEQ[0] = (float)((diagVar1.nBallCount / 2 - 1.2f) * diagVar1.nRPM / 60 * fBearingFreq_Cond2);
+        fBearingFreq_SimpleEQ[1] = (float)((diagVar1.nBallCount / 2 + 1.2f) * diagVar1.nRPM / 60 * fBearingFreq_Cond2);
+        fBearingFreq_SimpleEQ[2] = (float)((diagVar1.nBallCount / 2 - 1.2f / diagVar1.nBallCount) * diagVar1.nRPM / 60 * fBearingFreq_Cond2);
+        fBearingFreq_SimpleEQ[3] = (float)((0.5f - 1.2f / diagVar1.nBallCount) * diagVar1.nRPM / 60 * fBearingFreq_Cond2);
+
+        // BPFO
+        if (fBearingFreq_Cond1 == 0)
+            valueVar2.data[9] = 0;
+        else
+        {
+            if (fBearingFreq_Cond3 == 1)
+                valueVar2.data[9] = fBearingFreq_FullEQ[0];
+            else
+                valueVar2.data[9] = fBearingFreq_SimpleEQ[0];
+        }
+
+        // BPFI
+        if (fBearingFreq_Cond1 == 0)
+            valueVar2.data[10] = 0;
+        else
+        {
+            if (fBearingFreq_Cond3 == 1)
+                valueVar2.data[10] = fBearingFreq_FullEQ[1];
+            else
+                valueVar2.data[10] = fBearingFreq_SimpleEQ[1];
+        }
+
+        // BSF
+        if (fBearingFreq_Cond1 == 0)
+            valueVar2.data[11] = 0;
+        else
+        {
+            if (fBearingFreq_Cond3 == 1)
+                valueVar2.data[11] = fBearingFreq_FullEQ[2];
+            else
+                valueVar2.data[11] = fBearingFreq_SimpleEQ[2];
+        }
+
+        // FTF
+        if (fBearingFreq_Cond1 == 0)
+            valueVar2.data[12] = 0;
+        else
+        {
+            if (fBearingFreq_Cond3 == 1)
+                valueVar2.data[12] = fBearingFreq_FullEQ[3];
+            else
+                valueVar2.data[12] = fBearingFreq_SimpleEQ[3];
+        }
+        /////////////////////////////////////
 
         for (int row = 0; row < nCauseCount; row++) {
             for (int col = 0; col < Constants.FEATURE_COUNT; col++) // A>R, R>A, Hor/Ver/, 1x, 2x, ..., LF, Overall
@@ -471,7 +562,7 @@ public class DiagnosisInfo {
 
             if (dSum > 0) {
                 dNoiseFloor = svsCommon.fnPercentile(data, dPercentile);
-                // dNoiseFloor = Statistics.Percentile(data, 35);
+                //dNoiseFloor = Statistics.Percentile(data, 35);  //  2020.03
                 // dNoiseFloor = Statistics.Quantile(data, 0.35);
             }
         } catch (Exception ex) {

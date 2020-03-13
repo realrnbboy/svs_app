@@ -11,7 +11,7 @@ import java.util.Date;
         public Date datetime;
         public int nCode;   // 0:ANSI HI 9.6.4, 1:API 610, 2:ISO 10816 Cat.1, 3:ISO 10816 Cat.2, 4:Project VIB Spec.
         public int nSubCode;   // added by hslee
-        public int nPrjVibSpec;
+        public int nPrjVibSpec; // added by hslee   아마도 안쓰는 듯
         public String strSiteCode;
         public String strEquipName; // Pump, Pipe Name
         public String strTagNo;

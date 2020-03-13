@@ -43,6 +43,8 @@ public class AnalysisData implements Serializable {
     public MeasureData measureData2;
     public MeasureData measureData3;
 
+    public float rmsLimit;   // added by hslee 2020.03.12 warning, danger를 표시할 때는 기존의 센서에서 올라오는 데이터를 사용, 이 값은 진단 결과 화면을 보여줄지 여부를 판단할 때 사용
+
     public AnalysisData(){
     }
 

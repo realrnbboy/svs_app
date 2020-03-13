@@ -89,7 +89,8 @@ public class RmsListAdapter extends ArrayAdapter<RmsModel> {
         textViewStatus.setText(statusString);
         textViewStatus.setTextColor(statusColor);
 
-        rmsListClickListener.setRmsStatus( position, "GOOD".equals(statusString) );
+        //rmsListClickListener.setRmsStatus( position, "GOOD".equals(statusString) );
+        rmsListClickListener.setRmsStatus( position, rms );
 
         return view;
     }

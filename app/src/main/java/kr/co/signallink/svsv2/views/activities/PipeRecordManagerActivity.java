@@ -35,6 +35,7 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import kr.co.signallink.svsv2.R;
+import kr.co.signallink.svsv2.commons.DefCMDOffset;
 import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.AnalysisEntity;
 import kr.co.signallink.svsv2.dto.AnalysisData;
@@ -256,6 +257,8 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
             data1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
         }
         else {
+            data1 = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
+            
             AnalysisEntity analysisEntity = analysisEntityList.get(entityIndex);
             if( analysisEntity != null ) {
                 RealmList<Double> frequencyList = analysisEntity.getFrequency();

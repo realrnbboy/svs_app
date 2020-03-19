@@ -238,6 +238,8 @@ public class PipeResultActivity extends BaseActivity {
                         }
                     }
 
+                    analysisEntity.setFrequency(frequency);
+
                     AnalysisEntity result = realm.copyToRealmOrUpdate(analysisEntity);
                     if( result != null ) {
                         ToastUtil.showShort("save success.");

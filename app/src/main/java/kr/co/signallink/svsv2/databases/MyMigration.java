@@ -190,6 +190,18 @@ public class MyMigration implements RealmMigration {
                         .addRealmListField("ratio", Double.class);
             }
 
+            //버전 15으로 마이그레이션 : AnalysisEntity에 frequency추가
+            if( step == 14 ) {
+                schema.get("AnalysisEntity")
+                        .addRealmListField("frequency", Double.class);
+            }
+
+            //버전 16으로 마이그레이션 : AnalysisEntity에 type 추가
+            if( step == 15 ) {
+                schema.get("AnalysisEntity")
+                        .addField("type", int.class);
+            }
+
         }
     }
 }

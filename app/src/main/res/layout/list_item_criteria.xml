@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:checked="false"
+    android:focusable="false"
+    android:background="@drawable/list_item_thin_border">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewStatus"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textColor="@color/myblue"
+            android:textSize="@dimen/font_midium"
+            android:text="status"/>
+
+        <TextView
+            android:id="@+id/textViewCriteria"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:padding="4dp"
+            android:textColor="@color/myblue"
+            android:background="@color/myWhiteDark"
+            android:textSize="@dimen/font_midium"
+            android:layout_marginStart="@dimen/margin_default"
+            android:text="criteria"/>
+
+    </LinearLayout>
+</LinearLayout>

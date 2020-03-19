@@ -16,6 +16,7 @@ public class AnalysisEntity extends RealmObject {
     @PrimaryKey
     private int id; // index
 
+    private int type;   // 1 rms, 2 frequency
     private String equipmentUuid;
     private long created;
     private float rms1;
@@ -25,6 +26,24 @@ public class AnalysisEntity extends RealmObject {
     public RealmList<String> causeDesc;
     public RealmList<Double> rank;
     public RealmList<Double> ratio;
+
+    public RealmList<Double> frequency;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public RealmList<Double> getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(RealmList<Double> frequency) {
+        this.frequency = frequency;
+    }
 
     public AnalysisEntity(){
     }

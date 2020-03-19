@@ -79,6 +79,26 @@ public class DialogUtil {
         alert.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.colorBlack));
     }
 
+    public static void selectMode(Context context, String title, String message, String mode1, String mode2, DialogInterface.OnClickListener onPositiveListener, DialogInterface.OnClickListener onNegativeListener) {
+
+        androidx.appcompat.app.AlertDialog.Builder alertBuilder = new androidx.appcompat.app.AlertDialog.Builder(context);
+        alertBuilder.setTitle(title)
+                .setCancelable(false);
+
+        if(message != null){
+            alertBuilder.setMessage(message);
+        }
+
+        alertBuilder.setPositiveButton(mode1, onPositiveListener);
+        alertBuilder.setNegativeButton(mode2, onNegativeListener);
+
+        androidx.appcompat.app.AlertDialog alert = alertBuilder.create();
+        alert.show();
+
+        alert.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.colorBlack));
+        alert.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.colorBlack));
+    }
+
     public static void confirm(Context context, String title, String message, DialogInterface.OnClickListener onPositiveListener) {
 
         androidx.appcompat.app.AlertDialog.Builder alertBuilder = new androidx.appcompat.app.AlertDialog.Builder(context);

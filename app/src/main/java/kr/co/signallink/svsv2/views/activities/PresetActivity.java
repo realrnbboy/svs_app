@@ -72,7 +72,6 @@ public class PresetActivity extends BaseActivity {
     int previousPositionSpinnerPreset = 0;
     int previousPositionSpinnerEquipmentCode = 0;
     int previousPositionSpinnerEquipmentSubCode = 0;
-    int previous2PositionSpinnerEquipmentSubCode = -1;   // 이전이전의 선택된 값 - 중복 alert 방지
     int previousPositionSpinnerLineFrequency = 0;
     int previousPositionSpinnerEquipmentType = 0;
     int previousPositionSpinnerBearingType = 0;
@@ -97,7 +96,7 @@ public class PresetActivity extends BaseActivity {
     AnalysisData m_analysisData = null;
 
     boolean bRemeasure = true;  // measureActivity 화면에서 다시 측정해야 할지 여부, 값을 변경하면 측정을 다시해야 함.
-    boolean bAutoChangeSpinnerCode = false;
+    boolean bAutoChangeSpinnerCode = false; // setPosition에 의해 자동으로 호출됐는지 여부, 자동 호출은 무시하기 위해 사용
     boolean bAutoChangeSpinnerSubCode = false;
     boolean bAutoChangeSpinnerLineFreq = false;
     boolean bAutoChangeSpinnerBearingType = false;
@@ -131,7 +130,7 @@ public class PresetActivity extends BaseActivity {
 
         Toolbar svsToolbar = findViewById(R.id.toolbar);
         TextView toolbarTitle = svsToolbar.findViewById(R.id.toolbar_title);
-        toolbarTitle.setText("INPUT");
+        toolbarTitle.setText("Input");
 
         setSupportActionBar(svsToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);

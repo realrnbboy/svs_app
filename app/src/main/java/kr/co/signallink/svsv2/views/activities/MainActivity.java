@@ -75,6 +75,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
     private static final String TAG = "MainActivity";
 
+    Context m_context;
+
     //View
     //private MainNavigationView mainNavigationView;
     private Button btnControlBle;
@@ -164,6 +166,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         initViews();
 
+        m_context = this;
 
 
         registerReceiver();
@@ -659,9 +662,26 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                                 return;
                             }
 
-                            Intent intent = new Intent(getBaseContext(), PresetActivity.class);
-                            intent.putExtra("equipmentUuid", uuid);
-                            startActivity(intent);
+                            DialogUtil.selectMode(m_context,
+                                    "Select mode",
+                                    "select sensor mode or pipe mode.",
+                                    "sensor",
+                                    "pipe",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            Intent intent = new Intent(getBaseContext(), PresetActivity.class);
+                                            intent.putExtra("equipmentUuid", uuid);
+                                            startActivity(intent);
+                                        }
+                                    },
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            Intent intent = new Intent(getBaseContext(), PipePresetActivity.class);
+                                            intent.putExtra("equipmentUuid", uuid);
+                                            startActivity(intent);
+                                        }
+                                    }
+                            );
                         }
                         else if( viewIdx == 4 ) {// added by hslee for test
 

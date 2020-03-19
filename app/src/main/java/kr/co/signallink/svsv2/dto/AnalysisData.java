@@ -45,6 +45,15 @@ public class AnalysisData implements Serializable {
 
     public float rmsLimit;   // added by hslee 2020.03.12 warning, danger를 표시할 때는 기존의 센서에서 올라오는 데이터를 사용, 이 값은 진단 결과 화면을 보여줄지 여부를 판단할 때 사용
 
+    // added by hslee   2020.03.19
+
+    public String pipeCode;
+    public String pipeName;
+    public String pipeLocation;
+    public String pipeTagNo;
+    public String pipeMedium;
+    public String pipeEtcOperatingCondition;
+
     public AnalysisData(){
     }
 

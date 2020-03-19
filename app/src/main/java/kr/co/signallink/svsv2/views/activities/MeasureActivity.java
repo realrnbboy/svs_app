@@ -153,7 +153,7 @@ public class MeasureActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if( bMeasure )                {
+                if( bMeasure ) {
                     bTestData = true;
                     makeMatrix2();
 
@@ -220,7 +220,7 @@ public class MeasureActivity extends BaseActivity {
         lineChartRawData.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorContent));
         //lineChartRawData.setMaxVisibleValueCount(20);
         //lineChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
-        lineChartRawData.setNoDataText("no data. please select today or week");
+        lineChartRawData.setNoDataText("no data. please measure first");
 
         Legend l = lineChartRawData.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색

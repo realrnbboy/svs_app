@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMain"
+    android:orientation="vertical">
+
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/include_view"
+                layout="@layout/app_bar_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/margin_default"
+                    style="@style/row_side_padding_dp_15">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/myblue"
+                        android:textSize="@dimen/font_midium"
+                        android:text="Vibration code" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_default"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        style="@style/item_sub_layout">
+
+                        <TextView
+                            android:id="@+id/textViewCode"
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_edittext"
+                            android:text="code"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/preset_item_other_contents"
+                android:orientation="horizontal"
+                style="@style/row_side_padding_dp_15">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/myblue"
+                    android:textSize="@dimen/font_midium"
+                    android:text="Pipework vibration criteria" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_height_rms"
+                android:padding="@dimen/padding_default"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    style="@style/item_sub_layout">
+
+                    <ListView
+                        android:id="@+id/listViewCriteria"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:dividerHeight="0dp"
+                        android:divider="@null"
+                        android:choiceMode="none"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/preset_item_other_contents"
+                android:orientation="horizontal"
+                style="@style/row_side_padding_dp_15">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/myblue"
+                    android:textSize="@dimen/font_midium"
+                    android:text="Assessment result" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_default"
+                android:orientation="vertical">
+                <LinearLayout
+                    style="@style/item_sub_layout">
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/lineChartRawData"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/chart_height"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            android:padding="@dimen/padding_default">
+
+                            <LinearLayout
+                                android:id="@+id/linearLayoutPt1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+                                <ImageButton
+                                    android:id="@+id/imageViewPt1"
+                                    android:checked="true"
+                                    android:focusable="false"
+                                    android:clickable="false"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:background="@drawable/my_custom_checkbox_drawable"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/myblue"
+                                    android:textSize="@dimen/font_midium"
+                                    android:layout_marginStart="@dimen/margin_default"
+                                    android:text="PT1" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/linearLayoutPt2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+                                <ImageButton
+                                    android:id="@+id/imageViewPt2"
+                                    android:checked="true"
+                                    android:focusable="false"
+                                    android:clickable="false"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:background="@drawable/my_custom_checkbox_drawable"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/myblue"
+                                    android:textSize="@dimen/font_midium"
+                                    android:layout_marginStart="@dimen/margin_default"
+                                    android:text="PT2" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/linearLayoutPt3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+                                <ImageButton
+                                    android:id="@+id/imageViewPt3"
+                                    android:checked="true"
+                                    android:focusable="false"
+                                    android:clickable="false"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:background="@drawable/my_custom_checkbox_drawable"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/myblue"
+                                    android:textSize="@dimen/font_midium"
+                                    android:layout_marginStart="@dimen/margin_default"
+                                    android:text="PT3" />
+                            </LinearLayout>
+                        </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/colorContent"
+                android:padding="5dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/buttonSaveDb"
+                    style="@style/button_confirm"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_red_round"
+                    android:text="save db"/>
+
+                <Button
+                    android:id="@+id/buttonSaveCsv"
+                    style="@style/button_confirm"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_red_round"
+                    android:text="save csv"/>
+
+                <Button
+                    android:id="@+id/buttonNext"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
+                    style="@style/button_confirm"
+                    android:text="next"/>
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

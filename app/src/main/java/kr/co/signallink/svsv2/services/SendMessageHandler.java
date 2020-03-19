@@ -11,6 +11,7 @@ import android.util.Log;
 import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.model.MainData;
 import kr.co.signallink.svsv2.utils.ToastUtil;
+import kr.co.signallink.svsv2.views.activities.PipePresetActivity;
 import kr.co.signallink.svsv2.views.activities.PresetActivity;
 import kr.co.signallink.svsv2.views.activities.PresetListActivity;
 
@@ -22,6 +23,7 @@ public class SendMessageHandler extends Handler {
 
     MainData mainData = null;
     PresetActivity presetActivity = null;
+    PipePresetActivity pipePresetActivity = null;
 
     public SendMessageHandler() {}
 
@@ -31,6 +33,10 @@ public class SendMessageHandler extends Handler {
 
     public SendMessageHandler(PresetActivity presetActivity) {
         this.presetActivity = presetActivity;
+    }
+
+    public SendMessageHandler(PipePresetActivity pipePresetActivity) {
+        this.pipePresetActivity = pipePresetActivity;
     }
 
 

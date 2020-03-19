@@ -20,7 +20,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import kr.co.signallink.svsv2.commons.DefCMDOffset;
 import kr.co.signallink.svsv2.services.MyApplication;
+
+import static java.lang.Math.log10;
 
 public class Utils {
     public static float floatFloor(float arg) {
@@ -229,5 +232,25 @@ public class Utils {
         }
 
         return fileName;
+    }
+
+    static public float[] getConcernDataList() {
+        float[] list = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
+
+        for( int i = 0; i<DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX; i++ ) {
+            list[i] = (float) (10 * ((log10(i+1) + 0.48017) / 2.127612));
+        }
+
+        return list;
+    }
+
+    static public float[] getProblemDataList() {
+        float[] list = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
+
+        for( int i = 0; i<DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX; i++ ) {
+            list[i] = (float) (10 * ((log10(i+1) + 1.871083) / 2.084547));
+        }
+
+        return list;
     }
 }

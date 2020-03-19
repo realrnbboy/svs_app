@@ -63,7 +63,19 @@
         </activity>
 
         <activity
+            android:name=".views.activities.PipePresetActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
             android:name=".views.activities.MeasureActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name=".views.activities.PipeMeasureActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" >
         </activity>
@@ -76,6 +88,12 @@
 
         <activity
             android:name=".views.activities.ResultActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name=".views.activities.PipeResultActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" >
         </activity>
@@ -94,6 +112,12 @@
 
         <activity
             android:name=".views.activities.RecordManagerActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name=".views.activities.PipeRecordManagerActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" >
         </activity>

@@ -79,6 +79,8 @@ public class MeasureExeActivity extends Activity {
     MeasureData measureDataSensor2 = null;
     MeasureData measureDataSensor3 = null;
 
+    boolean bModeSensor = true; // sensor or pipe
+
     private final BroadcastReceiver StatusChangeReceiverOnMain = new BroadcastReceiver() {
 
         public void onReceive(Context context, Intent intent) {
@@ -260,6 +262,8 @@ public class MeasureExeActivity extends Activity {
 
         setContentView(R.layout.activity_measure_exe);
 
+        bModeSensor = getIntent().getBooleanExtra("modeSensor", true);
+
         Log.d("TTTT","SVS AutoMode onCreate");
 
         init_service();
@@ -368,6 +372,9 @@ public class MeasureExeActivity extends Activity {
                         svsEntity.setMeasureOptionCount(1); // added by hslee
 
                         connectSVSItems.add(connectSVSItem);
+
+                        if( !bModeSensor )   // added by hslee 2020-03-19 배관진단에서는 센서1개만 사용
+                            break;
                     }
                     else
                     {
@@ -531,7 +538,7 @@ public class MeasureExeActivity extends Activity {
     private void showProgressDialog(boolean showButton, String subMessage)
     {
         String equipmentName = ((EquipmentEntity)svs.getLinkedEquipmentData()).getName();
-        String title = "Processing " + (connectSVSItems.getIndex_connecting()+1) + " of " + connectSVSItems.size();
+        String title = "Processing sensor";
         String message = equipmentName
                 + " " + connectSVSItems.getCurrentIndexSvsLocation().toString().toUpperCase()
                 + "\n\n"+ subMessage + "...";

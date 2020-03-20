@@ -252,6 +252,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@color/colorContent"
+                android:layout_marginTop="@dimen/margin_confirm_top"
                 android:padding="5dp"
                 android:gravity="center">
 

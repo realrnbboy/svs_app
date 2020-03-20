@@ -53,13 +53,99 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        style="@style/item_sub_layout">
+                        style="@style/item_sub_layout"
+                        android:layout_marginTop="@dimen/margin_default">
+
+                        <TextView
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_textview"
+                            android:text="Code :"/>
 
                         <TextView
                             android:id="@+id/textViewCode"
                             android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
                             style="@style/preset_item_edittext"
                             android:text="code"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/item_sub_layout"
+                        android:layout_marginTop="@dimen/margin_default">
+
+                        <TextView
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_textview"
+                            android:text="Pipe name :"/>
+
+                        <TextView
+                            android:id="@+id/textViewPipeName"
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_edittext"
+                            android:text="pipe name"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/item_sub_layout"
+                        android:layout_marginTop="@dimen/margin_default">
+
+                        <TextView
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_textview"
+                            android:text="Location :"/>
+
+                        <TextView
+                            android:id="@+id/textViewLocation"
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_edittext"
+                            android:text="location"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/item_sub_layout"
+                        android:layout_marginTop="@dimen/margin_default">
+
+                        <TextView
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_textview"
+                            android:text="Tag no. :"/>
+
+                        <TextView
+                            android:id="@+id/textViewTagNo"
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_edittext"
+                            android:text="tag no"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/item_sub_layout"
+                        android:layout_marginTop="@dimen/margin_default">
+
+                        <TextView
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_textview"
+                            android:text="Medium :"/>
+
+                        <TextView
+                            android:id="@+id/textViewMedium"
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_edittext"
+                            android:text="medium"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/item_sub_layout"
+                        android:layout_marginTop="@dimen/margin_default">
+
+                        <TextView
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_textview"
+                            android:text="Etc operating condition :"/>
+
+                        <TextView
+                            android:id="@+id/textViewEtcOperatingCondition"
+                            android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                            style="@style/preset_item_edittext"
+                            android:text="Etc operating condition"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -90,6 +176,7 @@
                 <LinearLayout
                     style="@style/item_sub_layout">
 
+                    <!-- 가변 데이터인줄 알고 listview로 구현함. 단순 표시 데이터라 textview로 변경해도 무방함. -->
                     <ListView
                         android:id="@+id/listViewCriteria"
                         android:layout_width="match_parent"

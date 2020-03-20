@@ -258,7 +258,7 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
         }
         else {
             data1 = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
-            
+
             AnalysisEntity analysisEntity = analysisEntityList.get(entityIndex);
             if( analysisEntity != null ) {
                 RealmList<Double> frequencyList = analysisEntity.getFrequency();

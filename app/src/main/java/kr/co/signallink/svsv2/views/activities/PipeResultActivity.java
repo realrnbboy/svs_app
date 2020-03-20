@@ -104,6 +104,16 @@ public class PipeResultActivity extends BaseActivity {
 
         TextView textViewCode = findViewById(R.id.textViewCode);
         textViewCode.setText(analysisData.pipeCode);
+        TextView textViewPipeName = findViewById(R.id.textViewPipeName);
+        textViewPipeName.setText(analysisData.pipeName);
+        TextView textViewLocation = findViewById(R.id.textViewLocation);
+        textViewLocation.setText(analysisData.pipeLocation);
+        TextView textViewTagNo = findViewById(R.id.textViewTagNo);
+        textViewTagNo.setText(analysisData.pipeTagNo);
+        TextView textViewMedium = findViewById(R.id.textViewMedium);
+        textViewMedium.setText(analysisData.pipeMedium);
+        TextView textViewEtcOperatingCondition = findViewById(R.id.textViewEtcOperatingCondition);
+        textViewEtcOperatingCondition.setText(analysisData.pipeEtcOperatingCondition);
 
         // criteria 값 추가
         addCriteriaItem();
@@ -148,11 +158,11 @@ public class PipeResultActivity extends BaseActivity {
             public void onClick(View v) {
 
                 float [] data1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
-                float [] data2 = analysisData.getMeasureData2().getAxisBuf().getfFreq();
-                float [] data3 = analysisData.getMeasureData3().getAxisBuf().getfFreq();
+                float [] data2 = Utils.getConcernDataList();
+                float [] data3 = Utils.getProblemDataList();
 
                 // csv로 raw data 데이터 저장
-                String fileName = Utils.createCsv(new String [] {"PT1", "PT2", "PT3"}, data1, data2, data3);
+                String fileName = Utils.createCsv(new String [] {"PT1", "concern", "problem"}, data1, data2, data3);
                 if( fileName == null ) {
                     ToastUtil.showShort("failed to save csv.");
                 }

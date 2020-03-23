@@ -120,7 +120,7 @@
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
-    <style name="buttonCancel" parent="button">
+    <style name="button_cancel" parent="button">
         <item name="android:background">@drawable/btn_borderless</item>
         <item name="android:textColor">@color/hotpink</item>
     </style>

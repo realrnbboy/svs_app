@@ -662,26 +662,30 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                                 return;
                             }
 
-                            DialogUtil.selectMode(m_context,
-                                    "Select mode",
-                                    "select sensor mode or pipe mode.",
-                                    "sensor",
-                                    "pipe",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            Intent intent = new Intent(getBaseContext(), PresetActivity.class);
-                                            intent.putExtra("equipmentUuid", uuid);
-                                            startActivity(intent);
-                                        }
-                                    },
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            Intent intent = new Intent(getBaseContext(), PipePresetActivity.class);
-                                            intent.putExtra("equipmentUuid", uuid);
-                                            startActivity(intent);
-                                        }
-                                    }
-                            );
+                            Intent intent = new Intent(getBaseContext(), MeasureModeSelectActivity.class);
+                            intent.putExtra("equipmentUuid", uuid);
+                            startActivity(intent);
+//
+//                            DialogUtil.selectMode(m_context,
+//                                    "Select mode",
+//                                    "select sensor mode or pipe mode.",
+//                                    "sensor",
+//                                    "pipe",
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int id) {
+//                                            Intent intent = new Intent(getBaseContext(), PresetActivity.class);
+//                                            intent.putExtra("equipmentUuid", uuid);
+//                                            startActivity(intent);
+//                                        }
+//                                    },
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int id) {
+//                                            Intent intent = new Intent(getBaseContext(), PipePresetActivity.class);
+//                                            intent.putExtra("equipmentUuid", uuid);
+//                                            startActivity(intent);
+//                                        }
+//                                    }
+//                            );
                         }
                         else if( viewIdx == 4 ) {// added by hslee for test
 

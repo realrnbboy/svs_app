@@ -63,19 +63,19 @@ public class RmsListAdapter extends ArrayAdapter<RmsModel> {
             rmsColor = ContextCompat.getColor(context, R.color.myred);
             statusColor = ContextCompat.getColor(context, R.color.myred);
             rmsString = rms + "mm/s" + " (" + rmsModel.getDanger() + ")";
-            statusString = "PROBLEM";
+            statusString = "ontextCompat.getColor(context, R.     PROBLEM";
         }
         else if( rmsModel.getRms() >= rmsModel.getWarning() ) {
             rmsColor = ContextCompat.getColor(context, R.color.myblue);
             statusColor = ContextCompat.getColor(context, R.color.myorange);
             rmsString = rms + "mm/s" + " (" + rmsModel.getWarning() + ")";
-            statusString = "CONCERN";
+            statusString = "ontextCompat.getColor(context, R.   CONCERN";
         }
         else {
             rmsColor = ContextCompat.getColor(context, R.color.myblue);
             statusColor = ContextCompat.getColor(context, R.color.mygreen);
             rmsString = rms + "mm/s";
-            statusString = "GOOD";
+            statusString = "ontextCompat.getColor(context, R.    GOOD";
         }
         //statusString = "PROBLEM";   // for test
 

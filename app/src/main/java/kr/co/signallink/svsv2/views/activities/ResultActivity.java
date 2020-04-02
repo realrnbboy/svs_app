@@ -178,6 +178,7 @@ public class ResultActivity extends BaseActivity {
 //            }
         });
         listViewRms.setAdapter(rmsListAdapter);
+        //Utils.setListViewHeight(listViewRms);
 
         Button buttonNext = findViewById(R.id.buttonNext);
         buttonNext.setOnClickListener(new View.OnClickListener() {

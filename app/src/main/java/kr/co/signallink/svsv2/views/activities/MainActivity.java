@@ -635,12 +635,12 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                     @Override
                     public void onBtnClicked(int viewIdx) {
 
-                        if(viewIdx == 1)
+                        if(viewIdx == 0)
                         {
                             svs.setSelectedEquipmentUuid(uuid);
                             goIntent(SVSLocationManualModeActivity.class);
                         }
-                        else if(viewIdx == 2)
+                        else if(viewIdx == 1)
                         {
                             svs.setSelectedEquipmentUuid(uuid);
 
@@ -649,7 +649,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                             map.put(EXTRA_EQUIPMENT_NAME, name);
                             goIntent(DetailUpdateActivity.class, false, map);
                         }
-                        else if( viewIdx == 3 ) {   // added by hslee
+                        else if( viewIdx == 2 ) {   // added by hslee
 
                             svs.setLinkedEquipmentUuid(uuid);
                             svs.setSelectedEquipmentUuid(uuid);

@@ -143,7 +143,7 @@
     <string name="diagnosis_content_fcl_da">Danger (%)</string>
 
     <string-array name="custom_list_dialog_equipment">
-        <item>Sensors</item>
+        <!--<item>Sensors</item>--> <!--deleted by hslee 2020.03.30 시그널링크 요청으로 삭제-->
         <item>Detail \u0026 Update</item>
         <item>Diagnostic analysis</item>
 <!--        <item>Analysis History</item>-->

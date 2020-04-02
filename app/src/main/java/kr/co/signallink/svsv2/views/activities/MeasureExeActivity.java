@@ -79,12 +79,16 @@ public class MeasureExeActivity extends Activity {
     MeasureData measureDataSensor2 = null;
     MeasureData measureDataSensor3 = null;
 
+    final int MAX_CONNECT_TRY_COUNT = 5;    // added by hslee 2020.03.30
+    int connectTryCount = 0;    // added by hslee 2020.03.30
+
     boolean bModeSensor = true; // sensor or pipe
 
     private final BroadcastReceiver StatusChangeReceiverOnMain = new BroadcastReceiver() {
 
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+
             if (action.equals(DefBLEdata.DISCOVERED_ARRIVE)) {
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -169,6 +173,14 @@ public class MeasureExeActivity extends Activity {
                 }
             }
             else if (action.equals(DefBLEdata.DISCONNECTION_ARRIVE)) {
+
+                ToastUtil.showShort("disconn!!" + connectTryCount);
+
+                if( ++connectTryCount >= MAX_CONNECT_TRY_COUNT ) {  // added by hslee
+                    ToastUtil.showShort("Max connect try count over.");
+                    cancel();
+                    return;
+                }
 
                 //세이브를 패스해야되는 숫자 카운트
                 if(bypassSaveCnt > 0)
@@ -556,10 +568,12 @@ public class MeasureExeActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     connectSVSItems.removeAll();
-                    if(DefConstant.UART_PROFILE_CONNECTED == svs.getBleConnectState())
+                    if(DefConstant.UART_PROFILE_CONNECTED == svs.getBleConnectState()) {
                         uartService.disconnect();
-                    else
+                    }
+                    else {
                         broadcastUpdate(UartService.ACTION_GATT_DISCONNECTED);
+                    }
 
                     cancel();
                 }

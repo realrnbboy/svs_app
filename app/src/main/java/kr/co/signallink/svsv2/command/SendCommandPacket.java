@@ -17,6 +17,10 @@ public class SendCommandPacket {
     private int periodCounting = 0;
     private long lastSendCommandTimeStamp;
 
+    public ByteArrayOutputStream getOutputStream() {
+        return outputStream;
+    }
+
     private ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
     public SendCommandPacket() {

@@ -16,10 +16,14 @@ public class DefBLEdata {
         LEARNING(7),
 
         MEASURE_V4(9),
-        MEASURE_OPTION_NONE(10),
-        MEASURE_OPTION_WITH_TIME(11),
-        MEASURE_OPTION_WITH_FREQ(12),
-        MEASURE_OPTION_WITH_TIME_FREQ(13);
+        //MEASURE_OPTION_NONE(10),
+        MEASURE_OPTION_NONE(0xf0),
+        MEASURE_OPTION_WITH_TIME(0x1f),
+        //MEASURE_OPTION_WITH_TIME(11),
+        //MEASURE_OPTION_WITH_FREQ(12),
+        MEASURE_OPTION_WITH_FREQ(0x2f),
+        //MEASURE_OPTION_WITH_TIME_FREQ(13);
+        MEASURE_OPTION_WITH_TIME_FREQ(0x0f);
 
         final private int cmd;
         private CMD(int cmd){

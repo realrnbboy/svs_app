@@ -117,6 +117,14 @@ public class SVS {
     public void addSendCommand_Init(DefBLEdata.CMD type) {
         SendCommandPacket sc = new SendCommandPacket(type, DefConstant.SVSTRASACTION_INIT);
 
+        if( sc != null && sc.getOutputStream() != null ) {  // added by hslee for test
+            byte[] t = sc.getOutputStream().toByteArray();
+            if (t != null && t.length > 1 && t[1] > 3) {
+                int i = 3;
+                i = 3;
+                System.out.println(111);
+            }
+        }
         synchronized (sendCommandPackets) {
             sendCommandPackets.add(sc);
         }
@@ -208,6 +216,15 @@ public class SVS {
             }
             else {
                 sc = new SendCommandPacket();
+            }
+        }
+
+        if( sc != null && sc.getOutputStream() != null ) {  // added by hslee for test
+            byte[] t = sc.getOutputStream().toByteArray();
+            if (t != null && t.length > 2 && t[1] > 3) {
+                int i = 3;
+                i = 3;
+                System.out.println(111);
             }
         }
 

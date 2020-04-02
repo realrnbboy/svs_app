@@ -79,10 +79,11 @@ public class MeasureExeActivity extends Activity {
     MeasureData measureDataSensor2 = null;
     MeasureData measureDataSensor3 = null;
 
-    final int MAX_CONNECT_TRY_COUNT = 5;    // added by hslee 2020.03.30
+    final int maxConnectTryCount = 5;    // added by hslee 2020.03.30
     int connectTryCount = 0;    // added by hslee 2020.03.30
+    int trySensorNumber = 0;  // 현재 시도 중인 센서
 
-    boolean bModeSensor = true; // sensor or pipe
+    boolean bModePump = true; // sensor or pipe
 
     private final BroadcastReceiver StatusChangeReceiverOnMain = new BroadcastReceiver() {
 
@@ -174,9 +175,10 @@ public class MeasureExeActivity extends Activity {
             }
             else if (action.equals(DefBLEdata.DISCONNECTION_ARRIVE)) {
 
-                ToastUtil.showShort("disconn!!" + connectTryCount);
+                //ToastUtil.showShort("disconn!!!" + connectTryCount);
+                //System.out.println("disconn!!! : " + connectTryCount + ", trySensorNumber : " + trySensorNumber);
 
-                if( ++connectTryCount >= MAX_CONNECT_TRY_COUNT ) {  // added by hslee
+                if( ++connectTryCount >= maxConnectTryCount + trySensorNumber ) {  // added by hslee 2020.03.30
                     ToastUtil.showShort("Max connect try count over.");
                     cancel();
                     return;
@@ -274,7 +276,7 @@ public class MeasureExeActivity extends Activity {
 
         setContentView(R.layout.activity_measure_exe);
 
-        bModeSensor = getIntent().getBooleanExtra("modeSensor", true);
+        bModePump = getIntent().getBooleanExtra("modeSensor", true);
 
         Log.d("TTTT","SVS AutoMode onCreate");
 
@@ -385,7 +387,7 @@ public class MeasureExeActivity extends Activity {
 
                         connectSVSItems.add(connectSVSItem);
 
-                        if( !bModeSensor )   // added by hslee 2020-03-19 배관진단에서는 센서1개만 사용
+                        if( !bModePump )   // added by hslee 2020-03-19 배관진단에서는 센서1개만 사용
                             break;
                     }
                     else
@@ -435,7 +437,11 @@ public class MeasureExeActivity extends Activity {
             {
                 MeasureData measureData = measureDatas.get(0);
 
-
+//                String td = "";
+//                for( int i = 0; i<1024; i++ ) {
+//                    td += measureData.axisBuf.fFreq[i] + ",";
+//                }
+//                Log.d("TTTT2",td);
 
                 SVSParam svsParam = SVS.getInstance().getUploaddata().getSvsParam();    // added by hslee
                 SVSCode svsCode = svsParam.getCode();
@@ -447,12 +453,18 @@ public class MeasureExeActivity extends Activity {
                 measureData.setRmsWarning(rmsWarning);
                 measureData.setRmsDanger(rmsDanger);
 
-                if( measureDataSensor1 == null )    // added by hslee
+                if( measureDataSensor1 == null ) {    // added by hslee
                     measureDataSensor1 = measureData;
-                else if( measureDataSensor2 == null )
+                    trySensorNumber = 1;
+                }
+                else if( measureDataSensor2 == null ) {
                     measureDataSensor2 = measureData;
-                else
+                    trySensorNumber = 2;
+                }
+                else {
                     measureDataSensor3 = measureData;
+                    trySensorNumber = 3;
+                }
 
 
 

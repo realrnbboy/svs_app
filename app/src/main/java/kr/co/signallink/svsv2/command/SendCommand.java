@@ -125,16 +125,20 @@ public class SendCommand {
 
     private static byte[] measure_option_with_time(UartService service){
         byte[] cmd = {(byte)0x5a, (byte)0x04, (byte)0x06, (byte)0x00, (byte)0xf1, NEED_CHECK_SUM};
+        //byte[] cmd = {(byte)0x5a, (byte)0x04, (byte)0x06, (byte)0x00, (byte)0x1f, NEED_CHECK_SUM};  // added by hslee 2020.04.02
         return cmd;
     }
 
     private static byte[] measure_option_with_freq(UartService service){
         byte[] cmd = {(byte)0x5a, (byte)0x04, (byte)0x06, (byte)0x00, (byte)0xf2, NEED_CHECK_SUM};
+        //byte[] cmd = {(byte)0x5a, (byte)0x04, (byte)0x06, (byte)0x00, (byte)0x2f, NEED_CHECK_SUM};  // added by hslee 2020.04.02
         return cmd;
     }
     
     private static byte[] measure_option_with_time_freq(UartService service){
         byte[] cmd = {(byte)0x5a, (byte)0x04, (byte)0x06, (byte)0x00, (byte)0xf3, NEED_CHECK_SUM};
+        //byte[] cmd = {(byte)0x5a, (byte)0x04, (byte)0x06, (byte)0x00, (byte)0x0f, NEED_CHECK_SUM};  // added by hslee 2020.04.02
+        //byte[] cmd = {(byte)0x5a, (byte)0x04, (byte)0x06, (byte)0x00, (byte)0xf0, NEED_CHECK_SUM};  // added by hslee 2020.04.02
         return cmd;
     }
 

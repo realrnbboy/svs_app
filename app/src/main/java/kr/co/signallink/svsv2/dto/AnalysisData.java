@@ -2,6 +2,7 @@ package kr.co.signallink.svsv2.dto;
 
 import java.io.Serializable;
 
+import kr.co.signallink.svsv2.commons.DefCMDOffset;
 import kr.co.signallink.svsv2.model.DIAGNOSIS_FEATURES_Type;
 import kr.co.signallink.svsv2.model.CauseModel;
 import kr.co.signallink.svsv2.model.VARIABLES_1_Type;
@@ -42,6 +43,10 @@ public class AnalysisData implements Serializable {
     public MeasureData measureData1;
     public MeasureData measureData2;
     public MeasureData measureData3;
+
+    public float [] csvMeasureData1 = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
+    public float [] csvMeasureData2 = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
+    public float [] csvMeasureData3 = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
 
     public float rmsLimit;   // added by hslee 2020.03.12 warning, danger를 표시할 때는 기존의 센서에서 올라오는 데이터를 사용, 이 값은 진단 결과 화면을 보여줄지 여부를 판단할 때 사용
 

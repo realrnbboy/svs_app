@@ -211,8 +211,8 @@ public class ResultActivity extends BaseActivity {
                     ToastUtil.showShort("already saved.");
                 }
                 else {
-                    save();
                 }
+                save();
             }
         });
 
@@ -221,9 +221,9 @@ public class ResultActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                float [] data1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
-                float [] data2 = analysisData.getMeasureData2().getAxisBuf().getfFreq();
-                float [] data3 = analysisData.getMeasureData3().getAxisBuf().getfFreq();
+                float [] data1 = analysisData.csvMeasureData1;
+                float [] data2 = analysisData.csvMeasureData2;
+                float [] data3 = analysisData.csvMeasureData3;
 
                 // csv로 raw data 데이터 저장
                 String fileName = Utils.createCsv(new String [] {"PT1", "PT2", "PT3"}, data1, data2, data3);

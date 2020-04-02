@@ -28,7 +28,7 @@ public class MeasureData implements Serializable {
     private float rmsDanger;   // added by hslee
 
     //SVS_Data_Type
-    private SVSAxisBuf axisBuf = new SVSAxisBuf();
+    public SVSAxisBuf axisBuf = new SVSAxisBuf();
 
     public MeasureData() {
         for(int i = 0; i<DefCMDOffset.BAND_MAX; i++) { freqCur[i] = new SVSFreq(); }

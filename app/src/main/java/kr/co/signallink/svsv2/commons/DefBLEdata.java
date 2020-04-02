@@ -17,7 +17,7 @@ public class DefBLEdata {
 
         MEASURE_V4(9),
         //MEASURE_OPTION_NONE(10),
-        MEASURE_OPTION_NONE(0xf0),
+        MEASURE_OPTION_NONE(0xf0),  // for test
         MEASURE_OPTION_WITH_TIME(0x1f),
         //MEASURE_OPTION_WITH_TIME(11),
         //MEASURE_OPTION_WITH_FREQ(12),

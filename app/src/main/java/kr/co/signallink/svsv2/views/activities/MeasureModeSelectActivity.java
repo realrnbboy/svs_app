@@ -63,7 +63,7 @@ public class MeasureModeSelectActivity extends Activity {
 
         setContentView(R.layout.activity_select_measure_mode);
 
-        uuid = getIntent().getStringExtra("uuid");
+        uuid = getIntent().getStringExtra("equipmentUuid");
 
         Button buttonConfirm = findViewById(R.id.buttonConfirm);
         buttonConfirm.setOnClickListener(new View.OnClickListener() {

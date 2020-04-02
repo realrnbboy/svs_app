@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import kr.co.signallink.svsv2.R;
+import kr.co.signallink.svsv2.commons.DefCMDOffset;
 import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.dto.AnalysisData;
@@ -519,15 +520,19 @@ public class MeasureActivity extends BaseActivity {
                     return;
                 }
 
+                measuredFreq1 = measureDataSensor1.getAxisBuf().getfFreq();
+                measuredFreq2 = measureDataSensor2.getAxisBuf().getfFreq();
+                measuredFreq3 = measureDataSensor3.getAxisBuf().getfFreq();
+
                 analysisData.setMeasureData1(measureDataSensor1);
                 analysisData.setMeasureData2(measureDataSensor2);
                 analysisData.setMeasureData3(measureDataSensor3);
 
-                bMeasure = true;
+                System.arraycopy(measuredFreq1, 0, analysisData.csvMeasureData1, 0, DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX);
+                System.arraycopy(measuredFreq2, 0, analysisData.csvMeasureData2, 0, DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX);
+                System.arraycopy(measuredFreq3, 0, analysisData.csvMeasureData3, 0, DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX);
 
-                measuredFreq1 = measureDataSensor1.getAxisBuf().getfFreq();
-                measuredFreq2 = measureDataSensor2.getAxisBuf().getfFreq();
-                measuredFreq3 = measureDataSensor3.getAxisBuf().getfFreq();
+                bMeasure = true;
 
                 try {
                     drawChart(measuredFreq1, measuredFreq2, measuredFreq3);

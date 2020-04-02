@@ -40,7 +40,7 @@
                     android:id="@+id/textViewStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="select sensor mode or pipe mode."
+                    android:text="select pipe mode or pump mode."
                     android:textColor="@color/myGrayDark"
                     android:textSize="@dimen/font_midium"/>
             </LinearLayout>
@@ -76,7 +76,7 @@
                     android:background="@drawable/radiobutton_background"
                     android:button="@android:color/transparent"
                     android:paddingVertical="@dimen/padding_default"
-                    android:text="Sensor" />
+                    android:text="Pump" />
             </RadioGroup>
 
             <LinearLayout

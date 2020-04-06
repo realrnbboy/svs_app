@@ -1,6 +1,7 @@
 package kr.co.signallink.svsv2.views.activities;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,10 +24,12 @@ import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.AnalysisEntity;
 import kr.co.signallink.svsv2.databases.DatabaseUtil;
 import kr.co.signallink.svsv2.dto.AnalysisData;
+import kr.co.signallink.svsv2.model.DiagnosisImageModel;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.CauseModel;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 import kr.co.signallink.svsv2.utils.Utils;
+import kr.co.signallink.svsv2.views.adapters.ResultDiagnosisImageAdapter;
 import kr.co.signallink.svsv2.views.adapters.ResultDiagnosisListAdapter;
 
 // added by hslee 2020-01-29
@@ -40,8 +44,11 @@ public class ResultDiagnosisActivity extends BaseActivity {
     MATRIX_2_Type matrix2;
 
     ListView listViewResultDiagnosis;
+    ListView listViewDiagnosisImage;
     ResultDiagnosisListAdapter resultDiagnosisListAdapter;
+    ResultDiagnosisImageAdapter resultDiagnosisImageAdapter;
     ArrayList<CauseModel> resultDiagnosisList = new ArrayList<>();
+    ArrayList<DiagnosisImageModel> resultDiagnosisImageList = new ArrayList<>();
 
     boolean bSaved = false; // 저장여부
 
@@ -94,6 +101,14 @@ public class ResultDiagnosisActivity extends BaseActivity {
         TextView textViewMatrix4 = findViewById(R.id.textViewMatrix4);
         textViewMatrix4.setText(analysisData.resultDiagnosis[0].cause + "-" + analysisData.resultDiagnosis[0].desc);
 
+        // cause 종류 확인
+        listViewDiagnosisImage = findViewById(R.id.listViewDiagnosisImage);
+
+        addResultDiagnosisImageList();  // 해당 이미지가 있으면 이미지 추가
+
+        resultDiagnosisImageAdapter = new ResultDiagnosisImageAdapter(this, R.layout.list_item_result_diagnosis_image, resultDiagnosisImageList);
+        listViewDiagnosisImage.setAdapter(resultDiagnosisImageAdapter);
+
         Button buttonNext = findViewById(R.id.buttonNext);
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +122,30 @@ public class ResultDiagnosisActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    // 진단 결과에 맞는 이미지가 있으면 이미지 목록에 추가
+    void addResultDiagnosisImageList() {
+        try {
+            AssetManager assetMgr = getAssets();
+            String[] list = assetMgr.list("");
+
+            // 해당 진단 결과 번호로 시작하는 이름을 가진 파일은 이미지 목록에 추가
+            for ( String fileName : list ) {
+                String [] fileNameArr = fileName.split("\\.");    // ex) 7.cavitation4.png
+                if( fileName.length() > 1 && fileNameArr.length == 3 ) {
+                    if( fileNameArr[0].equals(String.valueOf(analysisData.resultDiagnosis[0].no)) ) {
+                        DiagnosisImageModel diagnosisImageModel = new DiagnosisImageModel();
+                        diagnosisImageModel.setFileName(fileName);
+
+                        resultDiagnosisImageList.add(diagnosisImageModel);
+                    }
+                }
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // db에 진단 결과 데이터 저장

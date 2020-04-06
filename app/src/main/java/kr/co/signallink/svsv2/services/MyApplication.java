@@ -353,7 +353,6 @@ public class MyApplication extends Application {
             @Override
             public void run() {
 
-                SendCommandPacket sendCommandPacket2 = svs.getCurrentSendCommand();
                 if (uartService != null && DefConstant.UART_PROFILE_CONNECTED == svs.getBleConnectState())
                 {
                     SendCommandPacket sendCommandPacket = svs.getCurrentSendCommand();

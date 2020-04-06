@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 // added by hslee
 public class ResultDiagnosisData implements Serializable {
+    public int no;
     public String cause;
     public String desc;
     public double rank;

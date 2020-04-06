@@ -154,20 +154,17 @@ public class MeasureActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if( bMeasure ) {
-                    bTestData = true;
-                    makeMatrix2();
+                bTestData = true;
+                makeMatrix2();
 
-                    // 다음 화면으로 이동
-                    Intent intent = new Intent(getBaseContext(), ResultActivity.class);
-                    intent.putExtra("matrix2", matrix2);
-                    intent.putExtra("analysisData", analysisData);
-                    intent.putExtra("equipmentUuid", equipmentUuid);
-                    startActivity(intent);
-                }
-                else {  // 측정을 하지 않은 경우
-                    ToastUtil.showShort("Please measure first");
-                }
+                // 다음 화면으로 이동
+                Intent intent = new Intent(getBaseContext(), ResultDiagnosisActivity.class);
+                //Intent intent = new Intent(getBaseContext(), ResultActivity.class);
+
+                intent.putExtra("matrix2", matrix2);
+                intent.putExtra("analysisData", analysisData);
+                intent.putExtra("equipmentUuid", equipmentUuid);
+                startActivity(intent);
             }
         });
 
@@ -411,13 +408,13 @@ public class MeasureActivity extends BaseActivity {
             DIAGNOSIS_DATA_Type[] rawData = mainData.fnGetRawDatas();   // 임시데이터
             matrix2 = diagnosis.fnMakeMatrix2(rawData[0], rawData[1], rawData[2]);
 
-            analysisData.getMeasureData1().getAxisBuf().setfFreq(rawData[0].dFreq);
-            analysisData.getMeasureData2().getAxisBuf().setfFreq(rawData[1].dFreq);
-            analysisData.getMeasureData3().getAxisBuf().setfFreq(rawData[2].dFreq);
-
-            analysisData.getMeasureData1().getAxisBuf().setfTime(rawData[0].dPwrSpectrum);
-            analysisData.getMeasureData2().getAxisBuf().setfTime(rawData[1].dPwrSpectrum);
-            analysisData.getMeasureData3().getAxisBuf().setfTime(rawData[2].dPwrSpectrum);
+//            analysisData.getMeasureData1().getAxisBuf().setfFreq(rawData[0].dFreq);
+//            analysisData.getMeasureData2().getAxisBuf().setfFreq(rawData[1].dFreq);
+//            analysisData.getMeasureData3().getAxisBuf().setfFreq(rawData[2].dFreq);
+//
+//            analysisData.getMeasureData1().getAxisBuf().setfTime(rawData[0].dPwrSpectrum);
+//            analysisData.getMeasureData2().getAxisBuf().setfTime(rawData[1].dPwrSpectrum);
+//            analysisData.getMeasureData3().getAxisBuf().setfTime(rawData[2].dPwrSpectrum);
         }
         else {
             DIAGNOSIS_DATA_Type rawData1 = new DIAGNOSIS_DATA_Type();
@@ -446,6 +443,8 @@ public class MeasureActivity extends BaseActivity {
 
             for( int i = 0; i<tResultDiagnosis.length; i++ ) {
                 resultDiagnosisData[i] = new ResultDiagnosisData();
+
+                resultDiagnosisData[i].no = mainData.causeInfos.infos[i].nNo;
 
                 resultDiagnosisData[i].cause = mainData.causeInfos.infos[i].strCause;
                 resultDiagnosisData[i].desc = mainData.causeInfos.infos[i].strDesc;

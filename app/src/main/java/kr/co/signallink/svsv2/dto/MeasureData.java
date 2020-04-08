@@ -14,7 +14,7 @@ public class MeasureData implements Serializable {
     private byte[] rawData;
 
     private Date captureTime;
-    private float fSplFreqMes;
+    private float fSplFreqMes;  // csv 저장할때 필요함. 2020.04.08 added by hslee     fSplFreqMes / 2 / freq[i] 
     private long lDataConve;
     private long lScaleIdx;
     private long lAlarmCur;

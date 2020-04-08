@@ -381,8 +381,8 @@ public class MeasureExeActivity extends Activity {
                         connectSVSItem.setAddress(svsEntity.getAddress());
                         connectSVSItem.setSvsLocation(svsEntity.getSvsLocation());
 
-                        //svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_FREQ);  // added by hslee
-                        svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_TIME_FREQ);  // added by hslee
+                        svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_FREQ);  // added by hslee
+                        //svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_TIME_FREQ);  // added by hslee
                         svsEntity.setMeasureOptionCount(1); // added by hslee
 
                         connectSVSItems.add(connectSVSItem);

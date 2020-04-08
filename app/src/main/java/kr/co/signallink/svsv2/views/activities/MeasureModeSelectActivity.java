@@ -25,6 +25,7 @@ import java.util.Date;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
+import io.realm.RealmList;
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.command.ParserCommand;
 import kr.co.signallink.svsv2.commons.DefBLEdata;
@@ -56,6 +57,7 @@ public class MeasureModeSelectActivity extends Activity {
     private static final String TAG = "MeasureModeSelectActivity";
 
     String uuid;
+    private SVS svs = SVS.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,15 @@ public class MeasureModeSelectActivity extends Activity {
                     startActivity(intent);
                 }
                 else if( radioButtonSensor.isChecked() ) {
+                    svs.setLinkedEquipmentUuid(uuid);
+                    svs.setSelectedEquipmentUuid(uuid);
+
+                    RealmList<SVSEntity> svsEntityRealmList = ((EquipmentEntity)svs.getSelectedEquipmentData()).getSvsEntities();
+                    if( svsEntityRealmList == null || svsEntityRealmList.size() != 3 ) {
+                        ToastUtil.showShort("3 sensor required.");
+                        return;
+                    }
+
                     Intent intent = new Intent(getBaseContext(), PresetActivity.class);
                     intent.putExtra("equipmentUuid", uuid);
                     startActivity(intent);

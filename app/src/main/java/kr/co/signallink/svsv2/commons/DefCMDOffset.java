@@ -96,7 +96,7 @@ public class DefCMDOffset {
     public static final int CMD_MEASURE_SVSTIME_OFFSET_TIMECURCRF = 32;
     public static final int CMD_MEASURE_SVSFREQ_OFFSET_FREQCUR = 36;
     public static final int CMD_MEASURE_SVSAXIS_OFFSET_AXISTIME = 84;
-    public static final int CMD_MEASURE_SVSAXIS_OFFSET_AXISFREQ = CMD_MEASURE_SVSAXIS_OFFSET_AXISTIME + 4096;
+    //public static final int CMD_MEASURE_SVSAXIS_OFFSET_AXISFREQ = CMD_MEASURE_SVSAXIS_OFFSET_AXISTIME + 4096;
 
     //event
     public static final int CMD_EVENT_OFFSET_FRAMENUMBER = 4;

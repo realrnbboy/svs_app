@@ -927,7 +927,7 @@ public class MainData {
         bResponseCause = true;
 
         if( jsonString == null || "".equals(jsonString) ) {
-            ToastUtil.showShort("failed get cause from server. use in local storage");
+            //ToastUtil.showShort("failed get cause from server. use in local storage");
 
             cause = Utils.getStringArrayPref("cause");
             if( cause == null ) {   // 앱 설치 후 최초 실행인 경우 호출됨.
@@ -1008,7 +1008,7 @@ public class MainData {
         bResponseFeature = true;
 
         if( jsonString == null || "".equals(jsonString) ) {
-            ToastUtil.showShort("failed get feature from server. use in local storage");
+            //ToastUtil.showShort("failed get feature from server. use in local storage");
 
             feature = Utils.getStringArrayPref("feature");
             if( feature == null ) {   // 앱 설치 후 최초 실행인 경우 호출됨.

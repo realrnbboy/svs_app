@@ -656,11 +656,11 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
                             equipmentAdapter.setSelectedEquipmentUuid(uuid);
 
-                            RealmList<SVSEntity> svsEntityRealmList = ((EquipmentEntity)svs.getSelectedEquipmentData()).getSvsEntities();
-                            if( svsEntityRealmList == null || svsEntityRealmList.size() != 3 ) {
-                                ToastUtil.showShort("3 sensor required.");
-                                return;
-                            }
+//                            RealmList<SVSEntity> svsEntityRealmList = ((EquipmentEntity)svs.getSelectedEquipmentData()).getSvsEntities();
+//                            if( svsEntityRealmList == null || svsEntityRealmList.size() != 3 ) {
+//                                ToastUtil.showShort("3 sensor required.");
+//                                return;
+//                            }
 
                             Intent intent = new Intent(getBaseContext(), MeasureModeSelectActivity.class);
                             intent.putExtra("equipmentUuid", uuid);

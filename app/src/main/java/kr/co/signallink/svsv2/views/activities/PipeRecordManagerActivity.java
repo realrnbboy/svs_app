@@ -42,6 +42,7 @@ import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.AnalysisEntity;
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.CauseModel;
+import kr.co.signallink.svsv2.model.RmsModel;
 import kr.co.signallink.svsv2.utils.DateUtil;
 import kr.co.signallink.svsv2.utils.SizeUtil;
 import kr.co.signallink.svsv2.utils.ToastUtil;
@@ -64,6 +65,7 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
     TextView textViewEndd;
 
     RealmResults<AnalysisEntity> analysisEntityList;
+    ArrayList<RmsModel> previousRmsModelList;
     ArrayList<Date> rmsXDataList = new ArrayList<>();
     private final float XAXIS_LABEL_DEFAULT_ROATION = 70f;
 
@@ -93,9 +95,34 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
 
         equipmentUuid = intent.getStringExtra("equipmentUuid");
 
+//        // 이전 Activity 에서 전달받은 데이터 가져오기
+//        analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");   // 초기데이터 안보여주기로 함. 2020.04.13
+//        if( analysisData != null ) {
+//
+//            Thread t = new Thread() {
+//                public void run() {
+//
+//                    // 차트 그리기
+//                    bUsePreviousActivityData = true;
+//                    drawChartRms(false);
+//                }
+//            };
+//
+//            t.start();
+//
+//            // 진단결과 값 추가
+//            drawChartRawData(0);
+//        }
+
         // 이전 Activity 에서 전달받은 데이터 가져오기
-        analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");   // 초기데이터 안보여주기로 함. 2020.04.13
-        if( analysisData != null ) {
+        previousRmsModelList = (ArrayList<RmsModel>)intent.getSerializableExtra("previousRmsModelList");
+        if( previousRmsModelList != null ) {     // 초기데이터는 1주일 치 보여주기로 함. 2020.04.13
+
+            String endd = Utils.getCurrentTime("yyyy-MM-dd");
+            String startd = Utils.addDateDay(endd, -7, "yyyy-MM-dd");
+
+            textViewStartd.setText(startd);
+            textViewEndd.setText(endd);
 
             Thread t = new Thread() {
                 public void run() {
@@ -109,7 +136,7 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
             t.start();
 
             // 진단결과 값 추가
-            drawChartRawData(0);
+            //drawChartRawData(0);
         }
 
         //processButtonClickWeek(true);   // added by hslee 2020.04.13 초기화면에 1주일 정보 보여주기
@@ -198,7 +225,7 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
                 drawChartRms(bShowInitPreviousReport);
             }
             else {
-                ToastUtil.showShort("no data.");
+                ToastUtil.showShort("please select rms.");
             }
 
         }
@@ -214,13 +241,15 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
         float[] data2 = Utils.getConcernDataList();
         float[] data3 = Utils.getProblemDataList();
         if( bShowPreviousData ) {    // 이전화면(ResultDiagnosisActivity)에서 전달받은 데이터를 사용할 경우
-            if (analysisData == null) {
-                return;
-            }
+//            if (analysisData == null) {
+//                return;
+//            }
 
-            data1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
+            //data1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
+           data1 = previousRmsModelList.get(entityIndex).getFrequency();
         }
-        else {
+        else
+            {
             data1 = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
 
             AnalysisEntity analysisEntity = analysisEntityList.get(entityIndex);
@@ -232,7 +261,6 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
                         data1[i] = (float)frequency;
                     }
                 }
-
             }
         }
 
@@ -477,15 +505,24 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
 
             try {
 
-                float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();
+                //float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();
+                for( RmsModel rmsModel : previousRmsModelList ) {
+                    yDataList1.add((float) rmsModel.getRms1());
 
-                yDataList1.add(rms1);
+                    Date created = new Date(rmsModel.getCreated());
+                    rmsXDataList.add(created);
+                }
+
+                //yDataList1.add(rms1);
 
                 LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), true);
                 if (lineDataSet1 != null)
                     lineData.addDataSet(lineDataSet1);
 
-                rmsXDataList.add(analysisData.getMeasureData1().getCaptureTime());
+//                if( bShowInitPreviousReport ) {
+//                    drawChartRawData((rmsXDataList.size() - 1) < 0 ? 0 : rmsXDataList.size() - 1);    // 하단 차트 초기데이터일때 그리기
+//                }
+                //rmsXDataList.add(analysisData.getMeasureData1().getCaptureTime());
 
             } catch (Exception e) {
                 e.printStackTrace();

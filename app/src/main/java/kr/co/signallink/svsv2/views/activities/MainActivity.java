@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +48,7 @@ import kr.co.signallink.svsv2.databases.web.WCompanyEntity;
 import kr.co.signallink.svsv2.databases.web.WEquipmentEntity;
 import kr.co.signallink.svsv2.databases.web.WSVSEntity;
 import kr.co.signallink.svsv2.databases.web.WebLoginEntity;
+import kr.co.signallink.svsv2.model.RmsModel;
 import kr.co.signallink.svsv2.restful.APIManager;
 import kr.co.signallink.svsv2.restful.OnApiListener;
 import kr.co.signallink.svsv2.restful.response.APIResponse;
@@ -687,12 +689,109 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 //                                    }
 //                            );
                         }
-                        else if( viewIdx == 3 ) {// added by hslee for test
+                        else if( viewIdx == 3 ) {   // added by hslee for test
 
-                            // 다음 화면으로 이동
-                            Intent intent = new Intent(getBaseContext(), RecordManagerActivity.class);
+                            svs.setLinkedEquipmentUuid(uuid);
+                            svs.setSelectedEquipmentUuid(uuid);
+
+                            equipmentAdapter.setSelectedEquipmentUuid(uuid);
+
+                            Intent intent = new Intent(getBaseContext(), MeasureModeSelectActivity.class);
+                            intent.putExtra("type", "history");
                             intent.putExtra("equipmentUuid", uuid);
                             startActivity(intent);
+                        }
+                        else if( viewIdx == 4 ) {   // added by hslee for test
+
+                            try {
+                                String endd = Utils.getCurrentTime("yyyy-MM-dd");
+                                String tEndd = Utils.addDateDay(endd, 1, "yyyy-MM-dd"); // 00시부터 계산하기 때문에 다음날 0시이전의 데이터를 가져오기 위해 +1해줌
+                                String startd = Utils.addDateDay(endd, -7, "yyyy-MM-dd");
+
+                                Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startd);
+                                Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(tEndd);
+
+                                long startLong = startDate.getTime();
+                                long endLong = endDate.getTime();
+
+                                Realm realm = Realm.getDefaultInstance();
+
+                                RealmResults<AnalysisEntity> preiviousAnalysisEntityList = realm.where(AnalysisEntity.class)
+                                        .equalTo("type", 1) // 1 rms, 2 frequency
+                                        .greaterThanOrEqualTo("created", startLong)
+                                        .lessThanOrEqualTo("created", endLong)
+                                        .equalTo("equipmentUuid", uuid)
+                                        .findAll()
+                                        //.sort("created", Sort.DESCENDING);
+                                        .sort("created", Sort.ASCENDING);
+
+                                ArrayList<RmsModel> rmsModelList = new ArrayList<>();
+
+                                for( AnalysisEntity analysisEntity : preiviousAnalysisEntityList ) {
+                                    RmsModel rmsModel = new RmsModel();
+                                    rmsModel.setRms1(analysisEntity.getRms1());
+                                    rmsModel.setRms2(analysisEntity.getRms2());
+                                    rmsModel.setRms3(analysisEntity.getRms3());
+                                    rmsModel.setbShowCause(analysisEntity.isbShowCause());
+                                    rmsModel.setCreated(analysisEntity.getCreated());
+
+                                    rmsModelList.add(rmsModel);
+                                }
+
+
+                                // 다음 화면으로 이동
+                                Intent intent = new Intent(getBaseContext(), RecordManagerActivity.class);
+                                intent.putExtra("equipmentUuid", uuid);
+                                intent.putExtra("previousRmsModelList", rmsModelList);
+                                startActivity(intent);
+                            }
+                            catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else if( viewIdx == 5 ) {   // added by hslee for test
+
+                            try {
+                                String endd = Utils.getCurrentTime("yyyy-MM-dd");
+                                String tEndd = Utils.addDateDay(endd, 1, "yyyy-MM-dd"); // 00시부터 계산하기 때문에 다음날 0시이전의 데이터를 가져오기 위해 +1해줌
+                                String startd = Utils.addDateDay(endd, -7, "yyyy-MM-dd");
+
+                                Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startd);
+                                Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(tEndd);
+
+                                long startLong = startDate.getTime();
+                                long endLong = endDate.getTime();
+
+                                Realm realm = Realm.getDefaultInstance();
+
+                                RealmResults<AnalysisEntity> preiviousAnalysisEntityList = realm.where(AnalysisEntity.class)
+                                        .equalTo("type", 2) // 1 rms, 2 frequency
+                                        .greaterThanOrEqualTo("created", startLong)
+                                        .lessThanOrEqualTo("created", endLong)
+                                        .equalTo("equipmentUuid", uuid)
+                                        .findAll()
+                                        //.sort("created", Sort.DESCENDING);
+                                        .sort("created", Sort.ASCENDING);
+
+                                ArrayList<RmsModel> rmsModelList = new ArrayList<>();
+
+                                for( AnalysisEntity analysisEntity : preiviousAnalysisEntityList ) {
+                                    RmsModel rmsModel = new RmsModel();
+                                    rmsModel.setRms1(analysisEntity.getRms1());
+                                    rmsModel.setCreated(analysisEntity.getCreated());
+
+                                    rmsModelList.add(rmsModel);
+                                }
+
+                                // 다음 화면으로 이동
+                                Intent intent = new Intent(getBaseContext(), PipeRecordManagerActivity.class);
+                                intent.putExtra("equipmentUuid", uuid);
+                                intent.putExtra("previousRmsModelList", rmsModelList);
+                                startActivity(intent);
+                            }
+                            catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                         else if( viewIdx == 5 ) {// added by hslee for test
 

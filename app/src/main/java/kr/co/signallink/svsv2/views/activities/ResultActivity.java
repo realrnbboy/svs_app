@@ -26,10 +26,14 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.AnalysisEntity;
@@ -189,11 +193,54 @@ public class ResultActivity extends BaseActivity {
 
                 // 다음 화면으로 이동
                 Intent intent;
+
                 if( bRmsResultGood1 && bRmsResultGood2 && bRmsResultGood3 ) {   // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
                     intent = new Intent(getBaseContext(), RecordManagerActivity.class);
                 }
                 else {
                     intent = new Intent(getBaseContext(), ResultDiagnosisActivity.class);
+                }
+
+                try {
+                    String endd = Utils.getCurrentTime("yyyy-MM-dd");
+                    String tEndd = Utils.addDateDay(endd, 1, "yyyy-MM-dd"); // 00시부터 계산하기 때문에 다음날 0시이전의 데이터를 가져오기 위해 +1해줌
+                    String startd = Utils.addDateDay(endd, -7, "yyyy-MM-dd");
+
+                    Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startd);
+                    Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(tEndd);
+
+                    long startLong = startDate.getTime();
+                    long endLong = endDate.getTime();
+
+                    Realm realm = Realm.getDefaultInstance();
+
+                    // 일주일치 데이터 가져오기
+                    RealmResults<AnalysisEntity> preiviousAnalysisEntityList = realm.where(AnalysisEntity.class)
+                            .equalTo("type", 1) // 1 rms, 2 frequency
+                            .greaterThanOrEqualTo("created", startLong)
+                            .lessThanOrEqualTo("created", endLong)
+                            .equalTo("equipmentUuid", equipmentUuid)
+                            .findAll()
+                            //.sort("created", Sort.DESCENDING);
+                            .sort("created", Sort.ASCENDING);
+
+                    ArrayList<RmsModel> rmsModelList = new ArrayList<>();
+
+                    for( AnalysisEntity analysisEntity : preiviousAnalysisEntityList ) {
+                        RmsModel rmsModel = new RmsModel();
+                        rmsModel.setRms1(analysisEntity.getRms1());
+                        rmsModel.setRms2(analysisEntity.getRms2());
+                        rmsModel.setRms3(analysisEntity.getRms3());
+                        rmsModel.setbShowCause(analysisEntity.isbShowCause());
+                        rmsModel.setCreated(analysisEntity.getCreated());
+
+                        rmsModelList.add(rmsModel);
+                    }
+
+                    intent.putExtra("previousRmsModelList", rmsModelList);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 intent.putExtra("analysisData", analysisData);
@@ -332,6 +379,7 @@ public class ResultActivity extends BaseActivity {
                         ratio.add(analysisData.resultDiagnosis[i].ratio);
                     }
 
+                    analysisEntity.setType(1);  // 1 rms, 2 frequency
                     analysisEntity.setCause(cause);
                     analysisEntity.setCauseDesc(causeDesc);
                     analysisEntity.setRank(rank);

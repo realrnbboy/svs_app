@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -42,6 +43,7 @@ import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.AnalysisEntity;
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.CauseModel;
+import kr.co.signallink.svsv2.model.RmsModel;
 import kr.co.signallink.svsv2.utils.DateUtil;
 import kr.co.signallink.svsv2.utils.SizeUtil;
 import kr.co.signallink.svsv2.utils.ToastUtil;
@@ -65,6 +67,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
 
     LineChart lineChartRms;
     RealmResults<AnalysisEntity> analysisEntityList;
+    ArrayList<RmsModel> previousRmsModelList;
     ArrayList<Date> xDataList = new ArrayList<>();
     private final float XAXIS_LABEL_DEFAULT_ROATION = 70f;
 
@@ -107,9 +110,19 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         // 이전 Activity 에서 전달받은 데이터 가져오기
         //matrix2 = (MATRIX_2_Type)intent.getSerializableExtra("matrix2");
 
+
         // 이전 Activity 에서 전달받은 데이터 가져오기
-        analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");
-        if( analysisData != null ) {     // 초기데이터 안보여주기로 함. 2020.04.13
+        previousRmsModelList = (ArrayList<RmsModel>)intent.getSerializableExtra("previousRmsModelList");
+
+        // 이전 Activity 에서 전달받은 데이터 가져오기
+        //analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");
+        if( previousRmsModelList != null ) {     // 초기데이터는 1주일 치 보여주기로 함. 2020.04.13
+
+            String endd = Utils.getCurrentTime("yyyy-MM-dd");
+            String startd = Utils.addDateDay(endd, -7, "yyyy-MM-dd");
+
+            textViewStartd.setText(startd);
+            textViewEndd.setText(endd);
 
             Thread t = new Thread() {
                 public void run() {
@@ -123,10 +136,8 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
             t.start();
 
             // 진단결과 값 추가
-            redrawResultDiagnosisItem(0);
+            //redrawResultDiagnosisItem(0);
         }
-
-        //processButtonClickWeek(true);   // added by hslee 2020.04.13 초기화면에 1주일 정보 보여주기
     }
 
     void initView() {
@@ -269,7 +280,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
 //                    .sort("created", Sort.ASCENDING);
 
             analysisEntityList = realm.where(AnalysisEntity.class)
-                    .notEqualTo("type", 2) // 1 rms, 2 frequency
+                    .equalTo("type", 1) // 1 rms, 2 frequency
                     .greaterThanOrEqualTo("created", startLong)
                     .lessThanOrEqualTo("created", endLong)
                     .equalTo("equipmentUuid", equipmentUuid)
@@ -382,6 +393,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
 
         XAxis xAxis = lineChartRms.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
+        //xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         //xAxis.setAvoidFirstLastClipping(true); //X 축에서 처음과 끝에 있는 라벨이 짤리는걸 방지해 준다. (index 0번째를 그냥 없앨때도 있다.)
         xAxis.setValueFormatter(new IAxisValueFormatter() {
@@ -467,6 +479,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         float offsetBottom = textYSize + legendSize + SizeUtil.dpToPx(5); //15 is Padding
 
         lineChartRms.setViewPortOffsets(offsetSide+100,SizeUtil.dpToPx(5), offsetSide+50, offsetBottom+30);
+        //lineChartRms.setViewPortOffsets(100, 15, 50, 30);
         //lineChartRms.invalidate();
     }
 
@@ -491,12 +504,23 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
 
             try {
 
-                float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();
-                float rms2 = analysisData.getMeasureData2().getSvsTime().getdRms();
-                float rms3 = analysisData.getMeasureData3().getSvsTime().getdRms();
+//                float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();
+//                float rms2 = analysisData.getMeasureData2().getSvsTime().getdRms();
+//                float rms3 = analysisData.getMeasureData3().getSvsTime().getdRms();
+////                float rms1 = 1;
+////                float rms2 = 2;
+////                float rms3 = 3;
+                for( RmsModel rmsModel : previousRmsModelList ) {
+                    yDataList1.add((float) rmsModel.getRms1());
+                    yDataList2.add((float) rmsModel.getRms2());
+                    yDataList3.add((float) rmsModel.getRms3());
+
+                    Date created = new Date(rmsModel.getCreated());
+                    xDataList.add(created);
+                }
 
                 if( bShowChartPt1 ) {
-                    yDataList1.add(rms1);
+                    //yDataList1.add(rms1);
 
                     LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen));
                     if (lineDataSet1 != null)
@@ -504,7 +528,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                 }
 
                 if( bShowChartPt2 ) {
-                    yDataList2.add(rms2);
+                    //yDataList2.add(rms2);
 
                     LineDataSet lineDataSet2 = generateLineData("pt2", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange));
                     if (lineDataSet2 != null)
@@ -512,14 +536,17 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                 }
 
                 if( bShowChartPt3 ) {
-                    yDataList3.add(rms3);
+                    //yDataList3.add(rms3);
 
                     LineDataSet lineDataSet3 = generateLineData("pt3", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue));
                     if (lineDataSet3 != null)
                         lineData.addDataSet(lineDataSet3);
                 }
 
-                xDataList.add(analysisData.getMeasureData1().getCaptureTime());
+                //xDataList.add(analysisData.getMeasureData1().getCaptureTime());
+//                if( previousRmsModelList != null && previousRmsModelList.size() > 0 ) {
+//
+//                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -571,6 +598,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
             XAxis xAxis = lineChartRms.getXAxis();
             int xAxisMaximum = yDataList1.size() <= 0 ? 0 : yDataList1.size()-1;
             xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+            //xAxis.setAxisMaximum(1);
 
             lineChartRms.setData(lineData);
             lineChartRms.invalidate();

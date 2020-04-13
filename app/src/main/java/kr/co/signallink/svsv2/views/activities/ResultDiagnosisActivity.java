@@ -27,6 +27,7 @@ import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.DiagnosisImageModel;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.CauseModel;
+import kr.co.signallink.svsv2.model.RmsModel;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 import kr.co.signallink.svsv2.utils.Utils;
 import kr.co.signallink.svsv2.views.adapters.ResultDiagnosisImageAdapter;
@@ -50,6 +51,7 @@ public class ResultDiagnosisActivity extends BaseActivity {
     ArrayList<CauseModel> resultDiagnosisList = new ArrayList<>();
     ArrayList<DiagnosisImageModel> resultDiagnosisImageList = new ArrayList<>();
 
+    ArrayList<RmsModel> previousRmsModelList = new ArrayList<>();
     boolean bSaved = false; // 저장여부
 
     @Override
@@ -75,6 +77,7 @@ public class ResultDiagnosisActivity extends BaseActivity {
         Intent intent = getIntent();
 
         // 이전 Activity 에서 전달받은 데이터 가져오기
+        previousRmsModelList = (ArrayList<RmsModel>)intent.getSerializableExtra("previousRmsModelList");
         analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");
         if( analysisData == null ) {
             ToastUtil.showShort("analysis data is null");
@@ -116,6 +119,7 @@ public class ResultDiagnosisActivity extends BaseActivity {
 
                 // 다음 화면으로 이동
                 Intent intent = new Intent(getBaseContext(), RecordManagerActivity.class);
+                intent.putExtra("previousRmsModelList", previousRmsModelList);
                 intent.putExtra("matrix2", matrix2);
                 intent.putExtra("analysisData", analysisData);
                 intent.putExtra("equipmentUuid", equipmentUuid);

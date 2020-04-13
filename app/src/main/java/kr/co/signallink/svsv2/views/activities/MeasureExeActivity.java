@@ -680,4 +680,8 @@ public class MeasureExeActivity extends Activity {
 
         finish();
     }
+
+    @Override public void onBackPressed() { // added by hslee 2020.04.10
+        ToastUtil.showLong("back button is disabled during measure.");
+    }
 }

@@ -202,6 +202,12 @@ public class MyMigration implements RealmMigration {
                         .addField("type", int.class);
             }
 
+            //버전 17으로 마이그레이션 : AnalysisEntity에 bShowCause 추가
+            if( step == 16 ) {
+                schema.get("AnalysisEntity")
+                        .addField("bShowCause", boolean.class);
+            }
+
         }
     }
 }

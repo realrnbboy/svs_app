@@ -108,37 +108,36 @@
                 </LinearLayout>
             </LinearLayout>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_confirm_top"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@color/colorContent"
-                    android:padding="5dp"
-                    android:gravity="center">
-
-                    <Button
-                        android:id="@+id/buttonNext"
-                        android:layout_weight="1"
-                        style="@style/button_confirm"
-                        android:text="next"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <include
-                layout="@layout/footer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_confirm_top"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/colorContent"
+            android:padding="5dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/buttonNext"
+                style="@style/button_confirm"
+                android:text="next"/>
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

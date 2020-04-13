@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -58,16 +60,15 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
     LineChart lineChartRms;
     LineChart lineChartRawData;
 
+    TextView textViewStartd;
+    TextView textViewEndd;
+
     RealmResults<AnalysisEntity> analysisEntityList;
     ArrayList<Date> rmsXDataList = new ArrayList<>();
     private final float XAXIS_LABEL_DEFAULT_ROATION = 70f;
 
     boolean bUsePreviousActivityData = false;
     boolean bShowPreviousData = true;   // 이전 화면에서 전달한 데이터를 사용할 경우, 아이템 클릭시 널포인트 오류가 나는 부분이 있음, 이를 구분하기 위해 사용
-
-    boolean bShowChartPt1 = true; // 차트의 pt1 표시 여부
-    boolean bShowChartPt2 = true; // 차트의 pt2 표시 여부
-    boolean bShowChartPt3 = true; // 차트의 pt3 표시 여부
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,7 +94,7 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
         equipmentUuid = intent.getStringExtra("equipmentUuid");
 
         // 이전 Activity 에서 전달받은 데이터 가져오기
-        analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");
+        analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");   // 초기데이터 안보여주기로 함. 2020.04.13
         if( analysisData != null ) {
 
             Thread t = new Thread() {
@@ -101,7 +102,7 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
 
                     // 차트 그리기
                     bUsePreviousActivityData = true;
-                    drawChartRms();
+                    drawChartRms(false);
                 }
             };
 
@@ -110,17 +111,18 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
             // 진단결과 값 추가
             drawChartRawData(0);
         }
+
+        //processButtonClickWeek(true);   // added by hslee 2020.04.13 초기화면에 1주일 정보 보여주기
     }
 
     void initView() {
-
         String endd = Utils.getCurrentTime("yyyy-MM-dd");
         String startd = endd;
         //String startd = Utils.addDateDay(endd, -6, dateFormat);
 
-        final TextView textViewStartd = findViewById(R.id.textViewStartd);
+        textViewStartd = findViewById(R.id.textViewStartd);
         textViewStartd.setText(startd);
-        final TextView textViewEndd = findViewById(R.id.textViewEndd);
+        textViewEndd = findViewById(R.id.textViewEndd);
         textViewEndd.setText(endd);
 
         Button buttonToday = findViewById(R.id.buttonToday);
@@ -133,7 +135,7 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
                 textViewEndd.setText(today);
 
                 bShowPreviousData = false;
-                getDataFromDb(today, endd);
+                getDataFromDb(false, today, endd);
             }
         });
 
@@ -141,15 +143,7 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
         buttonWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String endd = Utils.getCurrentTime("yyyy-MM-dd");
-                String tEndd = Utils.addDateDay(endd, 1, "yyyy-MM-dd"); // 00시부터 계산하기 때문에 다음날 0시이전의 데이터를 가져오기 위해 +1해줌
-                String startd = Utils.addDateDay(endd, -7, "yyyy-MM-dd");
-                textViewStartd.setText(startd);
-                textViewEndd.setText(endd);
-
-                bShowPreviousData = false;
-                getDataFromDb(startd, tEndd);
+                processButtonClickWeek(false);
             }
         });
 
@@ -164,52 +158,22 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
                 startActivity(intent);
             }
         });
+    }
 
-        final ImageView imageViewPt1 = findViewById(R.id.imageViewPt1);
-        imageViewPt1.setSelected(true);// 초기값은 선택되있음.
-        LinearLayout linearLayoutPt1 = findViewById(R.id.linearLayoutPt1);
-        linearLayoutPt1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bShowChartPt1 = !bShowChartPt1;
+    void processButtonClickWeek(boolean bShowInitPreviousReport) {
+        String endd = Utils.getCurrentTime("yyyy-MM-dd");
+        String tEndd = Utils.addDateDay(endd, 1, "yyyy-MM-dd"); // 00시부터 계산하기 때문에 다음날 0시이전의 데이터를 가져오기 위해 +1해줌
+        String startd = Utils.addDateDay(endd, -7, "yyyy-MM-dd");
 
-                imageViewPt1.setSelected(bShowChartPt1);
+        textViewStartd.setText(startd);
+        textViewEndd.setText(endd);
 
-                drawChartRms();
-            }
-        });
-
-        final ImageView imageViewPt2 = findViewById(R.id.imageViewPt2);
-        imageViewPt2.setSelected(true);// 초기값은 선택되있음.
-        LinearLayout linearLayoutPt2 = findViewById(R.id.linearLayoutPt2);
-        linearLayoutPt2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bShowChartPt2 = !bShowChartPt2;
-
-                imageViewPt2.setSelected(bShowChartPt2);
-
-                drawChartRms();
-            }
-        });
-
-        final ImageView imageViewPt3 = findViewById(R.id.imageViewPt3);
-        imageViewPt3.setSelected(true);// 초기값은 선택되있음.
-        LinearLayout linearLayoutPt3 = findViewById(R.id.linearLayoutPt3);
-        linearLayoutPt3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bShowChartPt3 = !bShowChartPt3;
-
-                imageViewPt3.setSelected(bShowChartPt3);
-
-                drawChartRms();
-            }
-        });
+        bShowPreviousData = false;
+        getDataFromDb(bShowInitPreviousReport, startd, tEndd);
     }
 
     // db에서 날짜에 맞는 데이터 가져오기
-    void getDataFromDb(String startd, String endd) {
+    void getDataFromDb(boolean bShowInitPreviousReport, String startd, String endd) {
         try {
             Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startd);
             Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endd);
@@ -231,7 +195,7 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
             if( analysisEntityList != null ) {
                 // 차트 그리기
                 bUsePreviousActivityData = false;
-                drawChartRms();
+                drawChartRms(bShowInitPreviousReport);
             }
             else {
                 ToastUtil.showShort("no data.");
@@ -284,36 +248,29 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
         ArrayList<Float> valueList3 = new ArrayList<>();
 
         try {
-
-            if (bShowChartPt1) {
-                if (data1 != null) {
-                    for (float v : data1) {
-                        valueList1.add(v);
-                    }
+            if (data1 != null) {
+                for (float v : data1) {
+                    valueList1.add(v);
                 }
-
-                lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), false));
             }
 
-            if (bShowChartPt2) {
-                if (data2 != null) {
-                    for (float v : data2) {
-                        valueList2.add(v);
-                    }
-                }
+            lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), false));
 
-                lineData.addDataSet(generateLineData("concern", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange), false));
+            if (data2 != null) {
+                for (float v : data2) {
+                    valueList2.add(v);
+                }
             }
 
-            if (bShowChartPt3) {
-                if (data3 != null) {
-                    for (float v : data3) {
-                        valueList3.add(v);
-                    }
-                }
+            lineData.addDataSet(generateLineData("concern", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange), false));
 
-                lineData.addDataSet(generateLineData("problem", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myred), false));
+            if (data3 != null) {
+                for (float v : data3) {
+                    valueList3.add(v);
+                }
             }
+
+            lineData.addDataSet(generateLineData("problem", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myred), false));
         } catch (Exception ex) {
             return;
         }
@@ -388,6 +345,26 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
         xAxis.setTextColor(Color.WHITE);
         xAxis.setLabelRotationAngle(XAXIS_LABEL_DEFAULT_ROATION); //X축에 있는 라벨의 각도
         adjustViewportForChart();
+
+        final ScrollView scrollView = findViewById(R.id.scrollView);
+        lineChartRms.setOnTouchListener(new View.OnTouchListener() {    // 차크 클릭 시, 스크롤뷰의 스크롤 기능을 off 하여 차트 스크롤 기능을 방해하지 않게 함.
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        scrollView.requestDisallowInterceptTouchEvent(true);
+                        break;
+                    }
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP: {
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                        break;
+                    }
+                }
+
+                return false;
+            }
+        });
     }
 
     private void initChartRawData() {
@@ -426,6 +403,26 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
         //xAxis.setAxisMaximum(80);
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
+
+        final ScrollView scrollView = findViewById(R.id.scrollView);
+        lineChartRawData.setOnTouchListener(new View.OnTouchListener() {    // 차크 클릭 시, 스크롤뷰의 스크롤 기능을 off 하여 차트 스크롤 기능을 방해하지 않게 함.
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        scrollView.requestDisallowInterceptTouchEvent(true);
+                        break;
+                    }
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP: {
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                        break;
+                    }
+                }
+
+                return false;
+            }
+        });
     }
 
 
@@ -461,7 +458,7 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
         //lineChartRms.invalidate();
     }
 
-    private void drawChartRms() {
+    private void drawChartRms(boolean bShowInitPreviousReport) {
 
         try {
             Thread.sleep(1000); // 차트 초기화 시간 - 추가 안하면 정상적으로 표시 안됨.
@@ -472,8 +469,6 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
         LineData lineData = new LineData();
 
         ArrayList<Float> yDataList1 = new ArrayList<>();
-        ArrayList<Float> yDataList2 = new ArrayList<>();
-        ArrayList<Float> yDataList3 = new ArrayList<>();
 
         rmsXDataList.clear();
         lineChartRms.clear();
@@ -483,32 +478,12 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
             try {
 
                 float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();
-//                float rms2 = analysisData.getMeasureData2().getSvsTime().getdRms();
-//                float rms3 = analysisData.getMeasureData3().getSvsTime().getdRms();
 
-                if( bShowChartPt1 ) {
-                    yDataList1.add(rms1);
+                yDataList1.add(rms1);
 
-                    LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), true);
-                    if (lineDataSet1 != null)
-                        lineData.addDataSet(lineDataSet1);
-                }
-
-//                if( bShowChartPt2 ) {
-//                    yDataList2.add(rms2);
-//
-//                    LineDataSet lineDataSet2 = generateLineData("pt2", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange), true);
-//                    if (lineDataSet2 != null)
-//                        lineData.addDataSet(lineDataSet2);
-//                }
-//
-//                if( bShowChartPt3 ) {
-//                    yDataList3.add(rms3);
-//
-//                    LineDataSet lineDataSet3 = generateLineData("pt3", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue), true);
-//                    if (lineDataSet3 != null)
-//                        lineData.addDataSet(lineDataSet3);
-//                }
+                LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), true);
+                if (lineDataSet1 != null)
+                    lineData.addDataSet(lineDataSet1);
 
                 rmsXDataList.add(analysisData.getMeasureData1().getCaptureTime());
 
@@ -521,30 +496,18 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
             try {
                 for( AnalysisEntity analysisEntity : analysisEntityList ) {
                     yDataList1.add(analysisEntity.getRms1());
-                    yDataList2.add(analysisEntity.getRms2());
-                    yDataList3.add(analysisEntity.getRms3());
 
                     Date created = new Date(analysisEntity.getCreated());
                     rmsXDataList.add(created);
                 }
 
+                LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), true);
+                if (lineDataSet1 != null) {
+                    lineData.addDataSet(lineDataSet1);
 
-                if( bShowChartPt1 ) {
-                    LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), true);
-                    if (lineDataSet1 != null)
-                        lineData.addDataSet(lineDataSet1);
-                }
-
-                if( bShowChartPt2 ) {
-                    LineDataSet lineDataSet2 = generateLineData("pt2", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange), true);
-                    if (lineDataSet2 != null)
-                        lineData.addDataSet(lineDataSet2);
-                }
-
-                if( bShowChartPt3 ) {
-                    LineDataSet lineDataSet3 = generateLineData("pt3", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue), true);
-                    if (lineDataSet3 != null)
-                        lineData.addDataSet(lineDataSet3);
+                    if( bShowInitPreviousReport ) {
+                        drawChartRawData((rmsXDataList.size() - 1) < 0 ? 0 : rmsXDataList.size() - 1);    // 하단 차트 초기데이터일때 그리기
+                    }
                 }
 
             } catch (Exception e) {
@@ -603,6 +566,7 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
         super.onResume();
         DefLog.d(TAG, "onResume");
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

@@ -185,12 +185,12 @@ public class Utils {
     }
 
     // csv 파일 저장
-    public static String createCsv(String [] title, float [] data1, float [] data2, float [] data3) {
+    public static String createCsv(String type, String [] title, float [] data1, float [] data2, float [] data3) {
         if( !(data1.length == data2.length || data2.length == data3.length) ) {    // 데이터 사이즈가 맞지 않은 경우
             return null;
         }
 
-        String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "SVSdata" + File.separator + "csv" + File.separator;
+        String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "SVSdata" + File.separator + "csv" + File.separator + type + File.separator;
 
         File dir = new File(path);
         if( !dir.exists() ) {   // 폴더 없으면 생성

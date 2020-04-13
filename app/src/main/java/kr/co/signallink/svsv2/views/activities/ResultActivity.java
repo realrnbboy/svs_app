@@ -3,11 +3,13 @@ package kr.co.signallink.svsv2.views.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -197,6 +199,7 @@ public class ResultActivity extends BaseActivity {
                 intent.putExtra("analysisData", analysisData);
                 intent.putExtra("matrix2", matrix2);
                 intent.putExtra("equipmentUuid", equipmentUuid);
+                intent.putExtra("bShowCause", !(bRmsResultGood1 && bRmsResultGood2 && bRmsResultGood3));
                 startActivity(intent);
             }
         });
@@ -211,8 +214,9 @@ public class ResultActivity extends BaseActivity {
                     ToastUtil.showShort("already saved.");
                 }
                 else {
+                    save();
                 }
-                save();
+
             }
         });
 
@@ -226,12 +230,12 @@ public class ResultActivity extends BaseActivity {
                 float [] data3 = analysisData.csvMeasureData3;
 
                 // csv로 raw data 데이터 저장
-                String fileName = Utils.createCsv(new String [] {"PT1", "PT2", "PT3"}, data1, data2, data3);
+                String fileName = Utils.createCsv("pump", new String [] {"PT1", "PT2", "PT3"}, data1, data2, data3);
                 if( fileName == null ) {
                     ToastUtil.showShort("failed to save csv.");
                 }
                 else {
-                    ToastUtil.showLong("saved as \"/SVSdata/csv/" + fileName + "\"");
+                    ToastUtil.showLong("saved as \"/SVSdata/csv/pump/" + fileName + "\"");
                 }
 
             }
@@ -332,6 +336,7 @@ public class ResultActivity extends BaseActivity {
                     analysisEntity.setCauseDesc(causeDesc);
                     analysisEntity.setRank(rank);
                     analysisEntity.setRatio(ratio);
+                    analysisEntity.setbShowCause(!(bRmsResultGood1 && bRmsResultGood2 && bRmsResultGood3));
 
                     AnalysisEntity result = realm.copyToRealmOrUpdate(analysisEntity);
                     if( result != null ) {
@@ -420,6 +425,26 @@ public class ResultActivity extends BaseActivity {
         //xAxis.setAxisMaximum(80);
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
+
+        final ScrollView scrollView = findViewById(R.id.scrollView);
+        lineChartRawData.setOnTouchListener(new View.OnTouchListener() {    // 차크 클릭 시, 스크롤뷰의 스크롤 기능을 off 하여 차트 스크롤 기능을 방해하지 않게 함.
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        scrollView.requestDisallowInterceptTouchEvent(true);
+                        break;
+                    }
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP: {
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                        break;
+                    }
+                }
+
+                return false;
+            }
+        });
     }
 
 

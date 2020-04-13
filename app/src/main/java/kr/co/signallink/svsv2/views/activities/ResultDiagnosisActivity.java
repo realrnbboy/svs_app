@@ -119,6 +119,7 @@ public class ResultDiagnosisActivity extends BaseActivity {
                 intent.putExtra("matrix2", matrix2);
                 intent.putExtra("analysisData", analysisData);
                 intent.putExtra("equipmentUuid", equipmentUuid);
+                intent.putExtra("bShowCause", true);    // 원래 rms1,2,3이 모두 good인지 판단해야하나, 이 화면이 보이는 것은 모두 good일때 보여서 판단하지 않음.
                 startActivity(intent);
             }
         });

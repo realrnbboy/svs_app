@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -250,6 +251,26 @@ public class MeasureActivity extends BaseActivity {
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
         //applyXAxisDefault(xAxis, l);
+
+        final ScrollView scrollView = findViewById(R.id.scrollView);
+        lineChartRawData.setOnTouchListener(new View.OnTouchListener() {    // 차크 클릭 시, 스크롤뷰의 스크롤 기능을 off 하여 차트 스크롤 기능을 방해하지 않게 함.
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        scrollView.requestDisallowInterceptTouchEvent(true);
+                        break;
+                    }
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP: {
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                        break;
+                    }
+                }
+
+                return false;
+            }
+        });
 
         if( !(measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null) ) { // 기존에 측정한 데이터가 있으면 표시
             drawChart(measuredFreq1, measuredFreq2, measuredFreq3);

@@ -687,7 +687,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 //                                    }
 //                            );
                         }
-                        else if( viewIdx == 4 ) {// added by hslee for test
+                        else if( viewIdx == 3 ) {// added by hslee for test
 
                             // 다음 화면으로 이동
                             Intent intent = new Intent(getBaseContext(), RecordManagerActivity.class);

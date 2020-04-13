@@ -205,6 +205,7 @@
 
             <LinearLayout
                 android:id="@+id/linearLayoutDefectCause"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -247,29 +248,37 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@color/colorContent"
-                android:layout_marginTop="@dimen/margin_confirm_top"
-                android:padding="5dp"
-                android:gravity="center">
+        </LinearLayout>
 
-                <Button
-                    android:id="@+id/buttonClose"
-                    style="@style/button_confirm"
-                    android:text="close"/>
+    </ScrollView>
 
-            </LinearLayout>
+    <LinearLayout
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_confirm_top"
+        android:orientation="vertical">
 
-            <include
-                layout="@layout/footer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/colorContent"
+            android:padding="5dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/buttonClose"
+                style="@style/button_confirm"
+                android:text="close"/>
 
         </LinearLayout>
-    </ScrollView>
+
+        <include
+            layout="@layout/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

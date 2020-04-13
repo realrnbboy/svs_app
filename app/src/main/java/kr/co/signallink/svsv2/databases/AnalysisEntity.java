@@ -22,12 +22,22 @@ public class AnalysisEntity extends RealmObject {
     private float rms1;
     private float rms2;
     private float rms3;
+
+    private boolean bShowCause; // rms1,2,3이 good이면 cause 표시하지 않음
     public RealmList<String> cause;
     public RealmList<String> causeDesc;
     public RealmList<Double> rank;
     public RealmList<Double> ratio;
 
     public RealmList<Double> frequency;
+
+    public boolean isbShowCause() {
+        return bShowCause;
+    }
+
+    public void setbShowCause(boolean bShowCause) {
+        this.bShowCause = bShowCause;
+    }
 
     public int getType() {
         return type;

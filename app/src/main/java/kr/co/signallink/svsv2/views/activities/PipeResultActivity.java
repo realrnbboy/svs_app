@@ -3,11 +3,13 @@ package kr.co.signallink.svsv2.views.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -58,10 +60,6 @@ public class PipeResultActivity extends BaseActivity {
     String equipmentUuid = null;
 
     boolean bSaved = false; // 저장여부
-
-    boolean bShowChartPt1 = true; // 차트의 pt1 표시 여부
-    boolean bShowChartPt2 = true; // 차트의 pt2 표시 여부
-    boolean bShowChartPt3 = true; // 차트의 pt3 표시 여부
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -162,56 +160,14 @@ public class PipeResultActivity extends BaseActivity {
                 float [] data3 = Utils.getProblemDataList();
 
                 // csv로 raw data 데이터 저장
-                String fileName = Utils.createCsv(new String [] {"PT1", "concern", "problem"}, data1, data2, data3);
+                String fileName = Utils.createCsv("pipe", new String [] {"PT1", "concern", "problem"}, data1, data2, data3);
                 if( fileName == null ) {
                     ToastUtil.showShort("failed to save csv.");
                 }
                 else {
-                    ToastUtil.showLong("saved as \"/SVSdata/csv/" + fileName + "\"");
+                    ToastUtil.showLong("saved as \"/SVSdata/csv/pipe/" + fileName + "\"");
                 }
 
-            }
-        });
-
-        final ImageView imageViewPt1 = findViewById(R.id.imageViewPt1);
-        imageViewPt1.setSelected(true);// 초기값은 선택되있음.
-        LinearLayout linearLayoutPt1 = findViewById(R.id.linearLayoutPt1);
-        linearLayoutPt1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bShowChartPt1 = !bShowChartPt1;
-
-                imageViewPt1.setSelected(bShowChartPt1);
-
-                drawChart();
-            }
-        });
-
-        final ImageView imageViewPt2 = findViewById(R.id.imageViewPt2);
-        imageViewPt2.setSelected(true);// 초기값은 선택되있음.
-        LinearLayout linearLayoutPt2 = findViewById(R.id.linearLayoutPt2);
-        linearLayoutPt2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bShowChartPt2 = !bShowChartPt2;
-
-                imageViewPt2.setSelected(bShowChartPt2);
-
-                drawChart();
-            }
-        });
-
-        final ImageView imageViewPt3 = findViewById(R.id.imageViewPt3);
-        imageViewPt3.setSelected(true);// 초기값은 선택되있음.
-        LinearLayout linearLayoutPt3 = findViewById(R.id.linearLayoutPt3);
-        linearLayoutPt3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bShowChartPt3 = !bShowChartPt3;
-
-                imageViewPt3.setSelected(bShowChartPt3);
-
-                drawChart();
             }
         });
     }
@@ -239,6 +195,9 @@ public class PipeResultActivity extends BaseActivity {
 
                     long createdLong = analysisData.getMeasureData1().getCaptureTime().getTime();   // 측정된 시간으로 저장하기
                     analysisEntity.setCreated(createdLong);
+
+                    float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();
+                    analysisEntity.setRms1(rms1);
 
                     RealmList<Double> frequency = new RealmList<>();
                     float[] frequencyFloat = analysisData.getMeasureData1().getAxisBuf().getfFreq();
@@ -320,6 +279,26 @@ public class PipeResultActivity extends BaseActivity {
         //xAxis.setAxisMaximum(80);
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
+
+        final ScrollView scrollView = findViewById(R.id.scrollView);
+        lineChartRawData.setOnTouchListener(new View.OnTouchListener() {    // 차크 클릭 시, 스크롤뷰의 스크롤 기능을 off 하여 차트 스크롤 기능을 방해하지 않게 함.
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        scrollView.requestDisallowInterceptTouchEvent(true);
+                        break;
+                    }
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP: {
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                        break;
+                    }
+                }
+
+                return false;
+            }
+        });
     }
 
 
@@ -341,35 +320,30 @@ public class PipeResultActivity extends BaseActivity {
 
         try {
 
-            if( bShowChartPt1 ) {
-                if (data1 != null) {
-                    for (float v : data1) {
-                        valueList1.add(v);
-                    }
+            if (data1 != null) {
+                for (float v : data1) {
+                    valueList1.add(v);
                 }
-
-                lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
             }
 
-            if( bShowChartPt2 ) {
-                if (data2 != null) {
-                    for (float v : data2) {
-                        valueList2.add(v);
-                    }
-                }
+            lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
 
-                lineData.addDataSet(generateLineData("concern", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
+            if (data2 != null) {
+                for (float v : data2) {
+                    valueList2.add(v);
+                }
             }
 
-            if( bShowChartPt3 ) {
-                if (data3 != null) {
-                    for (float v : data3) {
-                        valueList3.add(v);
-                    }
-                }
+            lineData.addDataSet(generateLineData("concern", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
 
-                lineData.addDataSet(generateLineData("problem", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myred)));
+            if (data3 != null) {
+                for (float v : data3) {
+                    valueList3.add(v);
+                }
             }
+
+            lineData.addDataSet(generateLineData("problem", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myred)));
+
         } catch (Exception ex) {
             return;
         }

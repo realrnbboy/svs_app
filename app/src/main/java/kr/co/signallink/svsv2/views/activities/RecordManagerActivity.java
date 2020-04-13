@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -56,6 +58,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
     AnalysisData analysisData = null;
     String equipmentUuid = null;
 
+    LinearLayout linearLayoutDefectCause;
     ListView listViewResultDiagnosis;
     ResultDiagnosisListAdapter resultDiagnosisListAdapter;
     ArrayList<CauseModel> resultDiagnosisList = new ArrayList<>();
@@ -65,12 +68,17 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
     ArrayList<Date> xDataList = new ArrayList<>();
     private final float XAXIS_LABEL_DEFAULT_ROATION = 70f;
 
+    TextView textViewStartd;
+    TextView textViewEndd;
+
     boolean bUsePreviousActivityData = false;
     boolean bShowPreviousData = true;   // 이전 화면에서 전달한 데이터를 사용할 경우, 아이템 클릭시 널포인트 오류가 나는 부분이 있음, 이를 구분하기 위해 사용
 
     boolean bShowChartPt1 = true; // 차트의 pt1 표시 여부
     boolean bShowChartPt2 = true; // 차트의 pt2 표시 여부
     boolean bShowChartPt3 = true; // 차트의 pt3 표시 여부
+
+    boolean bShowCause = true;  // 이전 데이터를 사용할 경우만 사용
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,20 +102,21 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         Intent intent = getIntent();
 
         equipmentUuid = intent.getStringExtra("equipmentUuid");
+        bShowCause = intent.getBooleanExtra("bShowCause", false);
 
         // 이전 Activity 에서 전달받은 데이터 가져오기
         //matrix2 = (MATRIX_2_Type)intent.getSerializableExtra("matrix2");
 
         // 이전 Activity 에서 전달받은 데이터 가져오기
         analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");
-        if( analysisData != null ) {
+        if( analysisData != null ) {     // 초기데이터 안보여주기로 함. 2020.04.13
 
             Thread t = new Thread() {
                 public void run() {
 
                     // 차트 그리기
                     bUsePreviousActivityData = true;
-                    drawChart();
+                    drawChart(false);
                 }
             };
 
@@ -116,6 +125,8 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
             // 진단결과 값 추가
             redrawResultDiagnosisItem(0);
         }
+
+        //processButtonClickWeek(true);   // added by hslee 2020.04.13 초기화면에 1주일 정보 보여주기
     }
 
     void initView() {
@@ -124,9 +135,9 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         String startd = endd;
         //String startd = Utils.addDateDay(endd, -6, dateFormat);
 
-        final TextView textViewStartd = findViewById(R.id.textViewStartd);
+        textViewStartd = findViewById(R.id.textViewStartd);
         textViewStartd.setText(startd);
-        final TextView textViewEndd = findViewById(R.id.textViewEndd);
+        textViewEndd = findViewById(R.id.textViewEndd);
         textViewEndd.setText(endd);
 
         listViewResultDiagnosis = findViewById(R.id.listViewCause);
@@ -144,7 +155,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                 textViewEndd.setText(today);
 
                 bShowPreviousData = false;
-                getDataFromDb(today, endd);
+                getDataFromDb(false, today, endd);
             }
         });
 
@@ -153,14 +164,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
             @Override
             public void onClick(View v) {
 
-                String endd = Utils.getCurrentTime("yyyy-MM-dd");
-                String tEndd = Utils.addDateDay(endd, 1, "yyyy-MM-dd"); // 00시부터 계산하기 때문에 다음날 0시이전의 데이터를 가져오기 위해 +1해줌
-                String startd = Utils.addDateDay(endd, -7, "yyyy-MM-dd");
-                textViewStartd.setText(startd);
-                textViewEndd.setText(endd);
-
-                bShowPreviousData = false;
-                getDataFromDb(startd, tEndd);
+                processButtonClickWeek(false);
             }
         });
 
@@ -186,7 +190,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
 
                 imageViewPt1.setSelected(bShowChartPt1);
 
-                drawChart();
+                drawChart(false);
             }
         });
 
@@ -200,7 +204,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
 
                 imageViewPt2.setSelected(bShowChartPt2);
 
-                drawChart();
+                drawChart(false);
             }
         });
 
@@ -214,13 +218,28 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
 
                 imageViewPt3.setSelected(bShowChartPt3);
 
-                drawChart();
+                drawChart(false);
             }
         });
+
+        linearLayoutDefectCause = findViewById(R.id.linearLayoutDefectCause);
+    }
+
+    void processButtonClickWeek(boolean bShowInitPreviousReport) {
+
+        String endd = Utils.getCurrentTime("yyyy-MM-dd");
+        String tEndd = Utils.addDateDay(endd, 1, "yyyy-MM-dd"); // 00시부터 계산하기 때문에 다음날 0시이전의 데이터를 가져오기 위해 +1해줌
+        String startd = Utils.addDateDay(endd, -7, "yyyy-MM-dd");
+
+        textViewStartd.setText(startd);
+        textViewEndd.setText(endd);
+
+        bShowPreviousData = false;
+        getDataFromDb(bShowInitPreviousReport, startd, tEndd);
     }
 
     // db에서 날짜에 맞는 데이터 가져오기
-    void getDataFromDb(String startd, String endd) {
+    void getDataFromDb(boolean bShowInitPreviousReport, String startd, String endd) {
         try {
             Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startd);
             Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endd);
@@ -261,7 +280,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
             if( analysisEntityList != null ) {
                 // 차트 그리기
                 bUsePreviousActivityData = false;
-                drawChart();
+                drawChart(bShowInitPreviousReport);
             }
             else {
                 ToastUtil.showShort("no data.");
@@ -279,15 +298,22 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
 
         if( bShowPreviousData ) {    // 이전화면(ResultDiagnosisActivity)에서 전달받은 데이터를 사용할 경우
             if( analysisData != null ) {
-                for (int i = 0; i < analysisData.resultDiagnosis.length && i < 5; i++) {
+                if( bShowCause ) {
+                    linearLayoutDefectCause.setVisibility(View.VISIBLE);
 
-                    CauseModel model = new CauseModel();
+                    for (int i = 0; i < analysisData.resultDiagnosis.length && i < 5; i++) {
 
-                    String cause = analysisData.resultDiagnosis[i].cause + "-" + analysisData.resultDiagnosis[i].desc;
-                    model.setCause(cause);
-                    model.setRatio(analysisData.resultDiagnosis[i].ratio);
+                        CauseModel model = new CauseModel();
 
-                    resultDiagnosisList.add(model);
+                        String cause = analysisData.resultDiagnosis[i].cause + "-" + analysisData.resultDiagnosis[i].desc;
+                        model.setCause(cause);
+                        model.setRatio(analysisData.resultDiagnosis[i].ratio);
+
+                        resultDiagnosisList.add(model);
+                    }
+                }
+                else {
+                    linearLayoutDefectCause.setVisibility(View.GONE);
                 }
             }
         }
@@ -297,21 +323,29 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                 RealmList<String> causeList = analysisEntity.getCause();
                 RealmList<String> causeDescList = analysisEntity.getCauseDesc();
                 RealmList<Double> ratioList = analysisEntity.getRatio();
+                boolean tShowCause = analysisEntity.isbShowCause();
 
-                if( causeList != null ) {
-                    resultDiagnosisList.clear();    // 기존 데이터 삭제
+                if( tShowCause ) {
+                    linearLayoutDefectCause.setVisibility(View.VISIBLE);
 
-                    for( int i = 0; i<causeList.size(); i++ ) {
-                        CauseModel model = new CauseModel();
+                    if (causeList != null) {
+                        resultDiagnosisList.clear();    // 기존 데이터 삭제
 
-                        String cause = causeList.get(i) + "-" + causeDescList.get(i);
-                        model.setCause(cause);
-                        model.setRatio(ratioList.get(i));
+                        for (int i = 0; i < causeList.size(); i++) {
+                            CauseModel model = new CauseModel();
 
-                        resultDiagnosisList.add(model);
+                            String cause = causeList.get(i) + "-" + causeDescList.get(i);
+                            model.setCause(cause);
+                            model.setRatio(ratioList.get(i));
+
+                            resultDiagnosisList.add(model);
+                        }
+
+                        resultDiagnosisListAdapter.notifyDataSetChanged();
                     }
-
-                    resultDiagnosisListAdapter.notifyDataSetChanged();
+                }
+                else {
+                    linearLayoutDefectCause.setVisibility(View.GONE);
                 }
             }
         }
@@ -381,6 +415,26 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         xAxis.setLabelRotationAngle(XAXIS_LABEL_DEFAULT_ROATION); //X축에 있는 라벨의 각도
         //applyXAxisDefault(xAxis, l);
         adjustViewportForChart();
+
+        final ScrollView scrollView = findViewById(R.id.scrollView);
+        lineChartRms.setOnTouchListener(new View.OnTouchListener() {    // 차크 클릭 시, 스크롤뷰의 스크롤 기능을 off 하여 차트 스크롤 기능을 방해하지 않게 함.
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        scrollView.requestDisallowInterceptTouchEvent(true);
+                        break;
+                    }
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP: {
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                        break;
+                    }
+                }
+
+                return false;
+            }
+        });
     }
 
 
@@ -416,7 +470,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         //lineChartRms.invalidate();
     }
 
-    private void drawChart() {
+    private void drawChart(boolean bShowInitPreviousReport) {
 
         try {
             Thread.sleep(1000); // 차트 초기화 시간 - 추가 안하면 정상적으로 표시 안됨.
@@ -520,6 +574,11 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
 
             lineChartRms.setData(lineData);
             lineChartRms.invalidate();
+
+
+            if( bShowInitPreviousReport ) {
+                redrawResultDiagnosisItem(xAxisMaximum);    // 하단 리스트 초기데이터 일때 그리기
+            }
         }
     }
 

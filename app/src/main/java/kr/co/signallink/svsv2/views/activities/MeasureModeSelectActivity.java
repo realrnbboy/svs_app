@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -66,6 +67,14 @@ public class MeasureModeSelectActivity extends Activity {
     String uuid;
     String type;    // 측정 모드 선택, 내역 모드 선택
     private SVS svs = SVS.getInstance();
+
+    @Override
+    public void setRequestedOrientation(int requestedOrientation) {
+
+        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O) {
+            super.setRequestedOrientation(requestedOrientation);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

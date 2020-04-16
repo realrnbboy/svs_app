@@ -83,13 +83,13 @@
         <activity
             android:name=".views.activities.MeasureExeActivity"
             android:theme="@style/Theme.Transparent"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="unspecified" >
         </activity>
 
         <activity
             android:name=".views.activities.MeasureModeSelectActivity"
             android:theme="@style/Theme.Transparent"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="unspecified" >
         </activity>
 
         <activity

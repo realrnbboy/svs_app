@@ -108,7 +108,7 @@ public class MeasureModeSelectActivity extends Activity {
                             Realm realm = Realm.getDefaultInstance();
 
                             RealmResults<AnalysisEntity> preiviousAnalysisEntityList = realm.where(AnalysisEntity.class)
-                                    .equalTo("type", 1) // 1 rms, 2 frequency
+                                    .equalTo("type", 2) // 1 rms, 2 frequency
                                     .greaterThanOrEqualTo("created", startLong)
                                     .lessThanOrEqualTo("created", endLong)
                                     .equalTo("equipmentUuid", uuid)
@@ -121,17 +121,20 @@ public class MeasureModeSelectActivity extends Activity {
                             for( AnalysisEntity analysisEntity : preiviousAnalysisEntityList ) {
                                 RmsModel rmsModel = new RmsModel();
                                 rmsModel.setRms1(analysisEntity.getRms1());
-                                rmsModel.setRms2(analysisEntity.getRms2());
-                                rmsModel.setRms3(analysisEntity.getRms3());
-                                rmsModel.setbShowCause(analysisEntity.isbShowCause());
                                 rmsModel.setCreated(analysisEntity.getCreated());
+
+                                float [] newFreq = new float[analysisEntity.getFrequency().size()];
+                                for( int i = 0; i<analysisEntity.getFrequency().size(); i++ ) {
+                                    newFreq[i] = analysisEntity.getFrequency().get(i).floatValue();
+                                }
+                                rmsModel.setFrequency(newFreq);
 
                                 rmsModelList.add(rmsModel);
                             }
 
 
                             // 다음 화면으로 이동
-                            Intent intent = new Intent(getBaseContext(), RecordManagerActivity.class);
+                            Intent intent = new Intent(getBaseContext(), PipeRecordManagerActivity.class);
                             intent.putExtra("equipmentUuid", uuid);
                             intent.putExtra("previousRmsModelList", rmsModelList);
                             startActivity(intent);
@@ -154,7 +157,7 @@ public class MeasureModeSelectActivity extends Activity {
                             Realm realm = Realm.getDefaultInstance();
 
                             RealmResults<AnalysisEntity> preiviousAnalysisEntityList = realm.where(AnalysisEntity.class)
-                                    .equalTo("type", 2) // 1 rms, 2 frequency
+                                    .equalTo("type", 1) // 1 rms, 2 frequency
                                     .greaterThanOrEqualTo("created", startLong)
                                     .lessThanOrEqualTo("created", endLong)
                                     .equalTo("equipmentUuid", uuid)
@@ -167,13 +170,16 @@ public class MeasureModeSelectActivity extends Activity {
                             for( AnalysisEntity analysisEntity : preiviousAnalysisEntityList ) {
                                 RmsModel rmsModel = new RmsModel();
                                 rmsModel.setRms1(analysisEntity.getRms1());
+                                rmsModel.setRms2(analysisEntity.getRms2());
+                                rmsModel.setRms3(analysisEntity.getRms3());
+                                rmsModel.setbShowCause(analysisEntity.isbShowCause());
                                 rmsModel.setCreated(analysisEntity.getCreated());
 
                                 rmsModelList.add(rmsModel);
                             }
 
                             // 다음 화면으로 이동
-                            Intent intent = new Intent(getBaseContext(), PipeRecordManagerActivity.class);
+                            Intent intent = new Intent(getBaseContext(), RecordManagerActivity.class);
                             intent.putExtra("equipmentUuid", uuid);
                             intent.putExtra("previousRmsModelList", rmsModelList);
                             startActivity(intent);

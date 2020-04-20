@@ -39,10 +39,10 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Defeact cause"
                         android:textColor="@color/myblue"
-                        android:textSize="@dimen/font_midium"
-                        android:text="Defeact cause" />
+                        android:textSize="@dimen/font_midium" />
                 </LinearLayout>
 
                 <LinearLayout

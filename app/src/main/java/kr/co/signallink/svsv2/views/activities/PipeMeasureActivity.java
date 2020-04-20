@@ -23,8 +23,10 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +58,6 @@ public class PipeMeasureActivity extends BaseActivity {
     LineChart lineChartRawData;
 
     boolean bMeasure = false;   // 측정했는지 여부
-    boolean bTestData = false;  // 테스트데이터 사용 여부
 
     MeasureData measureDataSensor1 = null;
 
@@ -139,6 +140,7 @@ public class PipeMeasureActivity extends BaseActivity {
         lineChartRawData.getDescription().setEnabled(false);
         lineChartRawData.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorContent));
         lineChartRawData.setNoDataText("no data. please measure first");
+        lineChartRawData.setOnChartValueSelectedListener(onChartValueSelectedListenerRawData);
 
         Legend l = lineChartRawData.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
@@ -341,5 +343,19 @@ public class PipeMeasureActivity extends BaseActivity {
             }
         }
     }
+
+    private OnChartValueSelectedListener onChartValueSelectedListenerRawData = new OnChartValueSelectedListener() {
+
+        @Override
+        public void onValueSelected(Entry e, Highlight h) {
+            TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRawDataValue);
+            textViewSelectedItemValue.setText(String.valueOf(e.getY()));
+        }
+
+        @Override
+        public void onNothingSelected() {
+
+        }
+    };
 
 }

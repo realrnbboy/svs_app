@@ -371,6 +371,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         //lineChartRms.setMaxVisibleValueCount(20);
         //lineChartRms.setNoDataText(getResources().getString(R.string.recordingchartdata));
         lineChartRms.setNoDataText("no data. please select today or week");
+        lineChartRms.setOnChartValueSelectedListener(onChartValueSelectedListenerRms);
 
         Legend l = lineChartRms.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
@@ -664,4 +665,18 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
     public void onNothingSelected() {
 
     }
+
+    private OnChartValueSelectedListener onChartValueSelectedListenerRms = new OnChartValueSelectedListener() {
+
+        @Override
+        public void onValueSelected(Entry e, Highlight h) {
+            TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRmsValue);
+            textViewSelectedItemValue.setText(String.valueOf(e.getY()));
+        }
+
+        @Override
+        public void onNothingSelected() {
+
+        }
+    };
 }

@@ -26,6 +26,8 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.text.SimpleDateFormat;
@@ -50,7 +52,7 @@ import kr.co.signallink.svsv2.utils.Utils;
 
 // added by hslee 2020-03-19
 // 진단분석 결과1 화면
-public class PipeRecordManagerActivity extends BaseActivity implements OnChartValueSelectedListener {
+public class PipeRecordManagerActivity extends BaseActivity {
 
     private static final String TAG = "PipeRecordManagerActivity";
 
@@ -319,12 +321,13 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
 
     private void initChartRms() {
         lineChartRms = findViewById(R.id.lineChartRms);
-        lineChartRms.setOnChartValueSelectedListener(this);
+        //lineChartRms.setOnChartValueSelectedListener(this);
         lineChartRms.getDescription().setEnabled(false);
         lineChartRms.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorContent));
         //lineChartRms.setMaxVisibleValueCount(20);
         //lineChartRms.setNoDataText(getResources().getString(R.string.recordingchartdata));
         lineChartRms.setNoDataText("no data. please select today or week");
+        lineChartRms.setOnChartValueSelectedListener(onChartValueSelectedListenerRms);
 
         Legend l = lineChartRms.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
@@ -402,6 +405,7 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
         lineChartRawData.setMaxVisibleValueCount(20);
         //lineChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
         lineChartRawData.setNoDataText("no data.");
+        lineChartRawData.setOnChartValueSelectedListener(onChartValueSelectedListenerRawData);
 
         Legend l = lineChartRawData.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
@@ -615,14 +619,48 @@ public class PipeRecordManagerActivity extends BaseActivity implements OnChartVa
         super.onBackPressed();
     }
 
-    @Override
-    public void onValueSelected(Entry e, Highlight h) {
-        int i = (int) e.getX();
-        drawChartRawData(i);
-    }
+//    @Override
+//    public void onValueSelected(Entry e, Highlight h) {
+//        int i = (int) e.getX();
+//        drawChartRawData(i);
+//
+//        TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRmsValue);
+//        textViewSelectedItemValue.setText(String.valueOf(e.getY()));
+//    }
+//
+//    @Override
+//    public void onNothingSelected() {
+//
+//    }
 
-    @Override
-    public void onNothingSelected() {
+    private OnChartValueSelectedListener onChartValueSelectedListenerRms = new OnChartValueSelectedListener() {
 
-    }
+        @Override
+        public void onValueSelected(Entry e, Highlight h) {
+            int i = (int) e.getX();
+            drawChartRawData(i);
+
+            TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRmsValue);
+            textViewSelectedItemValue.setText(String.valueOf(e.getY()));
+        }
+
+        @Override
+        public void onNothingSelected() {
+
+        }
+    };
+
+    private OnChartValueSelectedListener onChartValueSelectedListenerRawData = new OnChartValueSelectedListener() {
+
+        @Override
+        public void onValueSelected(Entry e, Highlight h) {
+            TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRawDataValue);
+            textViewSelectedItemValue.setText(String.valueOf(e.getY()));
+        }
+
+        @Override
+        public void onNothingSelected() {
+
+        }
+    };
 }

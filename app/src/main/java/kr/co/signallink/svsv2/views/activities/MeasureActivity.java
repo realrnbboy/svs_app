@@ -23,8 +23,10 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -220,6 +222,7 @@ public class MeasureActivity extends BaseActivity {
         //lineChartRawData.setMaxVisibleValueCount(20);
         //lineChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
         lineChartRawData.setNoDataText("no data. please measure first");
+        lineChartRawData.setOnChartValueSelectedListener(onChartValueSelectedListenerRawData);
 
         Legend l = lineChartRawData.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
@@ -277,44 +280,16 @@ public class MeasureActivity extends BaseActivity {
         }
     }
 
-    private OnChartGestureListener OCGL = new OnChartGestureListener() {
-        @Override
-        public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+    private OnChartValueSelectedListener onChartValueSelectedListenerRawData = new OnChartValueSelectedListener() {
 
+        @Override
+        public void onValueSelected(Entry e, Highlight h) {
+            TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRawDataValue);
+            textViewSelectedItemValue.setText(String.valueOf(e.getY()));
         }
 
         @Override
-        public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-        }
-
-        @Override
-        public void onChartLongPressed(MotionEvent me) {
-            lineChartRawData.fitScreen();
-        }
-
-        @Override
-        public void onChartDoubleTapped(MotionEvent me) {
-
-        }
-
-        @Override
-        public void onChartSingleTapped(MotionEvent me) {
-
-        }
-
-        @Override
-        public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
-        }
-
-        @Override
-        public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
-        }
-
-        @Override
-        public void onChartTranslate(MotionEvent me, float dX, float dY) {
+        public void onNothingSelected() {
 
         }
     };

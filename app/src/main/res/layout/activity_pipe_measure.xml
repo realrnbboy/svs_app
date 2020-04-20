@@ -43,6 +43,15 @@
                 android:textSize="@dimen/font_midium"
                 android:text="FFT result" />
 
+            <TextView
+                android:id="@+id/textViewSelectedRawDataValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                android:textColor="@color/myblue"
+                android:textSize="@dimen/font_midium"
+                android:text="" />
+
         </LinearLayout>
 
         <LinearLayout

@@ -658,38 +658,12 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
                             equipmentAdapter.setSelectedEquipmentUuid(uuid);
 
-//                            RealmList<SVSEntity> svsEntityRealmList = ((EquipmentEntity)svs.getSelectedEquipmentData()).getSvsEntities();
-//                            if( svsEntityRealmList == null || svsEntityRealmList.size() != 3 ) {
-//                                ToastUtil.showShort("3 sensor required.");
-//                                return;
-//                            }
-
                             Intent intent = new Intent(getBaseContext(), MeasureModeSelectActivity.class);
                             intent.putExtra("equipmentUuid", uuid);
                             startActivity(intent);
 //
-//                            DialogUtil.selectMode(m_context,
-//                                    "Select mode",
-//                                    "select sensor mode or pipe mode.",
-//                                    "sensor",
-//                                    "pipe",
-//                                    new DialogInterface.OnClickListener() {
-//                                        public void onClick(DialogInterface dialog, int id) {
-//                                            Intent intent = new Intent(getBaseContext(), PresetActivity.class);
-//                                            intent.putExtra("equipmentUuid", uuid);
-//                                            startActivity(intent);
-//                                        }
-//                                    },
-//                                    new DialogInterface.OnClickListener() {
-//                                        public void onClick(DialogInterface dialog, int id) {
-//                                            Intent intent = new Intent(getBaseContext(), PipePresetActivity.class);
-//                                            intent.putExtra("equipmentUuid", uuid);
-//                                            startActivity(intent);
-//                                        }
-//                                    }
-//                            );
                         }
-                        else if( viewIdx == 3 ) {   // added by hslee for test
+                        else if( viewIdx == 3 ) {   // added by hslee 분석 내역
 
                             svs.setLinkedEquipmentUuid(uuid);
                             svs.setSelectedEquipmentUuid(uuid);
@@ -701,7 +675,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                             intent.putExtra("equipmentUuid", uuid);
                             startActivity(intent);
                         }
-                        else if( viewIdx == 4 ) {   // added by hslee for test
+                        else if( viewIdx == 4 ) {   // added by hslee for test Analysis History
 
                             try {
                                 String endd = Utils.getCurrentTime("yyyy-MM-dd");
@@ -749,7 +723,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                                 e.printStackTrace();
                             }
                         }
-                        else if( viewIdx == 5 ) {   // added by hslee for test
+                        else if( viewIdx == 4 ) {   // added by hslee for test Pipe Analysis History
 
                             try {
                                 String endd = Utils.getCurrentTime("yyyy-MM-dd");

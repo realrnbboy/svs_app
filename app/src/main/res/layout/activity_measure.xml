@@ -173,7 +173,7 @@
                 style="@style/button_confirm"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:background="@drawable/btn_red_round"
                 android:text="test data"/>
 

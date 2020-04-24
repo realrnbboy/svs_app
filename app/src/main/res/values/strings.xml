@@ -146,7 +146,7 @@
         <!--<item>Sensors</item>--> <!--deleted by hslee 2020.03.30 시그널링크 요청으로 삭제-->
         <item>Detail \u0026 Update</item>
         <item>Diagnostic analysis</item>
-<!--        <item>Analysis History</item>-->
+        <item>Analysis History</item>
 <!--        <item>Pipe Analysis History</item>-->
 <!--        <item>TEST DATA</item>-->
     </string-array>

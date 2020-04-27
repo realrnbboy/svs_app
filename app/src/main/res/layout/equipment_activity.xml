@@ -21,7 +21,6 @@
             android:textColor="@color/myorange"
             android:textSize="@dimen/font_large" />
         <TextView
-            android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"

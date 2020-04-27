@@ -17,7 +17,6 @@ public class EquipmentEntity extends RealmObject {
     private String uuid = StringUtil.makeUUID();
     private boolean isDeleted = false;
 
-    private String type;    // added by hslee 2020.04.27  pump 펌프, pipe or null 배관
     private String name;
     private String location;
     private String imageUri;
@@ -33,7 +32,6 @@ public class EquipmentEntity extends RealmObject {
 
     public void setEquipmentData(EquipmentData equipmentData)
     {
-        type = equipmentData.getType();
         name = equipmentData.getName();
         location = equipmentData.getLocation();
         imageUri = equipmentData.getImageUri() != null ? equipmentData.getImageUri().toString() : null;
@@ -49,15 +47,6 @@ public class EquipmentEntity extends RealmObject {
 
 
     //Getter Setter
-
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public String getUuid() {
         return uuid;

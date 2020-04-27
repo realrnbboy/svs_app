@@ -12,7 +12,6 @@ public class EquipmentData {
 
     private String uuid;
 
-    private String type;    // added by hslee 2020.04.27  pump 펌프, pipe or null 배관 ?? 이 클래스는 왜 있는지?
     private String name;
     private String location;
     private Uri imageUri;
@@ -27,14 +26,6 @@ public class EquipmentData {
 
     ////////////////////////////////
 
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public String getUuid() {
         return uuid;

@@ -183,7 +183,6 @@ public class PipeRecordManagerActivity extends BaseActivity {
 
                 // 홈 화면으로 이동
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                intent.putExtra("pipePumpMode", "pipe");
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }

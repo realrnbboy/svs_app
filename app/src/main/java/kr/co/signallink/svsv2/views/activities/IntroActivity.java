@@ -44,18 +44,15 @@ public class IntroActivity extends BaseActivity {
                         }
                     });
 
-                    //goIntent(ScreenModeSelectActivity.class);
-                    //goIntent(SelectPipePumpModeActivity.class); // added by hslee 2020.04.27
+                    goIntent(ScreenModeSelectActivity.class);
                 }
                 else if(screenMode == DefConstant.SCREEN_MODE.IDLE)
                 {
-                    //goIntent(ScreenModeSelectActivity.class);
-                    goIntent(SelectPipePumpModeActivity.class); // added by hslee 2020.04.27
+                    goIntent(ScreenModeSelectActivity.class);
                 }
                 else
                 {
-                    //goIntent(MainActivity.class);
-                    goIntent(SelectPipePumpModeActivity.class); // added by hslee 2020.04.27
+                    goIntent(MainActivity.class);
                 }
 
                 //화면 닫기

@@ -809,7 +809,7 @@ public class PresetActivity extends BaseActivity {
         bResponsePreset = true;
 
         if( jsonString == null || "".equals(jsonString) ) {
-            //ToastUtil.showShort("failed get preset from server. use in local storage");
+            ToastUtil.showShort("failed get preset from server. use in local storage");
 
             preset = new String[][]{
                     {"1", "Charge Pump #1", "1", "1", "HDO", "Charge Pump", "PP-L25-51", "980", "1", "0", "3579", "5", "3", "0", "0", "0", "0", "0"},

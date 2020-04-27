@@ -110,14 +110,10 @@ public class RegisterActivity extends BaseActivity implements SwipeRefreshLayout
 
     private int lastSelectIdx = -1;
 
-    String pipePumpMode;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
-
-        pipePumpMode = getIntent().getStringExtra("pipePumpMode");
 
         svsToolbar = (Toolbar) findViewById(R.id.toolbar);
         ((TextView)svsToolbar.findViewById(R.id.toolbar_title)).setText(R.string.register_screen);
@@ -504,7 +500,6 @@ public class RegisterActivity extends BaseActivity implements SwipeRefreshLayout
 
             //Equipment 객체 만들기
             final EquipmentEntity equipmentEntity = new EquipmentEntity();
-            equipmentEntity.setType(pipePumpMode);
             equipmentEntity.setName(name_register.getText().toString().trim());
             equipmentEntity.setLocation(location_register.getText().toString().trim());
             if(photoPath[0] != null){

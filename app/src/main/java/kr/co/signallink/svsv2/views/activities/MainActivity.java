@@ -98,6 +98,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     private OrderedRealmCollection<EquipmentEntity> rEquipmentEntities;
     private OrderedRealmCollection<WEquipmentEntity> rWEquipmentEntities;
 
+    String pipePumpMode;
+
     private final BroadcastReceiver StatusChangeReceiverOnSVSLocPhotoManualMode = new BroadcastReceiver() {
 
         public void onReceive(Context context, Intent intent) {
@@ -163,6 +165,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        pipePumpMode = getIntent().getStringExtra("pipePumpMode");
         customListDialog = new CustomListDialog(this, R.array.custom_list_dialog_equipment);
 
 
@@ -210,34 +213,38 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         super.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public void onBackPressed() {
-
-        DialogUtil.closeApp(this,
-            new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    //앱 종료시 블루투스 연결 끄기
-                    UartService uartService = svs.getUartService();
-                    if(uartService != null)
-                    {
-                        uartService.disconnect();
-                    }
-
-                    //앱 종료
-                    exit(0);
-                }
-            },
-            null
-        );
-
-    }
+//    @Override
+//    public void onBackPressed() {
+//
+//        DialogUtil.closeApp(this,
+//            new DialogInterface.OnClickListener()
+//            {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//
+//                    //앱 종료시 블루투스 연결 끄기
+//                    UartService uartService = svs.getUartService();
+//                    if(uartService != null)
+//                    {
+//                        uartService.disconnect();
+//                    }
+//
+//                    //앱 종료
+//                    exit(0);
+//                }
+//            },
+//            null
+//        );
+//
+//    }
 
 
 
     private void initViews() {
+
+        // added by hslee 2020.04.27
+        TextView textViewTitle = findViewById(R.id.textViewTitle);
+        textViewTitle.setText("quipment - " + pipePumpMode);
 
         //CurrentMode
         llCurrentLocalMode = findViewById(R.id.llCurrentLocalMode);
@@ -446,7 +453,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         btnRegisterEquipment.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goIntent(RegisterActivity.class);
+                HashMap map = new HashMap();
+                map.put("pipePumpMode", pipePumpMode);
+                goIntent(RegisterActivity.class, false, map);
             }
         });
 
@@ -482,7 +491,14 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             btnRegisterEquipment.setVisibility(View.VISIBLE);
 
             //장비 리스트 어댑터
-            rEquipmentEntities = new RealmDao<EquipmentEntity>(EquipmentEntity.class).loadAllByFilter("isDeleted",false).sort("name");
+            //rEquipmentEntities = new RealmDao<EquipmentEntity>(EquipmentEntity.class).loadAllByFilter("isDeleted",false).sort("name");
+            Realm realm = Realm.getDefaultInstance();   // // added by hslee 2020.04.27
+            rEquipmentEntities = realm.where(EquipmentEntity.class)
+                    .equalTo("type", pipePumpMode) // pipe, pump
+                    .equalTo("isDeleted", false)
+                    .findAll()
+                    .sort("name", Sort.ASCENDING);
+
             equipmentAdapter = new EquipmentAdapter(rEquipmentEntities);
 
             //장비 리스트 뷰
@@ -658,9 +674,26 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
                             equipmentAdapter.setSelectedEquipmentUuid(uuid);
 
-                            Intent intent = new Intent(getBaseContext(), MeasureModeSelectActivity.class);
-                            intent.putExtra("equipmentUuid", uuid);
-                            startActivity(intent);
+                            if( "pipe".equals(pipePumpMode) ) {   // pipe 모드
+                                Intent intent = new Intent(getBaseContext(), PipePresetActivity.class);
+                                intent.putExtra("equipmentUuid", uuid);
+                                startActivity(intent);
+                            }
+                            else {
+                                RealmList<SVSEntity> svsEntityRealmList = ((EquipmentEntity) svs.getSelectedEquipmentData()).getSvsEntities();
+                                if (svsEntityRealmList == null || svsEntityRealmList.size() != 3) {
+                                    ToastUtil.showShort("3 sensor required.");
+                                    return;
+                                }
+
+                                Intent intent = new Intent(getBaseContext(), PresetActivity.class);
+                                intent.putExtra("equipmentUuid", uuid);
+                                startActivity(intent);
+                            }
+
+//                            Intent intent = new Intent(getBaseContext(), MeasureModeSelectActivity.class);
+//                            intent.putExtra("equipmentUuid", uuid);
+//                            startActivity(intent);
 //
                         }
                         else if( viewIdx == 3 ) {   // added by hslee 분석 내역
@@ -670,10 +703,12 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
                             equipmentAdapter.setSelectedEquipmentUuid(uuid);
 
-                            Intent intent = new Intent(getBaseContext(), MeasureModeSelectActivity.class);
-                            intent.putExtra("type", "history");
-                            intent.putExtra("equipmentUuid", uuid);
-                            startActivity(intent);
+                            selectAnalysisHistory(uuid);
+
+//                            Intent intent = new Intent(getBaseContext(), MeasureModeSelectActivity.class);
+//                            intent.putExtra("type", "history");
+//                            intent.putExtra("equipmentUuid", uuid);
+//                            startActivity(intent);
                         }
                         else if( viewIdx == 4 ) {   // added by hslee for test Analysis History
 
@@ -850,6 +885,106 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             }
         }
     };
+
+    // added by hslee 2020.04.27
+    void selectAnalysisHistory(String uuid) {
+        if( "pipe".equals(pipePumpMode) ) { // pipe 모드
+            try {
+                String endd = Utils.getCurrentTime("yyyy-MM-dd");
+                String tEndd = Utils.addDateDay(endd, 1, "yyyy-MM-dd"); // 00시부터 계산하기 때문에 다음날 0시이전의 데이터를 가져오기 위해 +1해줌
+                String startd = Utils.addDateDay(endd, -7, "yyyy-MM-dd");
+
+                Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startd);
+                Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(tEndd);
+
+                long startLong = startDate.getTime();
+                long endLong = endDate.getTime();
+
+                Realm realm = Realm.getDefaultInstance();
+
+                RealmResults<AnalysisEntity> preiviousAnalysisEntityList = realm.where(AnalysisEntity.class)
+                        .equalTo("type", 2) // 1 rms, 2 frequency
+                        .greaterThanOrEqualTo("created", startLong)
+                        .lessThanOrEqualTo("created", endLong)
+                        .equalTo("equipmentUuid", uuid)
+                        .findAll()
+                        //.sort("created", Sort.DESCENDING);
+                        .sort("created", Sort.ASCENDING);
+
+                ArrayList<RmsModel> rmsModelList = new ArrayList<>();
+
+                for( AnalysisEntity analysisEntity : preiviousAnalysisEntityList ) {
+                    RmsModel rmsModel = new RmsModel();
+                    rmsModel.setRms1(analysisEntity.getRms1());
+                    rmsModel.setCreated(analysisEntity.getCreated());
+
+                    float [] newFreq = new float[analysisEntity.getFrequency().size()];
+                    for( int i = 0; i<analysisEntity.getFrequency().size(); i++ ) {
+                        newFreq[i] = analysisEntity.getFrequency().get(i).floatValue();
+                    }
+                    rmsModel.setFrequency(newFreq);
+
+                    rmsModelList.add(rmsModel);
+                }
+
+
+                // 다음 화면으로 이동
+                Intent intent = new Intent(getBaseContext(), PipeRecordManagerActivity.class);
+                intent.putExtra("equipmentUuid", uuid);
+                intent.putExtra("previousRmsModelList", rmsModelList);
+                startActivity(intent);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            try {
+                String endd = Utils.getCurrentTime("yyyy-MM-dd");
+                String tEndd = Utils.addDateDay(endd, 1, "yyyy-MM-dd"); // 00시부터 계산하기 때문에 다음날 0시이전의 데이터를 가져오기 위해 +1해줌
+                String startd = Utils.addDateDay(endd, -7, "yyyy-MM-dd");
+
+                Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startd);
+                Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(tEndd);
+
+                long startLong = startDate.getTime();
+                long endLong = endDate.getTime();
+
+                Realm realm = Realm.getDefaultInstance();
+
+                RealmResults<AnalysisEntity> preiviousAnalysisEntityList = realm.where(AnalysisEntity.class)
+                        .equalTo("type", 1) // 1 rms, 2 frequency
+                        .greaterThanOrEqualTo("created", startLong)
+                        .lessThanOrEqualTo("created", endLong)
+                        .equalTo("equipmentUuid", uuid)
+                        .findAll()
+                        //.sort("created", Sort.DESCENDING);
+                        .sort("created", Sort.ASCENDING);
+
+                ArrayList<RmsModel> rmsModelList = new ArrayList<>();
+
+                for( AnalysisEntity analysisEntity : preiviousAnalysisEntityList ) {
+                    RmsModel rmsModel = new RmsModel();
+                    rmsModel.setRms1(analysisEntity.getRms1());
+                    rmsModel.setRms2(analysisEntity.getRms2());
+                    rmsModel.setRms3(analysisEntity.getRms3());
+                    rmsModel.setbShowCause(analysisEntity.isbShowCause());
+                    rmsModel.setCreated(analysisEntity.getCreated());
+
+                    rmsModelList.add(rmsModel);
+                }
+
+                // 다음 화면으로 이동
+                Intent intent = new Intent(getBaseContext(), RecordManagerActivity.class);
+                intent.putExtra("equipmentUuid", uuid);
+                intent.putExtra("previousRmsModelList", rmsModelList);
+                startActivity(intent);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     // db에 진단 결과 데이터 저장
     void save(final String uuid, final float rms1, final float rms2, final float rms3, final String tCreated) {   // FOR TEST

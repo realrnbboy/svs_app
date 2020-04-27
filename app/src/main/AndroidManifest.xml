@@ -40,7 +40,12 @@
             android:name=".views.activities.ScreenModeSelectActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait">
+        </activity>
 
+        <activity
+            android:name=".views.activities.SelectPipePumpModeActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity

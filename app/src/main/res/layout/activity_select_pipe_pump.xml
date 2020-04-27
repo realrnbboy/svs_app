@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:agv="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#282b2f"
+    tools:context=".views.activities.ScreenModeSelectActivity"
+    android:id="@+id/llRoot"
+    >
+
+    <kr.pe.burt.android.lib.animategradientview.AnimateGradientView
+        android:id="@+id/agv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        agv:agv_angle="225"
+        agv:agv_startColor="#131B2A"
+        agv:agv_middleColor="#46485F"
+        agv:agv_endColor="#717C8E"
+        agv:agv_alpha="1.0"
+        agv:agv_gradient_scale="1.4"
+        agv:agv_animation="flow"
+        agv:agv_duration="4000"
+        agv:agv_autostart="true"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <include
+            layout="@layout/nav_header_core"
+            android:layout_width="match_parent"
+            android:layout_height="216dp"
+            />
+
+        <!-- Body -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <!-- Select Guide -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Please select a mode"
+                    android:textColor="@color/color1"
+                    android:textSize="@dimen/font_large"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+
+                <!-- Mode 1 -->
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+
+                    <com.fivehundredpx.android.blur.BlurringView
+                        android:id="@+id/llMode1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        app:blurRadius="11"
+                        app:downsampleFactor="6"
+                        app:overlayColor="#99ffffff"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:background="@android:color/transparent">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textColor="@color/color1"
+                                android:text="The pipe list is displayed."
+                                android:lines="2"
+                                android:padding="5dp"/>
+
+                        </LinearLayout>
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@color/color1"
+                            android:onClick="mode1"
+                            android:text="pipe"/>
+                    </LinearLayout>
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content"/>
+
+                <!-- Mode 2 -->
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+
+                    <com.fivehundredpx.android.blur.BlurringView
+                        android:id="@+id/llMode2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        app:blurRadius="11"
+                        app:downsampleFactor="6"
+                        app:overlayColor="#99ffffff"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:background="@android:color/transparent">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textColor="@color/color1"
+                                android:text="The pump list is displayed."
+                                android:lines="2"
+                                android:padding="5dp"/>
+
+                        </LinearLayout>
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@color/color1"
+                            android:onClick="mode2"
+                            android:text="pump" />
+                    </LinearLayout>
+                </FrameLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+        <!-- Footer -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="bottom"
+            android:clickable="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:text="Copyright 2018-2019. signallink." />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:text="All rights reserved." />
+            <TextView
+                android:id="@+id/appversion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/color1"
+                android:text="SW Ver. " />
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+</FrameLayout>

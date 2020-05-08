@@ -127,7 +127,9 @@
                     android:gravity="center_vertical"
                     android:textColor="@color/myblue"
                     android:textSize="@dimen/font_midium"
+                    android:layout_weight="1"
                     android:text="SVS Location"/>
+
 
             </LinearLayout>
 

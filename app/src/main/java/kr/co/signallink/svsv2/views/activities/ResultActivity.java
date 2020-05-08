@@ -277,9 +277,15 @@ public class ResultActivity extends BaseActivity {
                 float [] data1 = analysisData.csvMeasureData1;
                 float [] data2 = analysisData.csvMeasureData2;
                 float [] data3 = analysisData.csvMeasureData3;
+                float [] xData = new float[analysisData.csvMeasureData1.length];
+
+                // x축 데이터 구성
+                for( int i = 0; i < xData.length; i++ ) {
+                    xData[i] = analysisData.getMeasureData1().getfSplFreqMes() / 2 / 1024 * (i+1);
+                }
 
                 // csv로 raw data 데이터 저장
-                String fileName = Utils.createCsv("pump", new String [] {"PT1", "PT2", "PT3"}, data1, data2, data3);
+                String fileName = Utils.createCsv("pump", new String [] {"X", "PT1", "PT2", "PT3"}, xData, data1, data2, data3);
                 if( fileName == null ) {
                     ToastUtil.showShort("failed to save csv.");
                 }
@@ -503,7 +509,7 @@ public class ResultActivity extends BaseActivity {
         @Override
         public void onValueSelected(Entry e, Highlight h) {
             TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRawDataValue);
-            textViewSelectedItemValue.setText(String.valueOf(e.getY()));
+            textViewSelectedItemValue.setText(String.format("%.3f", e.getY()));
         }
 
         @Override

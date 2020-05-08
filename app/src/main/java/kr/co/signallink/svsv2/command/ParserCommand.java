@@ -75,6 +75,9 @@ public class ParserCommand {
             case BAT:
                 bat(responseCommandPacket);
                 break;
+            case BATTERY:   // added by hslee 2020.04.28
+                battery(responseCommandPacket);
+                break;
             case LEARNING:
                 learning(responseCommandPacket);
                 break;
@@ -83,6 +86,31 @@ public class ParserCommand {
         }
 
         timeCalcUtil.printGap();
+    }
+
+    // added by hslee 2020.05.07
+    static void setHelloData(byte [] rsp) {
+        HelloData helloData = null;
+        switch (SVS.getInstance().trySensorIndex) {
+            case 0:
+                helloData = SVS.getInstance().helloData60_1;  // added by hslee 2020.05.06
+                break;
+            case 1:
+                helloData = SVS.getInstance().helloData60_2;  // added by hslee 2020.05.06
+                break;
+            case 2:
+                helloData = SVS.getInstance().helloData60_3;  // added by hslee 2020.05.06
+                break;
+            default:
+                Log.d("error", "setHelloData - trySensorIndex invalid" + SVS.getInstance().trySensorIndex);
+                return;
+        }
+
+        helloData.setuFwVer(DefConvert.byteToInt(rsp, DefCMDOffset.CMD_HELLO_OFFSET_FWVER, 2, ByteOrder.LITTLE_ENDIAN));
+        helloData.setuHwVer(DefConvert.byteToInt(rsp, DefCMDOffset.CMD_HELLO_OFFSET_HWVER, 2, ByteOrder.LITTLE_ENDIAN));
+        helloData.setuSFI(DefConvert.byteToLong(rsp, DefCMDOffset.CMD_HELLO_OFFSET_SFI, 4, ByteOrder.LITTLE_ENDIAN));
+        helloData.setuCID(DefConvert.byteToLong(rsp, DefCMDOffset.CMD_HELLO_OFFSET_CID, 4, ByteOrder.LITTLE_ENDIAN));
+        helloData.setuSerialNo(DefConvert.byteToString(rsp, DefCMDOffset.CMD_HELLO_OFFSET_SN, 32, ByteOrder.LITTLE_ENDIAN));
     }
 
     private static void hello(ResponseCommandPacket responsecommand) {
@@ -99,6 +127,15 @@ public class ParserCommand {
             hellodata.setuSFI(DefConvert.byteToLong(rsp, DefCMDOffset.CMD_HELLO_OFFSET_SFI, 4, ByteOrder.LITTLE_ENDIAN));
             hellodata.setuCID(DefConvert.byteToLong(rsp, DefCMDOffset.CMD_HELLO_OFFSET_CID, 4, ByteOrder.LITTLE_ENDIAN));
             hellodata.setuSerialNo(DefConvert.byteToString(rsp, DefCMDOffset.CMD_HELLO_OFFSET_SN, 32, ByteOrder.LITTLE_ENDIAN));
+
+            final HelloData helloData60 = SVS.getInstance().helloData60;  // added by hslee 2020.05.06
+            helloData60.setuFwVer(DefConvert.byteToInt(rsp, DefCMDOffset.CMD_HELLO_OFFSET_FWVER, 2, ByteOrder.LITTLE_ENDIAN));
+            helloData60.setuHwVer(DefConvert.byteToInt(rsp, DefCMDOffset.CMD_HELLO_OFFSET_HWVER, 2, ByteOrder.LITTLE_ENDIAN));
+            helloData60.setuSFI(DefConvert.byteToLong(rsp, DefCMDOffset.CMD_HELLO_OFFSET_SFI, 4, ByteOrder.LITTLE_ENDIAN));
+            helloData60.setuCID(DefConvert.byteToLong(rsp, DefCMDOffset.CMD_HELLO_OFFSET_CID, 4, ByteOrder.LITTLE_ENDIAN));
+            helloData60.setuSerialNo(DefConvert.byteToString(rsp, DefCMDOffset.CMD_HELLO_OFFSET_SN, 32, ByteOrder.LITTLE_ENDIAN));
+
+            setHelloData(rsp);  // added by hslee 2020.05.07
 
             //접속중인 SVS에 FirmwareVersion 세팅
             DatabaseUtil.transaction(new Realm.Transaction() {
@@ -360,6 +397,8 @@ public class ParserCommand {
         } else {
             DefLog.d("checksum", "error");
         }
+
+        SVS.getInstance().cloneMeasureData();   // added by hslee 2020.05.06
     }
 
     public static MeasureData rawmeasure(RawMeasureData rawmeasuredata) {
@@ -528,6 +567,18 @@ public class ParserCommand {
             SVS.getInstance().addSendCommand_Init(DefBLEdata.CMD_BAT);
             DefLog.d("checksum", "error");
         }*/
+    }
+
+    private static void battery(ResponseCommandPacket responsecommand) {    // added by hslee 2020.04.28
+
+        byte [] rsp = responsecommand.getData();
+
+        if( rsp != null && rsp.length > 4 ) {
+            int batteryLevel = rsp[4];
+            SVS svs = SVS.getInstance();
+            svs.batteryLevel = batteryLevel;
+            svs.bBatteryInfoComplete = true;
+        }
     }
 
     private static void learning(ResponseCommandPacket responseCommandPacket){

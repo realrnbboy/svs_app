@@ -187,6 +187,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                 // 홈 화면으로 이동
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("pipePumpMode", "pump");
                 startActivity(intent);
             }
         });
@@ -671,7 +672,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         @Override
         public void onValueSelected(Entry e, Highlight h) {
             TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRmsValue);
-            textViewSelectedItemValue.setText(String.valueOf(e.getY()));
+            textViewSelectedItemValue.setText(String.format("%.3f", e.getY()));
         }
 
         @Override

@@ -54,7 +54,7 @@ public class ServerMeasureType extends DataSnapchot {
         }
 
 
-        ByteBuffer buff = ByteBuffer.allocate(1024 * 10);
+        ByteBuffer buff = ByteBuffer.allocate(12426);  // added by hslee 2020.05.07 기존 1024 * 10
         buff.order(ByteOrder.LITTLE_ENDIAN);
 
         buff.put(new byte[]{0x0});  //headerSTX
@@ -78,11 +78,11 @@ public class ServerMeasureType extends DataSnapchot {
         }
 
         //SVS_Data_Type
-        SVSAxisBuf svsAxisBuf = measureData.getAxisBuf();
+        SVSAxisBuf svsAxisBuf = measureData.getAxisBuf();   // for test time, freq 순서 바꿈. 원래 time 먼저
         for(int i=0; i< DefCMDOffset.MEASURE_AXIS_TIME_ELE_MAX; i++){
             buff.putFloat(svsAxisBuf.getfTime()[i]);    //SVS_Data_Type.fTime;
         }
-        for(int i=0; i< DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX; i++) {
+        for (int i = 0; i < DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX; i++) {
             buff.putFloat(svsAxisBuf.getfFreq()[i]);    //SVS_Data_Type.fFreq;
         }
 

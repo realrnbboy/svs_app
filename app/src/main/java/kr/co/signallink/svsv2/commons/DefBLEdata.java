@@ -22,8 +22,9 @@ public class DefBLEdata {
         MEASURE_OPTION_WITH_TIME(11),
         MEASURE_OPTION_WITH_FREQ(12),
         //MEASURE_OPTION_WITH_FREQ(0x2f),
-        MEASURE_OPTION_WITH_TIME_FREQ(13);
+        MEASURE_OPTION_WITH_TIME_FREQ(13),
         //MEASURE_OPTION_WITH_TIME_FREQ(0x0f);
+        BATTERY(14);    // added by hslee 2020.04.28
 
         final private int cmd;
         private CMD(int cmd){
@@ -44,6 +45,7 @@ public class DefBLEdata {
     public final static String EVENTWARNING_ARRIVE = "kr.co.signallink.svs.EVENTWARNING_ARRIVE";
     public final static String EVENTDANGER_ARRIVE = "kr.co.signallink.svs.EVENTDANGER_ARRIVE";
     public final static String BAT_ARRIVE = "kr.co.signallink.svs.BAT_ARRIVE";
+    public final static String BATTERY_ARRIVE = "kr.co.signallink.svs.BATTERY_ARRIVE";
     public final static String LEARNING_ARRIVE = "kr.co.signallink.svs.LEARNING_ARRIVE";
 
 }

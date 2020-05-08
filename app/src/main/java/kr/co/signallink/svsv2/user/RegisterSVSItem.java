@@ -1,6 +1,8 @@
 package kr.co.signallink.svsv2.user;
 
-public class RegisterSVSItem extends RegisterSVSData implements Comparable {
+import java.io.Serializable;
+
+public class RegisterSVSItem extends RegisterSVSData implements Comparable, Serializable {
 
     private boolean checked = false;
 

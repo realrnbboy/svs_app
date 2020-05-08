@@ -208,6 +208,12 @@ public class MyMigration implements RealmMigration {
                         .addField("bShowCause", boolean.class);
             }
 
+            //버전 18으로 마이그레이션 : EquipmentEntity에 type 추가
+            if( step == 17 ) {
+                schema.get("EquipmentEntity")
+                        .addField("type", String.class);
+            }
+
         }
     }
 }

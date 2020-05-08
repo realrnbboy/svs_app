@@ -63,9 +63,33 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/imageButtonBattery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingHorizontal="@dimen/padding_default"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_battery_unknown_8da6d3_24dp" />
+
+            <TextView
+                android:id="@+id/textViewBattery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/myblue"
+                android:textSize="@dimen/font_small"
+                android:text=""/>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="80dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="5dp"
             android:orientation="vertical"
             android:gravity="center">
 

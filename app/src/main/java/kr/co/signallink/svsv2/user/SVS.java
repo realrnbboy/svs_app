@@ -35,12 +35,22 @@ public class SVS {
     private UartService uartService = null;
 
     private HelloData hellodata = new HelloData();
+    public HelloData helloData60 = new HelloData();    // added by hslee 2020.05.06 pipe에서 사용
+    public HelloData helloData60_1 = new HelloData();    // added by hslee 2020.05.06 pump에서 사용
+    public HelloData helloData60_2 = new HelloData();    // added by hslee 2020.05.06 pump에서 사용
+    public HelloData helloData60_3 = new HelloData();    // added by hslee 2020.05.06 pump에서 사용
+    public int trySensorIndex = 0;     // added by hslee 2020.05.07
+    public boolean sensorType60 = false;    // added by hslee 2020.05.06
     private UploadData uploaddata = new UploadData();
     private BatData batdata = new BatData();
     private MeasureData measuredata_max = new MeasureData();
 
     private ArrayList<SendCommandPacket> sendCommandPackets = new ArrayList<>();
     private ArrayList<MeasureData> measureDatas = new ArrayList<>();
+    private ArrayList<MeasureData> measureDatas60 = new ArrayList<>();    // added by hslee 2020.05.06 pipe에서 사용
+    public ArrayList<MeasureData> measureDatas60_1 = new ArrayList<>();    // added by hslee 2020.05.06 pump에서 사용
+    public ArrayList<MeasureData> measureDatas60_2 = new ArrayList<>();    // added by hslee 2020.05.06 pump에서 사용
+    public ArrayList<MeasureData> measureDatas60_3 = new ArrayList<>();    // added by hslee 2020.05.06 pump에서 사용
 
     private int bleConnectState = DefConstant.UART_PROFILE_DISCONNECTED;
 
@@ -68,6 +78,12 @@ public class SVS {
     //ScreenMode
     private DefConstant.SCREEN_MODE screenMode = DefConstant.SCREEN_MODE.UNKNOWN;
 
+    public boolean bRegisterActivityNotRefresh = false;    // added by hslee 2020.05.02
+    public boolean bBatteryInfoRequest = false;    // added by hslee 2020.04.29
+    public boolean bBatteryInfoComplete = false;    // added by hslee 2020.04.29
+    public SVSEntity svsEntityBatteryInfo = null;    // added by hslee 2020.04.29
+    public int batteryLevel = 0;    // added by hslee 2020.04.29
+    //public float [] measuredFreq = null;  // measureActivity에서 측정된 데이터    // added by hslee 2020.05.06
 
     private SVS(){
 
@@ -222,6 +238,35 @@ public class SVS {
     public ArrayList<MeasureData> getMeasureDatas() {
         Log.d("TTTT","SVS getMeasureDatas");
         return measureDatas;
+    }
+
+    public ArrayList<MeasureData> getMeasureDatas60() {    // added by hslee 2020.05.06
+        Log.d("TTTT","SVS getMeasureDatas");
+        return measureDatas60;
+    }
+
+    public void cloneMeasureData() {    // added by hslee 2020.05.06
+        try {
+            measureDatas60 = (ArrayList<MeasureData>)measureDatas.clone();
+
+            switch (SVS.getInstance().trySensorIndex) {
+                case 0:
+                    measureDatas60_1 = (ArrayList<MeasureData>)measureDatas.clone();;  // added by hslee 2020.05.06
+                    break;
+                case 1:
+                    measureDatas60_2 = (ArrayList<MeasureData>)measureDatas.clone();;  // added by hslee 2020.05.06
+                    break;
+                case 2:
+                    measureDatas60_3 = (ArrayList<MeasureData>)measureDatas.clone();;  // added by hslee 2020.05.06
+                    break;
+                default:
+                    Log.d("error", "cloneMeasureData - trySensorIndex invalid" + SVS.getInstance().trySensorIndex);
+                    return;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setMeasureDatas(ArrayList<MeasureData> measureDatas) {

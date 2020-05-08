@@ -183,6 +183,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
 
                 // 홈 화면으로 이동
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                intent.putExtra("pipePumpMode", "pipe");
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
@@ -625,7 +626,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
 //        drawChartRawData(i);
 //
 //        TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRmsValue);
-//        textViewSelectedItemValue.setText(String.valueOf(e.getY()));
+//        textViewSelectedItemValue.setText(String.format("%.3f", e.getY()));
 //    }
 //
 //    @Override
@@ -641,7 +642,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
             drawChartRawData(i);
 
             TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRmsValue);
-            textViewSelectedItemValue.setText(String.valueOf(e.getY()));
+            textViewSelectedItemValue.setText(String.format("%.3f", e.getY()));
         }
 
         @Override
@@ -655,7 +656,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
         @Override
         public void onValueSelected(Entry e, Highlight h) {
             TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRawDataValue);
-            textViewSelectedItemValue.setText(String.valueOf(e.getY()));
+            textViewSelectedItemValue.setText(String.format("%.3f", e.getY()));
         }
 
         @Override

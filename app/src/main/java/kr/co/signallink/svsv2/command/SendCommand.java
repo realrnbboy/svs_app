@@ -75,6 +75,9 @@ public class SendCommand {
             case BAT:
                 cmd = bat(service);
                 break;
+            case BATTERY:       // added by hslee 2020.04.28
+                cmd = battery(service);
+                break;
             case LEARNING:
                 if(canLearning)
                 {
@@ -169,6 +172,13 @@ public class SendCommand {
 
 
     private static byte[] bat(UartService service) {
+        byte [] cmd = {(byte)0x5a, (byte)0x0e, (byte)0x05, (byte)0x00, (byte)0xf4};
+        return cmd;
+    }
+
+    private static byte[] battery(UartService service) {    // added by hslee 2020.04.28
+        //byte [] cmd = {(byte)0x5a, (byte)0x14, (byte)0x05, (byte)0x00, (byte)0xee};
+        //byte [] cmd = {(byte)0x5a, (byte)0x0e, (byte)0x05, (byte)0x00, (byte)0xee};
         byte [] cmd = {(byte)0x5a, (byte)0x0e, (byte)0x05, (byte)0x00, (byte)0xf4};
         return cmd;
     }

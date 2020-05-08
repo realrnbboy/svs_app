@@ -40,6 +40,7 @@ import kr.co.signallink.svsv2.utils.TimeCalcUtil;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 
 import static java.lang.System.exit;
+import static kr.co.signallink.svsv2.commons.DefConstant.MEASURE_OPTION.BATTERY;
 import static kr.co.signallink.svsv2.commons.DefConstant.MEASURE_OPTION.MEASURE_V4;
 import static kr.co.signallink.svsv2.commons.DefConstant.MEASURE_OPTION.RAW_NONE;
 import static kr.co.signallink.svsv2.commons.DefConstant.MEASURE_OPTION.RAW_WITH_FREQ;
@@ -271,6 +272,10 @@ public class MyApplication extends Application {
     };
 
     private void fisrt_register_sendcommand() {
+        if( svs.bBatteryInfoRequest ) {
+            return;
+        }
+
         svs.addSendCommand_Init(DefBLEdata.CMD.HELLO);
         svs.addSendCommand_Init(DefBLEdata.CMD.UPLOAD);
 
@@ -442,6 +447,20 @@ public class MyApplication extends Application {
                         }
                         else
                         {
+                            if( svs.bBatteryInfoRequest ) {    // added by hslee 2020.04.29
+                                svs.bBatteryInfoRequest = false;
+
+                                addSendCommandBatteryInfo();
+                                return;
+                            }
+
+                            if( svs.bBatteryInfoComplete ) {    // added by hslee 2020.04.29
+
+                                cmdTimer.cancel();
+                                cmdTimer = null;
+                                return;
+                            }
+
                             //측정 계속 하기
                             addSendCommand_Init_Measure();
                         }
@@ -452,6 +471,154 @@ public class MyApplication extends Application {
 
         cmdTimer = new Timer();
         cmdTimer.schedule(cmdTask, DefConstant.DELAYTIME, DefConstant.PERIODTIME);
+    }
+
+    // added by hslee 2020.04.29
+    private void addSendCommandBatteryInfo() {
+
+        SendCommandPacket sendCommandPacket = svs.getCurrentSendCommand();
+        DefBLEdata.CMD packetType = sendCommandPacket.getType();
+
+        synchronized (sendCommandPacket) {
+            //Learning 중일때는 측정을 하지 않음.
+            if(packetType == DefBLEdata.CMD.LEARNING)
+            {
+                return;
+            }
+            //측정이 진행중일때는 측정 커멘드를 보내지 않음.
+            else if(packetType == DefBLEdata.CMD.MEASURE_V4
+                    || packetType == DefBLEdata.CMD.MEASURE_OPTION_NONE
+                    || packetType == DefBLEdata.CMD.MEASURE_OPTION_WITH_TIME
+                    || packetType == DefBLEdata.CMD.MEASURE_OPTION_WITH_FREQ
+                    || packetType == DefBLEdata.CMD.MEASURE_OPTION_WITH_TIME_FREQ
+                    || packetType == DefBLEdata.CMD.BATTERY // added by hslee 2020.04.29
+            ){
+                if(sendCommandPacket.getStatus() == DefConstant.SVSTRASACTION_ING)
+                {
+                    return;
+                }
+            }
+        }
+
+
+        //필수 (getMeasureOption()함수가 Activity에서 변경할경우, 바로 반영이 안되는 현상이 있어서 꼭 refresh를 해줘야 한다.
+        Realm realm = Realm.getDefaultInstance();
+        realm.refresh();
+
+        if( svs.svsEntityBatteryInfo != null ) {
+            int fwVer = svs.svsEntityBatteryInfo.getFwVer();
+            DefConstant.MEASURE_OPTION measureOption = svs.svsEntityBatteryInfo.getMeasureOption();
+            final int measureOptionCount = svs.svsEntityBatteryInfo.getMeasureOptionCount();
+
+            //Unknown
+            if(fwVer == -1)
+            {
+                //Measure Process
+                if(measureOptionCount > 0)
+                {
+                    if(measureOption == RAW_WITH_TIME_FREQ) {
+                        svs.addSendCommand_Init(DefBLEdata.CMD.MEASURE_OPTION_WITH_TIME_FREQ);
+                    }
+                    else if(measureOption == RAW_WITH_TIME) {
+                        svs.addSendCommand_Init(DefBLEdata.CMD.MEASURE_OPTION_WITH_TIME);
+                    }
+                    else if(measureOption == RAW_WITH_FREQ) {
+                        svs.addSendCommand_Init(DefBLEdata.CMD.MEASURE_OPTION_WITH_FREQ);
+                        //svs.addSendCommand_Init(DefBLEdata.CMD.BATTERY);    // added by hslee 2020.04.28
+                    }
+                    else if(measureOption == BATTERY) {
+                        svs.addSendCommand_Init(DefBLEdata.CMD.BATTERY);    // added by hslee 2020.04.28
+                    }
+                    else {
+                        svs.addSendCommand_Init(DefBLEdata.CMD.MEASURE_OPTION_NONE);
+                    }
+                }
+                else {
+                    svs.addSendCommand_Init(DefBLEdata.CMD.MEASURE_OPTION_NONE);
+                }
+            }
+            else
+            {
+                //버전 체크 및 변경 기능
+                Boolean isChanged = false;
+                if(fwVer >= DefConstant.FwVer.SupportRawMeasure.getFwVer())
+                {
+                    //이전 버전을 쓰고 있다면 최신버전으로 변경.
+                    if(measureOption == MEASURE_V4)
+                    {
+                        measureOption = RAW_NONE;
+                        isChanged = true;
+                    }
+                }
+                else
+                {
+                    //구버전 펌웨어 인데, 최신 Measure Option을 사용하고 있으면 구버전 MeasureOption으로 변경
+                    if(measureOption != MEASURE_V4)
+                    {
+                        measureOption = MEASURE_V4;
+                        isChanged = true;
+                    }
+                }
+
+                //구버전 옵션에 대한 변경을 DB에 반영
+//                if(isChanged)
+//                {
+//                    final DefConstant.MEASURE_OPTION changedMeasureOption = measureOption;
+//                    DatabaseUtil.transaction(new Realm.Transaction() {
+//                        @Override
+//                        public void execute(Realm realm) {
+//                            SVSEntity svsEntity = (SVSEntity)svs.getLinkedSvsData();
+//                            svsEntity.setMeasureOption(changedMeasureOption);
+//                        }
+//                    });
+//                    DatabaseUtil.refresh();
+//                }
+
+
+                //Measure Process
+                if(measureOptionCount > 0)
+                {
+                    if(measureOption == RAW_WITH_TIME_FREQ) {
+                        svs.addSendCommand_Init(DefBLEdata.CMD.MEASURE_OPTION_WITH_TIME_FREQ);
+                    }
+                    else if(measureOption == RAW_WITH_TIME) {
+                        svs.addSendCommand_Init(DefBLEdata.CMD.MEASURE_OPTION_WITH_TIME);
+                    }
+                    else if(measureOption == RAW_WITH_FREQ) {
+                        svs.addSendCommand_Init(DefBLEdata.CMD.MEASURE_OPTION_WITH_FREQ);
+                    }
+                    else if(measureOption == BATTERY) {
+                        svs.addSendCommand_Init(DefBLEdata.CMD.BATTERY);    // added by hslee 2020.04.28
+                    }
+                    else {
+                        svs.addSendCommand_Init(DefBLEdata.CMD.MEASURE_OPTION_NONE);
+                    }
+                }
+                else {
+                    svs.addSendCommand_Init(DefBLEdata.CMD.MEASURE_OPTION_NONE);
+                }
+            }
+
+            //공통
+
+            //MeasureOptionCount를 감소시키고 DB에 반영
+//            if(measureOptionCount > 0)
+//            {
+//                DatabaseUtil.transaction(new Realm.Transaction() {
+//                    @Override
+//                    public void execute(Realm realm) {
+//                        SVSEntity svsEntity = (SVSEntity)svs.getLinkedSvsData();
+//                        svsEntity.setMeasureOptionCount(measureOptionCount-1);
+//                    }
+//                });
+//                DatabaseUtil.refresh();
+//            }
+
+        }
+        else
+        {
+            Log.e("TTTT","SvsEntity is null. Request not measure.");
+        }
     }
 
     private void broadcastUpdate(final String action) {
@@ -489,6 +656,7 @@ public class MyApplication extends Application {
                     || packetType == DefBLEdata.CMD.MEASURE_OPTION_WITH_TIME
                     || packetType == DefBLEdata.CMD.MEASURE_OPTION_WITH_FREQ
                     || packetType == DefBLEdata.CMD.MEASURE_OPTION_WITH_TIME_FREQ
+                    || packetType == DefBLEdata.CMD.BATTERY // added by hslee 2020.04.29
             ){
                 if(sendCommandPacket.getStatus() == DefConstant.SVSTRASACTION_ING)
                 {

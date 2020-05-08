@@ -1,5 +1,6 @@
 package kr.co.signallink.svsv2.user;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import kr.co.signallink.svsv2.commons.DefConstant;
@@ -9,10 +10,12 @@ import kr.co.signallink.svsv2.utils.StringUtil;
 
 import static kr.co.signallink.svsv2.commons.DefConstant.PLCState.OFF;
 
-public class RegisterSVSData {
+public class RegisterSVSData implements Serializable {
 
     private String uuid;
 
+    private String battery = ""; // added by hslee 2020.04.28
+    private boolean bGetBatteryInfo = false; // added by hslee 2020.04.28
     private String name;
     private String address;
     private DefFile.SVS_LOCATION svsLocation;
@@ -30,6 +33,7 @@ public class RegisterSVSData {
 
     public RegisterSVSData(){
         uuid = StringUtil.makeUUID();
+        //uuid = "dhfjhsdjhfj";
         //..
     }
 
@@ -41,6 +45,22 @@ public class RegisterSVSData {
 
     /////////////////////////
 
+
+    public boolean isbGetBatteryInfo() {
+        return bGetBatteryInfo;
+    }
+
+    public void setbGetBatteryInfo(boolean bGetBatteryInfo) {
+        this.bGetBatteryInfo = bGetBatteryInfo;
+    }
+
+    public String getBattery() {
+        return battery;
+    }
+
+    public void setBattery(String battery) {
+        this.battery = battery;
+    }
 
     public String getUuid() {
         return uuid;
@@ -74,7 +94,7 @@ public class RegisterSVSData {
         this.svsLocation = svsLocation;
 
         //임시
-        this.uuid = StringUtil.md5(svsLocation.toString());
+        //this.uuid = StringUtil.md5(svsLocation.toString());   // deleted by hslee 2020.04.29
     }
 
     public DefConstant.PLCState getPlcState() {

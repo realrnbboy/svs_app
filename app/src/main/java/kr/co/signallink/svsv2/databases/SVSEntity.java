@@ -109,7 +109,8 @@ public class SVSEntity extends RealmObject {
     }
 
     public void setSvsState(DefConstant.SVS_STATE svsState) {
-        this.SVS_STATE = svsState.name();
+        if( svsState != null )  // added by hslee 2020.04.28
+            this.SVS_STATE = svsState.name();
     }
 
     public DefConstant.PLCState getPlcState() {

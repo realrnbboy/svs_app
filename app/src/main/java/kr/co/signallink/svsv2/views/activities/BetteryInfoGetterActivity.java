@@ -43,22 +43,29 @@ import kr.co.signallink.svsv2.dto.UploadData;
 import kr.co.signallink.svsv2.services.UartService;
 import kr.co.signallink.svsv2.user.ConnectSVSItem;
 import kr.co.signallink.svsv2.user.ConnectSVSItems;
+import kr.co.signallink.svsv2.user.RegisterSVSItem;
 import kr.co.signallink.svsv2.user.SVS;
 import kr.co.signallink.svsv2.utils.DateUtil;
 import kr.co.signallink.svsv2.utils.DialogUtil;
 import kr.co.signallink.svsv2.utils.FileUtil;
+import kr.co.signallink.svsv2.utils.StringUtil;
 import kr.co.signallink.svsv2.utils.ToastUtil;
+
+import static kr.co.signallink.svsv2.commons.DefConstant.PLCState.OFF;
 
 // added by hslee
 // SVSLocationAutoModeActivity 의 내용을 복사하여 이름만 바꾸고 조금 수정한 클래스.
-public class MeasureExeActivity extends Activity {
+public class BetteryInfoGetterActivity extends Activity {
 
-    private static final String TAG = "MeasureExeActivity";
+    private static final String TAG = "BetteryInfoGetterActivity";
     private SVS svs = SVS.getInstance();
 
     private UartService uartService = null;
 
     private OrderedRealmCollection<SVSEntity> svsEntities;
+    //ArrayList<RegisterSVSItem> sensorList;
+    RegisterSVSItem sensorEntity;
+    int sensorPosition;
 
     private boolean showProgressDialogButton = false;
 
@@ -76,8 +83,6 @@ public class MeasureExeActivity extends Activity {
     final int maxConnectTryCount = 5;    // added by hslee 2020.03.30
     int connectTryCount = 0;    // added by hslee 2020.03.30
     int trySensorNumber = 0;  // 현재 시도 중인 센서
-
-    boolean bModePump = true; // sensor or pipe
 
     private final BroadcastReceiver StatusChangeReceiverOnMain = new BroadcastReceiver() {
 
@@ -118,6 +123,15 @@ public class MeasureExeActivity extends Activity {
                         {
                             showProgressDialog(false, getResources().getString(R.string.requestsettinginfo));
                         }
+                    }
+                });
+            } else if (action.equals(DefBLEdata.BATTERY_ARRIVE)) {  // added by hslee 2020.04.29
+                runOnUiThread(new Runnable() {
+                    public void run() {
+
+                        DefLog.d(TAG, "BATTERY_ARRIVE");
+
+                        complete();
                     }
                 });
             } else if (action.equals(DefBLEdata.UPLOAD_ARRIVE)) {
@@ -212,16 +226,9 @@ public class MeasureExeActivity extends Activity {
                             {
                                 boolean sucessSave = true;
                                 if(connectSVSItems.isAutoSaveMode()) {
-                                    sucessSave = save();
+                                    //sucessSave = save2();
                                 }
                                 svs.clear();
-
-//                                if( measureDataSensor2 != null ) {    // for test
-//                                    hideProgressDialog();
-//                                    uartService.disconnect();
-//                                    complete();
-//                                    return ;
-//                                }
 
                                 //성공시에만 다음 기기로 갈 수 있게 변경. (간혹 같은 기기를 disconnect하고 다시 connect하면 정상적으로 measureData를 받지 못하는 경우가 생김)
                                 if(sucessSave){
@@ -276,10 +283,14 @@ public class MeasureExeActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_measure_exe);
-
-        SVS.getInstance().trySensorIndex = 0;
-
-        bModePump = getIntent().getBooleanExtra("modeSensor", true);
+        sensorEntity = (RegisterSVSItem) getIntent().getSerializableExtra("sensorEntity");
+        if( sensorEntity == null ) {
+            finish();
+        }
+        sensorPosition = getIntent().getIntExtra("sensorPosition", -1);
+        if( sensorPosition < 0 ) {
+            finish();
+        }
 
         Log.d("TTTT","SVS AutoMode onCreate");
 
@@ -294,7 +305,25 @@ public class MeasureExeActivity extends Activity {
             return;
         }
 
-        svsEntities = ((EquipmentEntity)svs.getSelectedEquipmentData()).getSvsEntities();
+
+        Button buttonCancel = findViewById(R.id.buttonCancel);
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                connectSVSItems.removeAll();
+                if(DefConstant.UART_PROFILE_CONNECTED == svs.getBleConnectState()) {
+                    uartService.disconnect();
+                }
+                else {
+                    broadcastUpdate(UartService.ACTION_GATT_DISCONNECTED);
+                }
+
+                cancel();
+            }
+        });
+
+        //svsEntities = ((EquipmentEntity)svs.getSelectedEquipmentData()).getSvsEntities();
+        //svsEntities = sensorList;
     }
 
     @Override
@@ -340,6 +369,7 @@ public class MeasureExeActivity extends Activity {
 
         intentFilter.addAction(DefBLEdata.HELLO_ARRIVE);
         intentFilter.addAction(DefBLEdata.BAT_ARRIVE);
+        intentFilter.addAction(DefBLEdata.BATTERY_ARRIVE);
         intentFilter.addAction(DefBLEdata.UPLOAD_ARRIVE);
         intentFilter.addAction(DefBLEdata.UPLOAD_NOTARRIVE);
         intentFilter.addAction(DefBLEdata.MEASURE_ARRIVE);
@@ -372,37 +402,32 @@ public class MeasureExeActivity extends Activity {
             DatabaseUtil.transaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                //화면에 보인 순서와 다르게, SVS_LOCATION 이름순으로 AutoProcessing 시작.
-                OrderedRealmCollection<SVSEntity> orderedSvsEntities = svsEntities.sort("SVS_LOCATION"); //Location 정렬..
-                    int i = 0;
-                for(SVSEntity svsEntity : orderedSvsEntities)
-                {
-                    if(svsEntity.isValid())
-                    {
-                        ConnectSVSItem connectSVSItem = new ConnectSVSItem();
-                        connectSVSItem.setSvsUuid(svsEntity.getUuid());
-                        connectSVSItem.setAddress(svsEntity.getAddress());
-                        connectSVSItem.setSvsLocation(svsEntity.getSvsLocation());
 
-                        //svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_FREQ);  // added by hslee
-                        svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_TIME_FREQ);  // added by hslee
-                        svsEntity.setMeasureOptionCount(1); // added by hslee
+                    SVSEntity svsEntity = new SVSEntity();
+                    svsEntity.setUuid(sensorEntity.getUuid());
+                    //svsEntity.setSerialNum(sensor.getS());
+                    svsEntity.setName(sensorEntity.getName());
+                    svsEntity.setAddress(sensorEntity.getAddress());
+                    svsEntity.setImageUri(sensorEntity.getImageUri());
+                    svsEntity.setLastRecord(sensorEntity.getLastRecord());
+                    svsEntity.setSvsLocation(sensorEntity.getSvsLocation());
+                    svsEntity.setSvsState(sensorEntity.getSvsState());
+                    svsEntity.setPlcState(sensorEntity.getPlcState());
+                    //svsEntity.setMeasureOption(sensor.getMeasureOption());
+                    svsEntity.setMeasureOptionCount(1);
 
-                        connectSVSItems.add(connectSVSItem);
+                    ConnectSVSItem connectSVSItem = new ConnectSVSItem();
+                    connectSVSItem.setSvsUuid(svsEntity.getUuid());
+                    connectSVSItem.setAddress(svsEntity.getAddress());
+                    connectSVSItem.setSvsLocation(svsEntity.getSvsLocation());
+                    connectSVSItem.setDeviceName(svsEntity.getName());
 
-                        if( i > 1 ) { // for test
-                            break;
-                        }
-                        i++;
+                    svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.BATTERY);  // added by hslee
+                    //svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_TIME_FREQ);  // added by hslee
 
-                        if( !bModePump )   // added by hslee 2020-03-19 배관진단에서는 센서1개만 사용
-                            break;
-                    }
-                    else
-                    {
-                        ToastUtil.showShort(R.string.notSVSLocationName);
-                    }
-                }
+                    svs.bBatteryInfoRequest = true;
+                    svs.svsEntityBatteryInfo = svsEntity;
+                    connectSVSItems.add(connectSVSItem);
                 }
             });
 
@@ -427,181 +452,21 @@ public class MeasureExeActivity extends Activity {
         }
     }
 
-    private boolean save() {
-
-        EquipmentEntity equipmentEntity = (EquipmentEntity)svs.getLinkedEquipmentData();
-        SVSEntity svsEntity = (SVSEntity)svs.getLinkedSvsData();
-        final String linkedEquipmentUuid = equipmentEntity.getUuid();
-        final String linkedSvsUuid = svsEntity.getUuid();
-
-        if(linkedEquipmentUuid != null && linkedSvsUuid != null)
-        {
-
-            ArrayList<MeasureData> measureDatas = svs.getMeasureDatas();
-
-            Log.d("TTTT","SVS measureCnt:"+measureDatas.size());
-
-            if(measureDatas.size() > 0)
-            {
-                MeasureData measureData = measureDatas.get(0);
-
-//                String td = "";
-//                for( int i = 0; i<1024; i++ ) {
-//                    td += measureData.axisBuf.fFreq[i] + ",";
-//                }
-//                Log.d("TTTT2",td);
-
-                SVSParam svsParam = SVS.getInstance().getUploaddata().getSvsParam();    // added by hslee
-                SVSCode svsCode = svsParam.getCode();
-                SVSTime svsTimeWarning = svsCode.getTimeWrn();
-                float rmsWarning = svsTimeWarning.getdRms();
-                SVSTime svsTimeDanger = svsCode.getTimeDan();
-                float rmsDanger = svsTimeDanger.getdRms();
-
-                measureData.setRmsWarning(rmsWarning);
-                measureData.setRmsDanger(rmsDanger);
-
-                if( measureDataSensor1 == null ) {    // added by hslee
-                    measureDataSensor1 = measureData;
-                    trySensorNumber = 1;
-                    SVS.getInstance().trySensorIndex = 1;    // added by hslee 2020.05.07
-                }
-                else if( measureDataSensor2 == null ) {
-                    measureDataSensor2 = measureData;
-                    trySensorNumber = 2;
-                    SVS.getInstance().trySensorIndex = 2;    // added by hslee 2020.05.07
-                }
-                else {
-                    measureDataSensor3 = measureData;
-                    trySensorNumber = 3;
-                    SVS.getInstance().trySensorIndex = 3;    // added by hslee 2020.05.07
-                }
-
-
-
-                Date date = measureData.getCaptureTime();
-                String strDate = DateUtil.getDateStringBySimpleFormat(date);
-                String strTime = DateUtil.getTimeStringBySimpleFormat(date);
-
-                //Dir
-                String historyDir = DefFile.FOLDER.HISTORY.getFullPath();
-                String equipmentDir = historyDir + linkedEquipmentUuid + File.separator;
-                String svsDir = equipmentDir + linkedSvsUuid + File.separator;
-                String dateDir = svsDir + strDate + File.separator;
-                String timeDir = dateDir + strTime + File.separator;
-
-                //폴더 확인
-                File fTimeDir = new File(timeDir);
-                if (!fTimeDir.exists()) {
-                    boolean b = fTimeDir.mkdirs();
-                    if(!b){
-                        ToastUtil.showShort("Can't Make File.");
-                        return false;
-                    }
-                }
-
-                //Write Upload, Measure, Comment
-                FileUtil.writeUpload(timeDir);
-                FileUtil.writeMeasure(timeDir, new ArrayList<MeasureData>(Arrays.asList(measureData)));
-                FileUtil.writeComment(timeDir, "Auto Saved.");
-
-
-                //상태
-                HistoryData historyData = new HistoryData();
-                UploadData uploaddata = ParserCommand.rawupload(svs.getRawuploaddata());
-                historyData.setUploaddata(uploaddata);
-                DefConstant.SVS_STATE svsState = DefConstant.SVS_STATE.DEFAULT;
-                if (svs.getRecordMeasureDatas() != null)
-                {
-                    historyData.calcAverageMeasure(svs.getRecordMeasureDatas());
-
-                    MeasureData measuredata = historyData.getAveragemeasure();
-                    svsState = FileUtil.calcSVSState(uploaddata, measuredata);
-                }
-
-                //기록 갯수
-                int totalHistoryCount = 0; //장비의 총 갯수
-                int targetHistoryCount = 0; //연결된 기기의 갯수
-
-                //기기의 기록 갯수 구하기
-                for(SVSEntity child : equipmentEntity.getSvsEntities())
-                {
-                    String childUuid = child.getUuid();
-
-                    int historyCount = FileUtil.getSubDirCount(equipmentDir + childUuid + File.separator);
-                    if(childUuid.equals(linkedSvsUuid))
-                    {
-                        targetHistoryCount = historyCount;
-                    }
-
-                    totalHistoryCount += historyCount;
-                }
-
-                //상태와 갯수를 파일로 쓰기
-                final String equipmentLastRecordContent = strDate + "(" + totalHistoryCount + ")";
-                final String svsLastRecordContent = strDate + "(" + targetHistoryCount + ")";
-                final DefConstant.SVS_STATE lastSvsState = svsState;
-                DatabaseUtil.transaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-
-                        EquipmentEntity equipmentEntity = new RealmDao<EquipmentEntity>(EquipmentEntity.class).loadByUuid(linkedEquipmentUuid);
-                        if(equipmentEntity != null)
-                        {
-                            equipmentEntity.setLastRecord(equipmentLastRecordContent);
-                            equipmentEntity.setSvsState(lastSvsState);
-                        }
-
-                        SVSEntity svsEntity = new RealmDao<SVSEntity>(SVSEntity.class).loadByUuid(linkedSvsUuid);
-                        if(svsEntity != null)
-                        {
-                            svsEntity.setLastRecord(svsLastRecordContent);
-                            svsEntity.setSvsState(lastSvsState);
-                        }
-                    }
-                });
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     private void showProgressDialog(boolean showButton, String subMessage)
     {
-        String equipmentName = ((EquipmentEntity)svs.getLinkedEquipmentData()).getName();
         String title = "Processing sensor";
-        String message = equipmentName
-                + " " + connectSVSItems.getCurrentIndexSvsLocation().toString().toUpperCase()
+        String message = "Getting battery information"
+                //+ " " + connectSVSItems.getCurrentIndexSvsLocation().toString().toUpperCase()
+                + " " + connectSVSItems.getCurrentItem().getDeviceName()
                 + "\n\n"+ subMessage + "...";
 
         ProgressBar progressBar = findViewById(R.id.progressBar);
         TextView textViewTitle = findViewById(R.id.textViewTitle);
         TextView textViewStatus = findViewById(R.id.textViewStatus);
-        Button buttonCancel = findViewById(R.id.buttonCancel);
 
         textViewTitle.setText(title);
         textViewStatus.setText(message);
-        if(!showProgressDialogButton && showButton)
-        {
-            buttonCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    connectSVSItems.removeAll();
-                    if(DefConstant.UART_PROFILE_CONNECTED == svs.getBleConnectState()) {
-                        uartService.disconnect();
-                    }
-                    else {
-                        broadcastUpdate(UartService.ACTION_GATT_DISCONNECTED);
-                    }
-
-                    cancel();
-                }
-            });
-
+        if(!showProgressDialogButton && showButton) {
             showProgressDialogButton = true;
         }
 
@@ -685,9 +550,8 @@ public class MeasureExeActivity extends Activity {
     private void complete() {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
-        returnIntent.putExtra("measureDataSensor1", measureDataSensor1);
-        returnIntent.putExtra("measureDataSensor2", measureDataSensor2);
-        returnIntent.putExtra("measureDataSensor3", measureDataSensor3);    // for test
+        returnIntent.putExtra("battery", svs.batteryLevel);
+        returnIntent.putExtra("sensorPosition", sensorPosition);
 
         finish();
     }

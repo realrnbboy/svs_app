@@ -209,9 +209,15 @@ public class PipeResultActivity extends BaseActivity {
                 float [] data1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
                 float [] data2 = Utils.getConcernDataList();
                 float [] data3 = Utils.getProblemDataList();
+                float [] xData = new float[analysisData.getMeasureData1().getAxisBuf().getfFreq().length];
+
+                // x축 데이터 구성
+                for( int i = 0; i < xData.length; i++ ) {
+                    xData[i] = analysisData.getMeasureData1().getfSplFreqMes() / 2 / 1024 * (i+1);
+                }
 
                 // csv로 raw data 데이터 저장
-                String fileName = Utils.createCsv("pipe", new String [] {"PT1", "concern", "problem"}, data1, data2, data3);
+                String fileName = Utils.createCsv("pipe", new String [] {"X", "PT1", "concern", "problem"}, xData, data1, data2, data3);
                 if( fileName == null ) {
                     ToastUtil.showShort("failed to save csv.");
                 }
@@ -455,7 +461,7 @@ public class PipeResultActivity extends BaseActivity {
         @Override
         public void onValueSelected(Entry e, Highlight h) {
             TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRawDataValue);
-            textViewSelectedItemValue.setText(String.valueOf(e.getY()));
+            textViewSelectedItemValue.setText(String.format("%.3f", e.getY()));
         }
 
         @Override

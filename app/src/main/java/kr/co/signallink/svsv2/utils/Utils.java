@@ -185,7 +185,7 @@ public class Utils {
     }
 
     // csv 파일 저장
-    public static String createCsv(String type, String [] title, float [] data1, float [] data2, float [] data3) {
+    public static String createCsv(String type, String [] title, float [] xData, float [] data1, float [] data2, float [] data3) {
         if( !(data1.length == data2.length || data2.length == data3.length) ) {    // 데이터 사이즈가 맞지 않은 경우
             return null;
         }
@@ -219,6 +219,8 @@ public class Utils {
             // 실 데이터 추가
             for( int i = 0; i<data1.length; i++ ) {
 
+                fw.write(String.valueOf(xData[i]));
+                fw.write(",");
                 fw.write(String.valueOf(data1[i]));
                 fw.write(",");
                 fw.write(String.valueOf(data2[i]));

@@ -44,6 +44,8 @@ public class ResponseCommandHandler extends Handler {
                                 break;
                             case BAT:
                                 broadcastUpdate(DefBLEdata.BAT_ARRIVE);
+                            case BATTERY:   // added by hslee 2020.04.29
+                                broadcastUpdate(DefBLEdata.BATTERY_ARRIVE);
                                 break;
                             case UPLOAD:
                                 broadcastUpdate(DefBLEdata.UPLOAD_ARRIVE);

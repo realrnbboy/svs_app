@@ -380,6 +380,23 @@ public class DetailUpdateActivity extends BaseActivity implements SwipeRefreshLa
                 cropPhoto();
             }
         }
+
+        if (resultCode == Activity.RESULT_OK) { // added by hslee 2020.05.04
+            if (requestCode == DefConstant.REQUEST_SENSING_RESULT) { // 센싱을 정상적으로 실행한 경우
+                int sensorPosition = data.getIntExtra("sensorPosition", -1);
+                //ToastUtil.showLong(String.valueOf(svs.batteryLevel) + ", "+ uuid);
+                if( sensorPosition >= 0 ) {
+                    registerSVSValueItems.get(sensorPosition).setbGetBatteryInfo(true);
+                    registerSVSValueItems.get(sensorPosition).setBattery(String.valueOf(svs.batteryLevel));
+                    registerSVSValueItemsAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+        else {
+            if (requestCode == DefConstant.REQUEST_SENSING_RESULT) { // 센싱을 정상적으로 실행하지 않은 경우
+                //bMeasure = false; // 추가하면 센싱 중 취소 시, 처음부터 다시 해야됨.
+            }
+        }
     }
 
 

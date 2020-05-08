@@ -9,12 +9,12 @@ import kr.co.signallink.svsv2.commons.DefCMDOffset;
  * Created by nspil on 2018-02-09.
  */
 
-public class MeasureData implements Serializable {
+public class MeasureData implements Serializable, Cloneable {
 
     private byte[] rawData;
 
     private Date captureTime;
-    private float fSplFreqMes;  // csv 저장할때 필요함. 2020.04.08 added by hslee     fSplFreqMes / 2 / freq[i] 
+    private float fSplFreqMes;  // csv 저장할때 필요함. 2020.04.08 added by hslee     fSplFreqMes / 2 / 1024    => 새로 알려준 방식은 sampleFreq / 1024로 알려줌.
     private long lDataConve;
     private long lScaleIdx;
     private long lAlarmCur;

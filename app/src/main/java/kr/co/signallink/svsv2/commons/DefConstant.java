@@ -339,7 +339,8 @@ public class DefConstant {
         RAW_NONE(1),
         RAW_WITH_TIME(2),
         RAW_WITH_FREQ(3),
-        RAW_WITH_TIME_FREQ(4);
+        RAW_WITH_TIME_FREQ(4),
+        BATTERY(5);
 
         private int index;
         private MEASURE_OPTION(int index){

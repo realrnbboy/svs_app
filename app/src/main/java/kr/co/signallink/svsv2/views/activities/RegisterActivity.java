@@ -17,6 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,10 +40,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import kr.co.signallink.svsv2.R;
+import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.commons.DefConvert;
 import kr.co.signallink.svsv2.databases.DatabaseUtil;
 import kr.co.signallink.svsv2.databases.EquipmentEntity;
@@ -99,7 +103,7 @@ public class RegisterActivity extends BaseActivity implements SwipeRefreshLayout
     private SortManager.SORT_TYPE selectSortType = SortManager.SORT_TYPE.NAME_ADDRESS;
     private ArrayAdapter<SortManager.SORT_TYPE> arrayAdapter;
 
-    private List<RegisterSVSItem> registerSVSValueItems;
+    private ArrayList<RegisterSVSItem> registerSVSValueItems;
     private List<RegisterSVSItem> temp_registerSVSValueItems = new ArrayList<RegisterSVSItem>();
     private HashMap<DefFile.SVS_LOCATION, RegisterSVSItem> checkedHashMap = new HashMap<>();
 
@@ -110,10 +114,14 @@ public class RegisterActivity extends BaseActivity implements SwipeRefreshLayout
 
     private int lastSelectIdx = -1;
 
+    String pipePumpMode;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
+
+        pipePumpMode = getIntent().getStringExtra("pipePumpMode");
 
         svsToolbar = (Toolbar) findViewById(R.id.toolbar);
         ((TextView)svsToolbar.findViewById(R.id.toolbar_title)).setText(R.string.register_screen);
@@ -200,7 +208,6 @@ public class RegisterActivity extends BaseActivity implements SwipeRefreshLayout
             return;
         }
 
-
     }
 
     @Override
@@ -215,6 +222,10 @@ public class RegisterActivity extends BaseActivity implements SwipeRefreshLayout
             DefLog.d(TAG, "onResume - BT not enabled yet");
             dialogBleOnOff();
         } else {
+            if( SVS.getInstance().bRegisterActivityNotRefresh ) {
+                SVS.getInstance().bRegisterActivityNotRefresh = false;
+                return;
+            }
             scanBleDevice(true);
         }
     }
@@ -353,6 +364,23 @@ public class RegisterActivity extends BaseActivity implements SwipeRefreshLayout
 
                 lastSelectIdx = pick.getLocalIndex();
                 cropPhoto();
+            }
+        }
+
+        if (resultCode == Activity.RESULT_OK) { // added by hslee 2020.05.04
+            if (requestCode == DefConstant.REQUEST_SENSING_RESULT) { // 센싱을 정상적으로 실행한 경우
+                int sensorPosition = data.getIntExtra("sensorPosition", -1);
+                //ToastUtil.showLong(String.valueOf(svs.batteryLevel) + ", "+ uuid);
+                if( sensorPosition >= 0 ) {
+                    registerSVSValueItems.get(sensorPosition).setbGetBatteryInfo(true);
+                    registerSVSValueItems.get(sensorPosition).setBattery(String.valueOf(svs.batteryLevel));
+                    registerSVSValueItemsAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+        else {
+            if (requestCode == DefConstant.REQUEST_SENSING_RESULT) { // 센싱을 정상적으로 실행하지 않은 경우
+                //bMeasure = false; // 추가하면 센싱 중 취소 시, 처음부터 다시 해야됨.
             }
         }
 
@@ -500,6 +528,7 @@ public class RegisterActivity extends BaseActivity implements SwipeRefreshLayout
 
             //Equipment 객체 만들기
             final EquipmentEntity equipmentEntity = new EquipmentEntity();
+            equipmentEntity.setType(pipePumpMode);
             equipmentEntity.setName(name_register.getText().toString().trim());
             equipmentEntity.setLocation(location_register.getText().toString().trim());
             if(photoPath[0] != null){
@@ -616,6 +645,7 @@ public class RegisterActivity extends BaseActivity implements SwipeRefreshLayout
     private ScanCallback mLeScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
+            Map<ParcelUuid, byte[]> bytes = result.getScanRecord().getServiceData();
             processResult(result);
         }
 

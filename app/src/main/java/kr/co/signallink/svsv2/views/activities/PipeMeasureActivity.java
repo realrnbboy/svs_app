@@ -1,6 +1,8 @@
 package kr.co.signallink.svsv2.views.activities;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,6 +35,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import kr.co.signallink.svsv2.R;
+import kr.co.signallink.svsv2.commons.DefBLEdata;
 import kr.co.signallink.svsv2.commons.DefCMDOffset;
 import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.commons.DefLog;
@@ -42,7 +45,13 @@ import kr.co.signallink.svsv2.dto.ResultDiagnosisData;
 import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.MainData;
+import kr.co.signallink.svsv2.server.OnTCPSendCallback;
+import kr.co.signallink.svsv2.server.TCPSendUtil;
 import kr.co.signallink.svsv2.services.DiagnosisInfo;
+import kr.co.signallink.svsv2.services.MyApplication;
+import kr.co.signallink.svsv2.user.SVS;
+import kr.co.signallink.svsv2.utils.DialogUtil;
+import kr.co.signallink.svsv2.utils.ProgressDialogUtil;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 
 import static java.lang.Math.log10;
@@ -65,9 +74,14 @@ public class PipeMeasureActivity extends BaseActivity {
 
     float [] measuredFreq1 = null;  // measureActivity에서 측정된 데이터
 
+    private static boolean isUpload = false;
+    Context m_context;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        m_context = this;
+
         setContentView(R.layout.activity_pipe_measure);
 
         Toolbar svsToolbar = findViewById(R.id.toolbar);
@@ -133,6 +147,23 @@ public class PipeMeasureActivity extends BaseActivity {
             }
         });
 
+        Button buttonUpload = findViewById(R.id.buttonUpload);  // 웹서버로 업로드 버튼 클릭
+        buttonUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if( bMeasure ) {
+                    if( isUpload ) {
+                        ToastUtil.showShort("Already uploaded.");
+                        //return;
+                    }
+                    guideUploadToWebManager();
+                }
+                else {  // 측정을 하지 않은 경우
+                    ToastUtil.showShort("Please measure first.");
+                }
+            }
+        });
     }
 
     private void initChart() {
@@ -327,6 +358,7 @@ public class PipeMeasureActivity extends BaseActivity {
                 analysisData.setMeasureData1(measureDataSensor1);
 
                 bMeasure = true;
+                isUpload = false;
 
                 measuredFreq1 = measureDataSensor1.getAxisBuf().getfFreq();
 
@@ -349,7 +381,7 @@ public class PipeMeasureActivity extends BaseActivity {
         @Override
         public void onValueSelected(Entry e, Highlight h) {
             TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRawDataValue);
-            textViewSelectedItemValue.setText(String.valueOf(e.getY()));
+            textViewSelectedItemValue.setText(String.format("%.3f", e.getY()));
         }
 
         @Override
@@ -358,4 +390,59 @@ public class PipeMeasureActivity extends BaseActivity {
         }
     };
 
+    //RawData 업로드 할지 물어보기
+    private void guideUploadToWebManager(){
+        //SVS.getInstance().measuredFreq = measuredFreq1;
+        SVS.getInstance().sensorType60 = true;
+
+        //업로드 체크
+        if(!isUpload)
+        {
+            //업로드 팝업
+            DialogUtil.yesNo(this, "Upload Raw Data", "Do you want to upload the data you are currently viewing to Web Manager?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    doUploadToWebManager();
+                }
+            }, null);
+        }
+        else
+        {
+            //재업로드 팝업
+            DialogUtil.yesNo(this, "Re Upload Raw Data", "Do you want to upload the data you are currently viewing to Web Manager?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    doUploadToWebManager();
+                }
+            }, null);
+        }
+    }
+
+    //RawData 업로드
+    private void doUploadToWebManager(){
+
+        final ProgressDialogUtil progressDialogUtil = new ProgressDialogUtil(this, "Upload Raw Data", "Data transfer is in progress. Please wait.");
+        progressDialogUtil.show();
+
+        TCPSendUtil.sendRawMeasure(new OnTCPSendCallback() {
+            @Override
+            public void onSuccess(String tag, Object obj) {
+
+                progressDialogUtil.hide();
+
+                DialogUtil.confirm(m_context, "Success", "Successfully uploaded raw data to the server", null);
+
+                isUpload = true;
+                //enableUploadToWebManager(true);
+            }
+
+            @Override
+            public void onFailed(String tag, String msg) {
+                progressDialogUtil.hide();
+
+                DialogUtil.confirm(m_context, "Failed to upload raw data to the server.", msg, null);
+
+            }
+        });
+    }
 }

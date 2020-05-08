@@ -52,6 +52,9 @@ public class TCPSend extends AsyncTask<Void, Void, Void> {
 
                     //데이터 준비
                     byte[] bytes = tcpSendData.bytes;
+//                    for( int i =0; i<bytes.length; i++) {   // for test
+//                        //Log.d("---", String.format("%d:%x, ", i, bytes[i]));
+//                    }
                     if(bytes == null){
 
                         //실패
@@ -75,6 +78,13 @@ public class TCPSend extends AsyncTask<Void, Void, Void> {
                         DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
                         dos.write(bytes, 0, bytes.length);
                         dos.flush();
+
+                        try {
+                            Thread.sleep(10); // added by hslee 2020.05.08
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                         //성공
                         final String msg = "Successful upload of sensor information to the server.";

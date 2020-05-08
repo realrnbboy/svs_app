@@ -78,7 +78,7 @@ public class ServerMeasureType extends DataSnapchot {
         }
 
         //SVS_Data_Type
-        SVSAxisBuf svsAxisBuf = measureData.getAxisBuf();   // for test time, freq 순서 바꿈. 원래 time 먼저
+        SVSAxisBuf svsAxisBuf = measureData.getAxisBuf();
         for(int i=0; i< DefCMDOffset.MEASURE_AXIS_TIME_ELE_MAX; i++){
             buff.putFloat(svsAxisBuf.getfTime()[i]);    //SVS_Data_Type.fTime;
         }

@@ -384,16 +384,16 @@ public class MeasureExeActivity extends Activity {
                         connectSVSItem.setAddress(svsEntity.getAddress());
                         connectSVSItem.setSvsLocation(svsEntity.getSvsLocation());
 
-                        //svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_FREQ);  // added by hslee
-                        svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_TIME_FREQ);  // added by hslee
+                        svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_FREQ);  // added by hslee
+                        //svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_TIME_FREQ);  // added by hslee
                         svsEntity.setMeasureOptionCount(1); // added by hslee
 
                         connectSVSItems.add(connectSVSItem);
 
-                        if( i > 1 ) { // for test
-                            break;
-                        }
-                        i++;
+//                        if( i > 1 ) { // for test
+//                            break;
+//                        }
+//                        i++;
 
                         if( !bModePump )   // added by hslee 2020-03-19 배관진단에서는 센서1개만 사용
                             break;
@@ -687,7 +687,7 @@ public class MeasureExeActivity extends Activity {
         setResult(Activity.RESULT_OK, returnIntent);
         returnIntent.putExtra("measureDataSensor1", measureDataSensor1);
         returnIntent.putExtra("measureDataSensor2", measureDataSensor2);
-        returnIntent.putExtra("measureDataSensor3", measureDataSensor3);    // for test
+        returnIntent.putExtra("measureDataSensor3", measureDataSensor3);
 
         finish();
     }

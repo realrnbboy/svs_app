@@ -84,6 +84,7 @@ public class MeasureActivity extends BaseActivity {
 
     private static boolean isUpload = false;
     int uploadedSensorIndex = 0;
+    int uploadedConfigSensorIndex = 0;
     Context m_context;
 
     @Override
@@ -172,7 +173,7 @@ public class MeasureActivity extends BaseActivity {
                 if( bMeasure ) {
                     if( isUpload ) {
                         ToastUtil.showShort("Already uploaded.");
-                        return;
+                        //return;
                     }
 
                     uploadedSensorIndex = 0;
@@ -568,6 +569,8 @@ public class MeasureActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                guideConfigUploadToWebManager();
             }
         }
         else {
@@ -633,6 +636,63 @@ public class MeasureActivity extends BaseActivity {
 
                 //DialogUtil.confirm(m_context, "Failed to upload raw data to the server.", msg, null);
                 ToastUtil.showLong("Failed to upload raw data to the server." + msg);
+
+            }
+        });
+    }
+
+    //센서 정보 업로드 할지 물어보기
+    private void guideConfigUploadToWebManager(){
+        DialogUtil.yesNo(m_context, "Upload Sensor Infomation", "Do you want to upload the sensor information you are currently viewing to Web Manager?", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    doUploadConfigToWebManager(1);
+                    Thread.sleep(1000);
+                    doUploadConfigToWebManager(2);
+                    Thread.sleep(1000);
+                    doUploadConfigToWebManager(3);
+                    Thread.sleep(1000);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, null);
+    }
+
+    //센서 정보 업로드
+    private void doUploadConfigToWebManager(int sensorIndex){
+        SVS.getInstance().sensorType60 = true;
+        uploadedConfigSensorIndex = 0;
+
+        //final ProgressDialogUtil progressDialogUtil = new ProgressDialogUtil(m_context, "Upload Sensor information", "Data transfer is in progress. Please wait.");
+        //progressDialogUtil.show();
+
+        TCPSendUtil.sendConfig(sensorIndex, new OnTCPSendCallback() {
+            @Override
+            public void onSuccess(String tag, Object obj) {
+
+                uploadedConfigSensorIndex++;
+
+                if( uploadedConfigSensorIndex > 2 ) { // 3개 전부 업로드된 경우만
+                    //progressDialogUtil.hide();
+                    DialogUtil.confirm(m_context, "Success", "Successfully uploaded sensor information to the server", null);
+                }
+            }
+
+            @Override
+            public void onFailed(String tag, String msg) {
+                //progressDialogUtil.hide();
+
+                DialogUtil.yesNo(m_context, "Failed to upload sensor information. Try again?", msg, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //재업로드 로직
+                        //doUploadConfigToWebManager();
+                    }
+                }, null);
 
             }
         });

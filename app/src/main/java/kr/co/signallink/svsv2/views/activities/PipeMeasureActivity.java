@@ -367,6 +367,8 @@ public class PipeMeasureActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                guideConfigUploadToWebManager();
             }
         }
         else {
@@ -441,6 +443,53 @@ public class PipeMeasureActivity extends BaseActivity {
                 progressDialogUtil.hide();
 
                 DialogUtil.confirm(m_context, "Failed to upload raw data to the server.", msg, null);
+
+            }
+        });
+    }
+
+
+
+    //센서 정보 업로드 할지 물어보기
+    private void guideConfigUploadToWebManager(){
+        DialogUtil.yesNo(m_context, "Upload Sensor Infomation", "Do you want to upload the sensor information you are currently viewing to Web Manager?", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                doUploadConfigToWebManager();
+            }
+        }, null);
+    }
+
+    //센서 정보 업로드
+    private void doUploadConfigToWebManager(){
+        SVS.getInstance().sensorType60 = true;
+
+        final ProgressDialogUtil progressDialogUtil = new ProgressDialogUtil(m_context, "Upload Sensor information", "Data transfer is in progress. Please wait.");
+        progressDialogUtil.show();
+
+        TCPSendUtil.sendConfig(new OnTCPSendCallback() {
+            @Override
+            public void onSuccess(String tag, Object obj) {
+
+
+                progressDialogUtil.hide();
+
+                DialogUtil.confirm(m_context, "Success", "Successfully uploaded sensor information to the server", null);
+
+            }
+
+            @Override
+            public void onFailed(String tag, String msg) {
+                progressDialogUtil.hide();
+
+                DialogUtil.yesNo(m_context, "Failed to upload sensor information. Try again?", msg, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //재업로드 로직
+                        doUploadToWebManager();
+                    }
+                }, null);
 
             }
         });

@@ -59,6 +59,55 @@ public class TCPSendUtil {
 
         return header;
     }
+    public static ServerHeaderType makeServerHeaderType(int sensorIndex){  // added by hslee 2020.05.08
+
+        //svs
+        SVS svs = SVS.getInstance();
+
+        //svs id (32byte)
+        byte[] svsId = new byte[32];
+        HelloData helloData = null;
+        switch (sensorIndex) {
+            case 1 :
+                helloData = svs.helloData60_1;
+                break;
+            case 2 :
+                helloData = svs.helloData60_2;
+                break;
+            case 3 :
+                helloData = svs.helloData60_3;
+                break;
+            default:
+                Log.d("error", "makeServerHeaderType - sensorIndex invalid" + sensorIndex);
+                return null;
+        }
+
+        if(helloData != null){
+            String strSerialNo = helloData.getuSerialNo();
+            //if(strSerialNo != null || strSerialNo.length() != 0){
+            if(strSerialNo != null && strSerialNo.length() != 0){   // added by hslee 2020.05.06
+                System.arraycopy(strSerialNo.getBytes(), 0, svsId, 0, strSerialNo.getBytes().length);
+                Log.d("TTTT","TCPSend makeServerHeaderType svsId:"+strSerialNo);
+            }
+            else
+            {
+                Log.i("TTTT","TCPSend makeServerHeaderType err(1).");
+                ToastUtil.showShort("Server Send Err('Header Err.1')");
+                return null;
+            }
+        }
+        else {
+            Log.i("TTTT","TCPSend makeServerHeaderType err(2).");
+            ToastUtil.showShort("Server Send Err('Header Err.2')");
+            return null;
+        }
+
+        //Header
+        ServerHeaderType header = new ServerHeaderType();
+        header.svsID = svsId;
+
+        return header;
+    }
 
     public static ServerHeaderType makeServerHeaderTypeSensor3(int sensorIndex){
 
@@ -111,6 +160,41 @@ public class TCPSendUtil {
 
         //Header
         ServerHeaderType header = makeServerHeaderType();
+        if(header == null){
+            return null;
+        }
+
+        //msg id
+        header.msgID = new byte[]{0x03};
+
+        //svs
+        SVS svs = SVS.getInstance();
+
+        //param
+        UploadData uploadData = svs.getUploaddata();
+        RawUploadData rawUploadData = svs.getRawuploaddata();
+        if(uploadData == null || rawUploadData == null){
+            ToastUtil.showShort("Server makeConfig Err('Get UploadData Fail.')");
+            return null;
+        }
+
+        //ServerConfig
+        ServerConfigType config = new ServerConfigType();
+        config.header = header;
+        config.datetime = System.currentTimeMillis();
+        config.param = uploadData.getSvsParam();
+        config.rawParam = rawUploadData.getData();
+        config.setSvsParamToBytes(uploadData.getSvsParam());
+
+        Log.d("TTTT","byte1:"+config.rawParam.length+",byte2:"+config.rawParam2.length);
+
+        return config;
+    }
+
+    public static ServerConfigType makeConfig(int sensorIndex){ // added by hslee 2020.05.08
+
+        //Header
+        ServerHeaderType header = makeServerHeaderType(sensorIndex);
         if(header == null){
             return null;
         }
@@ -250,12 +334,7 @@ public class TCPSendUtil {
 
         byte[] rawData = measureData.getRawData();
         measure.rawMeasure = new byte[85 + 8192 + 4096];
-        Arrays.fill(measure.rawMeasure, (byte) 3);
-//        for( int i  = 85; i<85+8192; i++) {
-//            measure.rawMeasure[i] = (byte)i;
-//        }
-        measure.rawMeasure[85] = 1; // for test
-        measure.rawMeasure[85+8192] = 2;
+        Arrays.fill(measure.rawMeasure, (byte) 0);
         System.arraycopy(rawData, 0, measure.rawMeasure, 0, 85);
         System.arraycopy(rawData, 85, measure.rawMeasure, 85 + 8192, 4096);
 //        measure.rawMeasure = new byte[85 + 4096];
@@ -330,10 +409,15 @@ public class TCPSendUtil {
         measure.header = header;
         measure.datetime = measureData.getCaptureTime().getTime();
         measure.measure = measureData;
-        measure.rawMeasure = measureData.getRawData();
-        measure.setMeasureToBytes(measureData);
+        //measure.rawMeasure = measureData.getRawData();
+        //measure.setMeasureToBytes(measureData);
 
-        Log.d("TTTT","byte1:"+measure.rawMeasure.length+",byte2:"+measure.rawMeasure2.length);
+        byte[] rawData = measureData.getRawData();
+        measure.rawMeasure = new byte[85 + 8192 + 4096];
+        Arrays.fill(measure.rawMeasure, (byte) 0);
+        System.arraycopy(rawData, 0, measure.rawMeasure, 0, 85);
+        System.arraycopy(rawData, 85, measure.rawMeasure, 85 + 8192, 4096);
+        //Log.d("TTTT","byte1:"+measure.rawMeasure.length+",byte2:"+measure.rawMeasure2.length);
 
         //anlysis
         //measure.refreshAnalysis(svs.getUploaddata(), measureData);
@@ -389,6 +473,37 @@ public class TCPSendUtil {
 
         //Config
         ServerConfigType config = makeConfig();
+        if(config == null){
+
+            String msg = "data is empty";
+            Log.i("TTTT","TCPSend sendConfig:"+msg);
+
+            fail(tag, msg, sendCallback);
+            return;
+        }
+
+        //Bytes
+        byte[] bytes = config.getBytes();
+
+        //TCPData
+        TCPSendData tcpSendData = new TCPSendData();
+        tcpSendData.tag = tag;
+        tcpSendData.bytes = bytes;
+        tcpSendData.callback = sendCallback;
+
+        //TCPSend
+        TCPSend tcpSend = TCPSend.getInstance();
+        tcpSend.send(tcpSendData);
+    }
+
+    public static void sendConfig(int sensorIndex, OnTCPSendCallback sendCallback){  // added by hslee
+
+        Log.d("sendConfig", "sendConfig - " + sensorIndex);
+        //Tag
+        final String tag = "Config";
+
+        //Config
+        ServerConfigType config = makeConfig(sensorIndex);
         if(config == null){
 
             String msg = "data is empty";
@@ -500,6 +615,13 @@ public class TCPSendUtil {
             //TCPSend
             TCPSend tcpSend = TCPSend.getInstance();
             tcpSend.send(tcpSendData);
+
+            try {
+                //Thread.sleep(1000);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

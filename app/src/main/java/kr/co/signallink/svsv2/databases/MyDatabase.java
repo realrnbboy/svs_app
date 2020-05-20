@@ -7,6 +7,7 @@ import java.io.File;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 import kr.co.signallink.svsv2.user.SVS;
 import kr.co.signallink.svsv2.utils.FileUtil;
 
@@ -29,7 +30,7 @@ public class MyDatabase {
 
         Realm.init(context);
 
-        changeDefaultPath(context);
+        //changeDefaultPath(context); // deleted by hslee 2020.05.11
 
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .directory(new File(SVS.rootDir))

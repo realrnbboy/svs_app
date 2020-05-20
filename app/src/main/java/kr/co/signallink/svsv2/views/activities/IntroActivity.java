@@ -29,34 +29,35 @@ public class IntroActivity extends BaseActivity {
             @Override
             public void granted() {
 
+                goIntent(SelectPipePumpModeActivity.class); // added by hslee 2020.04.27
                 //퍼미션 모두 수락
 
                 //초창기 스크린 모드 선택하기
-                DefConstant.SCREEN_MODE screenMode = SVS.getInstance().getScreenMode();
-                if(screenMode == DefConstant.SCREEN_MODE.UNKNOWN)
-                {
-                    //로그인 정보 초기화
-                    DatabaseUtil.transaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            RealmResults<WebLoginEntity> webLoginEntities = new RealmDao<WebLoginEntity>(WebLoginEntity.class).loadAll();
-                            webLoginEntities.deleteAllFromRealm();
-                        }
-                    });
-
-                    //goIntent(ScreenModeSelectActivity.class);
-                    //goIntent(SelectPipePumpModeActivity.class); // added by hslee 2020.04.27
-                }
-                else if(screenMode == DefConstant.SCREEN_MODE.IDLE)
-                {
-                    //goIntent(ScreenModeSelectActivity.class);
-                    goIntent(SelectPipePumpModeActivity.class); // added by hslee 2020.04.27
-                }
-                else
-                {
-                    //goIntent(MainActivity.class);
-                    goIntent(SelectPipePumpModeActivity.class); // added by hslee 2020.04.27
-                }
+//                DefConstant.SCREEN_MODE screenMode = SVS.getInstance().getScreenMode();
+//                if(screenMode == DefConstant.SCREEN_MODE.UNKNOWN)
+//                {
+////                    //로그인 정보 초기화
+////                    DatabaseUtil.transaction(new Realm.Transaction() {
+////                        @Override
+////                        public void execute(Realm realm) {
+////                            RealmResults<WebLoginEntity> webLoginEntities = new RealmDao<WebLoginEntity>(WebLoginEntity.class).loadAll();
+////                            webLoginEntities.deleteAllFromRealm();
+////                        }
+////                    });
+//
+//                    //goIntent(ScreenModeSelectActivity.class);
+//                    //goIntent(SelectPipePumpModeActivity.class); // added by hslee 2020.04.27
+//                }
+//                else if(screenMode == DefConstant.SCREEN_MODE.IDLE)
+//                {
+//                    //goIntent(ScreenModeSelectActivity.class);
+//                    goIntent(SelectPipePumpModeActivity.class); // added by hslee 2020.04.27
+//                }
+//                else
+//                {
+//                    //goIntent(MainActivity.class);
+//                    goIntent(SelectPipePumpModeActivity.class); // added by hslee 2020.04.27
+//                }
 
                 //화면 닫기
                 finish();

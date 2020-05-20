@@ -455,6 +455,7 @@ public class MyApplication extends Application {
                             }
 
                             if( svs.bBatteryInfoComplete ) {    // added by hslee 2020.04.29
+                                svs.bBatteryInfoComplete = false;
 
                                 cmdTimer.cancel();
                                 cmdTimer = null;

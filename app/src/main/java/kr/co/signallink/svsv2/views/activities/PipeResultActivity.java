@@ -107,14 +107,18 @@ public class PipeResultActivity extends BaseActivity {
 
         equipmentUuid = intent.getStringExtra("equipmentUuid");
 
-        TextView textViewCode = findViewById(R.id.textViewCode);
-        textViewCode.setText(analysisData.pipeCode);
+        TextView textViewSiteCode = findViewById(R.id.textViewSiteCode);
+        textViewSiteCode.setText(analysisData.pipeSiteCode);
+        TextView textViewPumpCode = findViewById(R.id.textViewPumpCode);
+        textViewPumpCode.setText(analysisData.pipePumpCode);
+        TextView textViewProjectVibSpec = findViewById(R.id.textViewProjectVibSpec);
+        textViewProjectVibSpec.setText(analysisData.pipeProjectVibSpec);
         TextView textViewPipeName = findViewById(R.id.textViewPipeName);
         textViewPipeName.setText(analysisData.pipeName);
         TextView textViewLocation = findViewById(R.id.textViewLocation);
         textViewLocation.setText(analysisData.pipeLocation);
-        TextView textViewTagNo = findViewById(R.id.textViewTagNo);
-        textViewTagNo.setText(analysisData.pipeTagNo);
+        TextView textViewPipeNo = findViewById(R.id.textViewPipeNo);
+        textViewPipeNo.setText(analysisData.pipeNo);
         TextView textViewMedium = findViewById(R.id.textViewMedium);
         textViewMedium.setText(analysisData.pipeMedium);
         TextView textViewEtcOperatingCondition = findViewById(R.id.textViewEtcOperatingCondition);

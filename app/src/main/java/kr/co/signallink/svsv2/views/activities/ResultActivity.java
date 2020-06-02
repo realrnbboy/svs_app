@@ -426,19 +426,31 @@ public class ResultActivity extends BaseActivity {
         rmsModel2.setRms(rms2);
         rmsModel3.setRms(rms3);
 
-        float danger1 = analysisData.getMeasureData1().getRmsDanger();
-        float danger2 = analysisData.getMeasureData2().getRmsDanger();
-        float danger3 = analysisData.getMeasureData3().getRmsDanger();
-        rmsModel1.setDanger(danger1);
-        rmsModel2.setDanger(danger2);
-        rmsModel3.setDanger(danger3);
+        if( analysisData.getDiagVar1().nCode == 4 ) {   // added by hslee 2020.05.25 사용자 입력값 사용할 경우
+            rmsModel1.setbProjectVib(true);
+            rmsModel2.setbProjectVib(true);
+            rmsModel3.setbProjectVib(true);
 
-        float warning1 = analysisData.getMeasureData1().getRmsWarning();
-        float warning2 = analysisData.getMeasureData2().getRmsWarning();
-        float warning3 = analysisData.getMeasureData3().getRmsWarning();
-        rmsModel1.setWarning(warning1);
-        rmsModel2.setWarning(warning2);
-        rmsModel3.setWarning(warning3);
+            rmsModel1.setDanger(analysisData.getDiagVar1().nPrjVibSpec);
+            rmsModel2.setDanger(analysisData.getDiagVar1().nPrjVibSpec);
+            rmsModel3.setDanger(analysisData.getDiagVar1().nPrjVibSpec);
+
+        }
+        else {
+            float danger1 = analysisData.getMeasureData1().getRmsDanger();
+            float danger2 = analysisData.getMeasureData2().getRmsDanger();
+            float danger3 = analysisData.getMeasureData3().getRmsDanger();
+            rmsModel1.setDanger(danger1);
+            rmsModel2.setDanger(danger2);
+            rmsModel3.setDanger(danger3);
+
+            float warning1 = analysisData.getMeasureData1().getRmsWarning();
+            float warning2 = analysisData.getMeasureData2().getRmsWarning();
+            float warning3 = analysisData.getMeasureData3().getRmsWarning();
+            rmsModel1.setWarning(warning1);
+            rmsModel2.setWarning(warning2);
+            rmsModel3.setWarning(warning3);
+        }
 
         rmsList.add(rmsModel1);
         rmsList.add(rmsModel2);

@@ -10,7 +10,7 @@ public class RmsModel implements Serializable {
     public double danger;
     public double warning;
     public String status;
-
+    public boolean bProjectVib = false;
 
     public double rms1;
     public double rms2;
@@ -18,6 +18,14 @@ public class RmsModel implements Serializable {
     private boolean bShowCause; // rms1,2,3이 good이면 cause 표시하지 않음
     private long created;
     private float[] frequency;
+
+    public boolean isbProjectVib() {
+        return bProjectVib;
+    }
+
+    public void setbProjectVib(boolean bProjectVib) {
+        this.bProjectVib = bProjectVib;
+    }
 
     public float[] getFrequency() {
         return frequency;

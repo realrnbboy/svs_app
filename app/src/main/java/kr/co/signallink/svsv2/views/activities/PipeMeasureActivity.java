@@ -368,7 +368,7 @@ public class PipeMeasureActivity extends BaseActivity {
                     e.printStackTrace();
                 }
 
-                guideConfigUploadToWebManager();
+                //guideConfigUploadToWebManager();  // deleted by hslee 2020.05.25 시그널링크 요청으로 임시 비활성화
             }
         }
         else {

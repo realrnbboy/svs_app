@@ -419,7 +419,7 @@ public class PresetActivity extends BaseActivity {
         diagVar1.nEquipType = equipmentType;
         diagVar1.nBearingType = bearingType;
         diagVar1.nLineFreq = lineFrequency;
-        //diagVar1.nPrjVibSpec = projectVibSpec;    // added by hslee 2020.03 아마도 사용 안함
+        diagVar1.nPrjVibSpec = projectVibSpec;    // added by hslee 2020.03 아마도 사용 안함
         diagVar1.strSiteCode = siteCode;
         diagVar1.strEquipName = equipmentName;
         diagVar1.strTagNo = tagNo;

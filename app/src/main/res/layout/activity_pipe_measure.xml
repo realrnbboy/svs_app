@@ -88,6 +88,7 @@
                 style="@style/button_confirm"
                 android:layout_weight="1"
                 android:layout_marginLeft="5dp"
+                android:visibility="gone"
                 android:background="@drawable/btn_red_round"
                 android:text="upload"/>
 

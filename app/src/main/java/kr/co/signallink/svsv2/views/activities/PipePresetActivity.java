@@ -42,10 +42,12 @@ public class PipePresetActivity extends BaseActivity {
 
     private static final String TAG = "PipePresetActivity";
 
-    EditText editTextCode;
+    EditText editTextSiteCode;
+    EditText editTextPumpCode;
+    EditText editTextProjectVibSpec;
     EditText editTextPipeName;
     EditText editTextLocation;
-    EditText editTextTagNo;
+    EditText editTextPipeNo;
     EditText editTextMedium;
     EditText editTextEtcOperatingCondition;
 
@@ -82,17 +84,21 @@ public class PipePresetActivity extends BaseActivity {
         TextView textViewTime = findViewById(R.id.textViewTime);
         textViewTime.setText(strDate);
 
-        editTextCode = findViewById(R.id.editTextCode);
+        editTextSiteCode = findViewById(R.id.editTextSiteCode);
+        editTextPumpCode = findViewById(R.id.editTextPumpCode);
+        editTextProjectVibSpec = findViewById(R.id.editTextProjectVibSpec);
         editTextPipeName = findViewById(R.id.editTextPipeName);
         editTextLocation = findViewById(R.id.editTextLocation);
-        editTextTagNo = findViewById(R.id.editTextTagNo);
+        editTextPipeNo = findViewById(R.id.editTextPipeNo);
         editTextMedium = findViewById(R.id.editTextMedium);
         editTextEtcOperatingCondition = findViewById(R.id.editTextEtcOperatingCondition);
 
-        editTextCode.addTextChangedListener(textWatcherInput);
+        editTextSiteCode.addTextChangedListener(textWatcherInput);
+        editTextPumpCode.addTextChangedListener(textWatcherInput);
+        editTextProjectVibSpec.addTextChangedListener(textWatcherInput);
         editTextPipeName.addTextChangedListener(textWatcherInput);
         editTextLocation.addTextChangedListener(textWatcherInput);
-        editTextTagNo.addTextChangedListener(textWatcherInput);
+        editTextPipeNo.addTextChangedListener(textWatcherInput);
         editTextMedium.addTextChangedListener(textWatcherInput);
         editTextEtcOperatingCondition.addTextChangedListener(textWatcherInput);
 
@@ -128,18 +134,22 @@ public class PipePresetActivity extends BaseActivity {
     AnalysisData setAnalysisData() {
         AnalysisData analysisData = new AnalysisData();
 
-        String code = editTextCode.getText().toString();
+        String siteCode = editTextSiteCode.getText().toString();
+        String pumpCode = editTextPumpCode.getText().toString();
+        String projectVibSpec = editTextProjectVibSpec.getText().toString();
         String pipeName = editTextPipeName.getText().toString();
         String location = editTextLocation.getText().toString();
-        String tagNo = editTextTagNo.getText().toString();
+        String pipeNo = editTextPipeNo.getText().toString();
         String medium = editTextMedium.getText().toString();
         String etcOperatingCondition = editTextEtcOperatingCondition.getText().toString();
 
 
-        analysisData.pipeCode = code;
+        analysisData.pipeSiteCode = siteCode;
+        analysisData.pipePumpCode = pumpCode;
+        analysisData.pipeProjectVibSpec = projectVibSpec;
         analysisData.pipeName = pipeName;
         analysisData.pipeLocation = location;
-        analysisData.pipeTagNo = tagNo;
+        analysisData.pipeNo = pipeNo;
         analysisData.pipeMedium = medium;
         analysisData.pipeEtcOperatingCondition = etcOperatingCondition;
 
@@ -151,10 +161,12 @@ public class PipePresetActivity extends BaseActivity {
         if( m_analysisData == null )
             m_analysisData = setAnalysisData();
 
-        editTextCode.setText(String.valueOf(m_analysisData.pipeCode));
+        editTextSiteCode.setText(String.valueOf(m_analysisData.pipeSiteCode));
+        editTextPumpCode.setText(String.valueOf(m_analysisData.pipePumpCode));
+        editTextProjectVibSpec.setText(String.valueOf(m_analysisData.pipeProjectVibSpec));
         editTextPipeName.setText(String.valueOf(m_analysisData.pipeName));
         editTextLocation.setText(String.valueOf(m_analysisData.pipeLocation));
-        editTextTagNo.setText(String.valueOf(m_analysisData.pipeTagNo));
+        editTextPipeNo.setText(String.valueOf(m_analysisData.pipeNo));
         editTextMedium.setText(String.valueOf(m_analysisData.pipeMedium));
         editTextEtcOperatingCondition.setText(String.valueOf(m_analysisData.pipeEtcOperatingCondition));
     }
@@ -178,9 +190,16 @@ public class PipePresetActivity extends BaseActivity {
     // 값이 정상적으로 들어가 있는지 확인
     private boolean validateForm() {
 
-        String siteCode = editTextCode.getText().toString().trim();
+        String siteCode = editTextSiteCode.getText().toString().trim();
         if(siteCode.isEmpty()){
-            editTextCode.requestFocus();
+            editTextSiteCode.requestFocus();
+            ToastUtil.showShort("code is empty");
+            return false;
+        }
+
+        String pumpCode = editTextPumpCode.getText().toString().trim();
+        if(pumpCode.isEmpty()){
+            editTextPumpCode.requestFocus();
             ToastUtil.showShort("code is empty");
             return false;
         }
@@ -199,9 +218,9 @@ public class PipePresetActivity extends BaseActivity {
             return false;
         }
 
-        String pipeTagNo = editTextTagNo.getText().toString().trim();
-        if(pipeTagNo.isEmpty()){
-            editTextTagNo.requestFocus();
+        String pipeNo = editTextPipeNo.getText().toString().trim();
+        if(pipeNo.isEmpty()){
+            editTextPipeNo.requestFocus();
             ToastUtil.showShort("tag no is empty");
             return false;
         }

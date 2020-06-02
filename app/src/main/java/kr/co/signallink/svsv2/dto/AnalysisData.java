@@ -52,10 +52,12 @@ public class AnalysisData implements Serializable {
 
     // added by hslee   2020.03.19
 
-    public String pipeCode;
+    public String pipeSiteCode;
+    public String pipePumpCode;
+    public String pipeProjectVibSpec;
     public String pipeName;
     public String pipeLocation;
-    public String pipeTagNo;
+    public String pipeNo;
     public String pipeMedium;
     public String pipeEtcOperatingCondition;
 

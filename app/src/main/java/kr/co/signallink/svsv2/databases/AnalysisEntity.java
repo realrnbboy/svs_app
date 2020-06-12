@@ -29,7 +29,9 @@ public class AnalysisEntity extends RealmObject {
     public RealmList<Double> rank;
     public RealmList<Double> ratio;
 
-    public RealmList<Double> frequency;
+    public RealmList<Double> frequency1;
+    public RealmList<Double> frequency2;
+    public RealmList<Double> frequency3;
 
     public boolean isbShowCause() {
         return bShowCause;
@@ -47,12 +49,28 @@ public class AnalysisEntity extends RealmObject {
         this.type = type;
     }
 
-    public RealmList<Double> getFrequency() {
-        return frequency;
+    public RealmList<Double> getFrequency1() {
+        return frequency1;
     }
 
-    public void setFrequency(RealmList<Double> frequency) {
-        this.frequency = frequency;
+    public void setFrequency1(RealmList<Double> frequency1) {
+        this.frequency1 = frequency1;
+    }
+
+    public RealmList<Double> getFrequency2() {
+        return frequency2;
+    }
+
+    public void setFrequency2(RealmList<Double> frequency2) {
+        this.frequency2 = frequency2;
+    }
+
+    public RealmList<Double> getFrequency3() {
+        return frequency3;
+    }
+
+    public void setFrequency3(RealmList<Double> frequency3) {
+        this.frequency3 = frequency3;
     }
 
     public AnalysisEntity(){

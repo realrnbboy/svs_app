@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -73,9 +75,13 @@ public class PipeMeasureActivity extends BaseActivity {
     String equipmentUuid = null;
 
     float [] measuredFreq1 = null;  // measureActivity에서 측정된 데이터
+    float [] measuredFreq2 = null;  // measureActivity에서 측정된 데이터
+    float [] measuredFreq3 = null;  // measureActivity에서 측정된 데이터
 
     private static boolean isUpload = false;
     Context m_context;
+
+    int nowMeasurePosition = 1; // 측정하려는 센서 위치
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,8 +104,10 @@ public class PipeMeasureActivity extends BaseActivity {
 
         equipmentUuid = intent.getStringExtra("equipmentUuid");
         measuredFreq1 = (float[]) intent.getSerializableExtra("measuredFreq1");
+        measuredFreq2 = (float[]) intent.getSerializableExtra("measuredFreq2");
+        measuredFreq3 = (float[]) intent.getSerializableExtra("measuredFreq3");
 
-        if( measuredFreq1 != null ) { // 기존에 측정한 데이터가 있으면
+        if( measuredFreq1 != null && measuredFreq2 != null && measuredFreq3 != null ) { // 기존에 측정한 데이터가 있으면
             bMeasure = true;    // 측정된 상태로 표시
         }
 
@@ -129,7 +137,15 @@ public class PipeMeasureActivity extends BaseActivity {
                     startActivity(intent);
                 }
                 else {  // 측정을 하지 않은 경우
-                    ToastUtil.showShort("Please measure first");
+                    if( measuredFreq1 == null ) {
+                        ToastUtil.showShort("Please measure pt1");
+                    }
+                    else if( measuredFreq2 == null ) {
+                        ToastUtil.showShort("Please measure pt2");
+                    }
+                    else {
+                        ToastUtil.showShort("Please measure pt3");
+                    }
                 }
             }
         });
@@ -138,10 +154,15 @@ public class PipeMeasureActivity extends BaseActivity {
         buttonMeasure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                RadioGroup radioGroup = findViewById(R.id.radioGroupSensorPosition);
+                int radioButtonId = radioGroup.getCheckedRadioButtonId();
+                RadioButton selectedRadioButton = radioGroup.findViewById(radioButtonId);
+                nowMeasurePosition = radioGroup.indexOfChild(selectedRadioButton) + 1;
 
                 // 다음 화면으로 이동
                 Intent intent = new Intent(getBaseContext(), MeasureExeActivity.class);
-                intent.putExtra("modeSensor", false);   // mode sensor or pipe
+                intent.putExtra("modePump", false);   // mode pump or pipe
+                intent.putExtra("measurePosition", nowMeasurePosition);
                 intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
                 startActivityForResult(intent, DefConstant.REQUEST_SENSING_RESULT);
             }
@@ -221,13 +242,13 @@ public class PipeMeasureActivity extends BaseActivity {
             }
         });
 
-        if( measuredFreq1 != null ) { // 기존에 측정한 데이터가 있으면 표시
-            drawChart(measuredFreq1);
+        if( measuredFreq1 != null || measuredFreq2 != null || measuredFreq3 != null) { // 기존에 측정한 데이터가 있으면 표시
+            drawChart();
         }
     }
 
 
-    private void drawChart(float[] data1){
+    private void drawChart(){
 
         try {
             //Thread.sleep(1000); // 차트 초기화 시간 - 추가 안하면 정상적으로 표시 안될 수 있음.
@@ -238,14 +259,16 @@ public class PipeMeasureActivity extends BaseActivity {
         LineData lineData = new LineData();
 
         ArrayList<Float> valueList1 = new ArrayList<>();
-//        ArrayList<Float> valueList2 = new ArrayList<>();
-//        ArrayList<Float> valueList3 = new ArrayList<>();
+        ArrayList<Float> valueList2 = new ArrayList<>();
+        ArrayList<Float> valueList3 = new ArrayList<>();
 //
 //        float[] data2 = getConcernDataList();
 //        float[] data3 = getProblemDataList();
 
         try {
-
+            float[] data1 = measuredFreq1;
+            float[] data2 = measuredFreq2;
+            float[] data3 = measuredFreq3;
             if (data1 != null) {
                 for (float v : data1) {
                     valueList1.add(v);
@@ -254,21 +277,21 @@ public class PipeMeasureActivity extends BaseActivity {
 
             lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
 
-//            if (data2 != null) {
-//                for (float v : data2) {
-//                    valueList2.add(v);
-//                }
-//            }
+            if (data2 != null) {
+                for (float v : data2) {
+                    valueList2.add(v);
+                }
+            }
+
+            lineData.addDataSet(generateLineData("pt2", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
 //
-//            lineData.addDataSet(generateLineData("concern", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
-//
-//            if (data3 != null) {
-//                for (float v : data3) {
-//                    valueList3.add(v);
-//                }
-//            }
-//
-//            lineData.addDataSet(generateLineData("problem", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myred)));
+            if (data3 != null) {
+                for (float v : data3) {
+                    valueList3.add(v);
+                }
+            }
+
+            lineData.addDataSet(generateLineData("pt3", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myred)));
         } catch (Exception ex) {
             return;
         }
@@ -278,8 +301,8 @@ public class PipeMeasureActivity extends BaseActivity {
 
         XAxis xAxis = lineChartRawData.getXAxis();
         int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
-//        xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
-//        xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
+        xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
+        xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
 
         xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
 
@@ -334,6 +357,8 @@ public class PipeMeasureActivity extends BaseActivity {
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("measuredFreq1", measuredFreq1);
+        returnIntent.putExtra("measuredFreq2", measuredFreq2);
+        returnIntent.putExtra("measuredFreq3", measuredFreq3);
 
         returnIntent.putExtra("analysisData", analysisData);
 
@@ -355,15 +380,30 @@ public class PipeMeasureActivity extends BaseActivity {
                     return;
                 }
 
-                analysisData.setMeasureData1(measureDataSensor1);
-
-                bMeasure = true;
                 isUpload = false;
 
-                measuredFreq1 = measureDataSensor1.getAxisBuf().getfFreq();
+                switch( nowMeasurePosition ) {
+                    case 1:
+                        analysisData.setMeasureData1(measureDataSensor1);
+                        measuredFreq1 = measureDataSensor1.getAxisBuf().getfFreq();
+                        break;
+                    case 2:
+                        analysisData.setMeasureData2(measureDataSensor1);
+                        measuredFreq2 = measureDataSensor1.getAxisBuf().getfFreq();
+                        break;
+                    case 3:
+                        analysisData.setMeasureData3(measureDataSensor1);
+                        measuredFreq3 = measureDataSensor1.getAxisBuf().getfFreq();
+                        break;
+                }
+
+
+                if( measuredFreq1 != null && measuredFreq2 != null && measuredFreq3 != null ) {
+                    bMeasure = true;
+                }
 
                 try {
-                    drawChart(measuredFreq1);
+                    drawChart();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

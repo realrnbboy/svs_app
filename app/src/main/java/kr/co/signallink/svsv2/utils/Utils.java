@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 import kr.co.signallink.svsv2.commons.DefCMDOffset;
+import kr.co.signallink.svsv2.model.Constants;
 import kr.co.signallink.svsv2.services.MyApplication;
 
 import static java.lang.Math.log10;
@@ -185,7 +186,7 @@ public class Utils {
     }
 
     // csv 파일 저장
-    public static String createCsv(String type, String [] title, float [] xData, float [] data1, float [] data2, float [] data3) {
+    public static String createCsv(String type, String [] title, float [] xData, float [] data1, float [] data2, float [] data3, float [] data4, float [] data5) {
         if( !(data1.length == data2.length || data2.length == data3.length) ) {    // 데이터 사이즈가 맞지 않은 경우
             return null;
         }
@@ -226,6 +227,14 @@ public class Utils {
                 fw.write(String.valueOf(data2[i]));
                 fw.write(",");
                 fw.write(String.valueOf(data3[i]));
+                if( data4 != null ) {
+                    fw.write(",");
+                    fw.write(String.valueOf(data4[i]));
+                }
+                if( data5 != null ) {
+                    fw.write(",");
+                    fw.write(String.valueOf(data5[i]));
+                }
 
                 fw.newLine();
             }
@@ -241,9 +250,11 @@ public class Utils {
     }
 
     static public float[] getConcernDataList() {
-        float[] list = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
+        int MAX_X_VALUE = Constants.MAX_PIPE_X_VALUE;
+        //MAX_X_VALUE = DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX;
+        float[] list = new float[MAX_X_VALUE];
 
-        for( int i = 0; i<DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX; i++ ) {
+        for( int i = 0; i<MAX_X_VALUE; i++ ) {
             list[i] = (float) (10 * ((log10(i+1) + 0.48017) / 2.127612));
         }
 
@@ -251,9 +262,11 @@ public class Utils {
     }
 
     static public float[] getProblemDataList() {
-        float[] list = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
+        int MAX_X_VALUE = Constants.MAX_PIPE_X_VALUE;
+        //MAX_X_VALUE = DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX;
+        float[] list = new float[MAX_X_VALUE];
 
-        for( int i = 0; i<DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX; i++ ) {
+        for( int i = 0; i<MAX_X_VALUE; i++ ) {
             list[i] = (float) (10 * ((log10(i+1) + 1.871083) / 2.084547));
         }
 

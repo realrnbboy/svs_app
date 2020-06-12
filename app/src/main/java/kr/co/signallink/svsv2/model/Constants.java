@@ -52,4 +52,6 @@ public class Constants {
     // for HDEC
     public static final int MAX_PRESET = 100;
     public static final int FEATURE_COUNT = 25;
+
+    public static final int MAX_PIPE_X_VALUE = 300; // added by hslee 2020.06.08
 }

@@ -40,6 +40,7 @@ import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.AnalysisEntity;
 import kr.co.signallink.svsv2.databases.DatabaseUtil;
 import kr.co.signallink.svsv2.dto.AnalysisData;
+import kr.co.signallink.svsv2.model.Constants;
 import kr.co.signallink.svsv2.model.CriteriaModel;
 import kr.co.signallink.svsv2.model.RmsModel;
 import kr.co.signallink.svsv2.utils.ToastUtil;
@@ -167,13 +168,27 @@ public class PipeResultActivity extends BaseActivity {
                     for( AnalysisEntity analysisEntity : preiviousAnalysisEntityList ) {
                         RmsModel rmsModel = new RmsModel();
                         rmsModel.setRms1(analysisEntity.getRms1());
+                        rmsModel.setRms2(analysisEntity.getRms2());
+                        rmsModel.setRms3(analysisEntity.getRms3());
                         rmsModel.setCreated(analysisEntity.getCreated());
 
-                        float [] newFreq = new float[analysisEntity.getFrequency().size()];
-                        for( int i = 0; i<analysisEntity.getFrequency().size(); i++ ) {
-                            newFreq[i] = analysisEntity.getFrequency().get(i).floatValue();
+                        float [] newFreq1 = new float[analysisEntity.getFrequency1().size()];
+                        for( int i = 0; i<analysisEntity.getFrequency1().size(); i++ ) {
+                            newFreq1[i] = analysisEntity.getFrequency1().get(i).floatValue();
                         }
-                        rmsModel.setFrequency(newFreq);
+                        rmsModel.setFrequency1(newFreq1);
+
+                        float [] newFreq2 = new float[analysisEntity.getFrequency2().size()];
+                        for( int i = 0; i<analysisEntity.getFrequency2().size(); i++ ) {
+                            newFreq2[i] = analysisEntity.getFrequency2().get(i).floatValue();
+                        }
+                        rmsModel.setFrequency2(newFreq2);
+
+                        float [] newFreq3 = new float[analysisEntity.getFrequency3().size()];
+                        for( int i = 0; i<analysisEntity.getFrequency3().size(); i++ ) {
+                            newFreq3[i] = analysisEntity.getFrequency3().get(i).floatValue();
+                        }
+                        rmsModel.setFrequency3(newFreq3);
 
                         rmsModelList.add(rmsModel);
                     }
@@ -211,8 +226,10 @@ public class PipeResultActivity extends BaseActivity {
             public void onClick(View v) {
 
                 float [] data1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
-                float [] data2 = Utils.getConcernDataList();
-                float [] data3 = Utils.getProblemDataList();
+                float [] data2 = analysisData.getMeasureData2().getAxisBuf().getfFreq();
+                float [] data3 = analysisData.getMeasureData3().getAxisBuf().getfFreq();
+                float [] data4 = Utils.getConcernDataList();
+                float [] data5 = Utils.getProblemDataList();
                 float [] xData = new float[analysisData.getMeasureData1().getAxisBuf().getfFreq().length];
 
                 // x축 데이터 구성
@@ -221,7 +238,7 @@ public class PipeResultActivity extends BaseActivity {
                 }
 
                 // csv로 raw data 데이터 저장
-                String fileName = Utils.createCsv("pipe", new String [] {"X", "PT1", "concern", "problem"}, xData, data1, data2, data3);
+                String fileName = Utils.createCsv("pipe", new String [] {"X", "PT1", "PT2", "PT3", "concern", "problem"}, xData, data1, data2, data3, data4, data5);
                 if( fileName == null ) {
                     ToastUtil.showShort("failed to save csv.");
                 }
@@ -259,16 +276,40 @@ public class PipeResultActivity extends BaseActivity {
 
                     float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();
                     analysisEntity.setRms1(rms1);
+                    float rms2 = analysisData.getMeasureData2().getSvsTime().getdRms();
+                    analysisEntity.setRms2(rms2);
+                    float rms3 = analysisData.getMeasureData3().getSvsTime().getdRms();
+                    analysisEntity.setRms3(rms3);
 
-                    RealmList<Double> frequency = new RealmList<>();
-                    float[] frequencyFloat = analysisData.getMeasureData1().getAxisBuf().getfFreq();
-                    if( frequencyFloat != null ) {
-                        for( int i = 0; i<frequencyFloat.length; i++ ) {
-                            frequency.add((double)frequencyFloat[i]);
+                    RealmList<Double> frequency1 = new RealmList<>();
+                    float[] frequencyFloat1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
+                    if( frequencyFloat1 != null ) {
+                        for( int i = 0; i<frequencyFloat1.length; i++ ) {
+                            frequency1.add((double)frequencyFloat1[i]);
                         }
                     }
 
-                    analysisEntity.setFrequency(frequency);
+                    analysisEntity.setFrequency1(frequency1);
+
+                    RealmList<Double> frequency2 = new RealmList<>();
+                    float[] frequencyFloat2 = analysisData.getMeasureData2().getAxisBuf().getfFreq();
+                    if( frequencyFloat2 != null ) {
+                        for( int i = 0; i<frequencyFloat2.length; i++ ) {
+                            frequency2.add((double)frequencyFloat2[i]);
+                        }
+                    }
+
+                    analysisEntity.setFrequency2(frequency2);
+
+                    RealmList<Double> frequency3 = new RealmList<>();
+                    float[] frequencyFloat3 = analysisData.getMeasureData3().getAxisBuf().getfFreq();
+                    if( frequencyFloat3 != null ) {
+                        for( int i = 0; i<frequencyFloat3.length; i++ ) {
+                            frequency3.add((double)frequencyFloat3[i]);
+                        }
+                    }
+
+                    analysisEntity.setFrequency3(frequency3);
 
                     AnalysisEntity result = realm.copyToRealmOrUpdate(analysisEntity);
                     if( result != null ) {
@@ -371,14 +412,18 @@ public class PipeResultActivity extends BaseActivity {
         }
 
         float[] data1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
-        float[] data2 = Utils.getConcernDataList();
-        float[] data3 = Utils.getProblemDataList();
+        float[] data2 = analysisData.getMeasureData2().getAxisBuf().getfFreq();
+        float[] data3 = analysisData.getMeasureData3().getAxisBuf().getfFreq();
+        float[] data4 = Utils.getConcernDataList();
+        float[] data5 = Utils.getProblemDataList();
 
         LineData lineData = new LineData();
 
         ArrayList<Float> valueList1 = new ArrayList<>();
         ArrayList<Float> valueList2 = new ArrayList<>();
         ArrayList<Float> valueList3 = new ArrayList<>();
+        ArrayList<Float> valueList4 = new ArrayList<>();
+        ArrayList<Float> valueList5 = new ArrayList<>();
 
         try {
 
@@ -396,7 +441,7 @@ public class PipeResultActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("concern", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
+            lineData.addDataSet(generateLineData("pt2", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
 
             if (data3 != null) {
                 for (float v : data3) {
@@ -404,7 +449,23 @@ public class PipeResultActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("problem", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myred)));
+            lineData.addDataSet(generateLineData("pt3", valueList3, ContextCompat.getColor(getBaseContext(), R.color.hotpink)));
+
+            if (data4 != null) {
+                for (float v : data4) {
+                    valueList4.add(v);
+                }
+            }
+
+            lineData.addDataSet(generateLineData("concern", valueList4, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
+
+            if (data5 != null) {
+                for (float v : data5) {
+                    valueList5.add(v);
+                }
+            }
+
+            lineData.addDataSet(generateLineData("problem", valueList5, ContextCompat.getColor(getBaseContext(), R.color.myred)));
 
         } catch (Exception ex) {
             return;
@@ -415,10 +476,11 @@ public class PipeResultActivity extends BaseActivity {
         lineData.setDrawValues(true);
 
         XAxis xAxis = lineChartRawData.getXAxis();
-        int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
-        xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
-        xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
-        xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+//        int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
+//        xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
+//        xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
+//        xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+        xAxis.setAxisMaximum(Constants.MAX_PIPE_X_VALUE);
 
         lineChartRawData.setData(lineData);
         lineChartRawData.invalidate();

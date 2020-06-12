@@ -17,7 +17,9 @@ public class RmsModel implements Serializable {
     public double rms3;
     private boolean bShowCause; // rms1,2,3이 good이면 cause 표시하지 않음
     private long created;
-    private float[] frequency;
+    private float[] frequency1;
+    private float[] frequency2;
+    private float[] frequency3;
 
     public boolean isbProjectVib() {
         return bProjectVib;
@@ -27,12 +29,28 @@ public class RmsModel implements Serializable {
         this.bProjectVib = bProjectVib;
     }
 
-    public float[] getFrequency() {
-        return frequency;
+    public float[] getFrequency1() {
+        return frequency1;
     }
 
-    public void setFrequency(float[] frequency) {
-        this.frequency = frequency;
+    public void setFrequency1(float[] frequency1) {
+        this.frequency1 = frequency1;
+    }
+
+    public float[] getFrequency2() {
+        return frequency2;
+    }
+
+    public void setFrequency2(float[] frequency2) {
+        this.frequency2 = frequency2;
+    }
+
+    public float[] getFrequency3() {
+        return frequency3;
+    }
+
+    public void setFrequency3(float[] frequency3) {
+        this.frequency3 = frequency3;
     }
 
     public double getRms1() {

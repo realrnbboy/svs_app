@@ -285,7 +285,7 @@ public class ResultActivity extends BaseActivity {
                 }
 
                 // csv로 raw data 데이터 저장
-                String fileName = Utils.createCsv("pump", new String [] {"X", "PT1", "PT2", "PT3"}, xData, data1, data2, data3);
+                String fileName = Utils.createCsv("pump", new String [] {"X", "PT1", "PT2", "PT3"}, xData, data1, data2, data3, null, null);
                 if( fileName == null ) {
                     ToastUtil.showShort("failed to save csv.");
                 }

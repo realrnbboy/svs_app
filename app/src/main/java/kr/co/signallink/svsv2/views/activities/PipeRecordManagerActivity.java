@@ -44,6 +44,7 @@ import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.AnalysisEntity;
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.CauseModel;
+import kr.co.signallink.svsv2.model.Constants;
 import kr.co.signallink.svsv2.model.RmsModel;
 import kr.co.signallink.svsv2.utils.DateUtil;
 import kr.co.signallink.svsv2.utils.SizeUtil;
@@ -241,34 +242,54 @@ public class PipeRecordManagerActivity extends BaseActivity {
     private void drawChartRawData(int entityIndex) {
 
         float[] data1 = null;
-        float[] data2 = Utils.getConcernDataList();
-        float[] data3 = Utils.getProblemDataList();
+        float[] data2 = null;
+        float[] data3 = null;
+        float[] data4 = Utils.getConcernDataList();
+        float[] data5 = Utils.getProblemDataList();
         if( bShowPreviousData ) {    // 이전화면(ResultDiagnosisActivity)에서 전달받은 데이터를 사용할 경우
 //            if (analysisData == null) {
 //                return;
 //            }
 
             //data1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
-           data1 = previousRmsModelList.get(entityIndex).getFrequency();
+            data1 = previousRmsModelList.get(entityIndex).getFrequency1();
+            data2 = previousRmsModelList.get(entityIndex).getFrequency2();
+            data3 = previousRmsModelList.get(entityIndex).getFrequency3();
         }
-        else
-            {
-            data1 = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
+        else {
+            //data1 = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];data1 = new float[Constants.MAX_PIPE_X_VALUE];
+            data1 = new float[Constants.MAX_PIPE_X_VALUE];
+            data2 = new float[Constants.MAX_PIPE_X_VALUE];
+            data3 = new float[Constants.MAX_PIPE_X_VALUE];
 
             AnalysisEntity analysisEntity = analysisEntityList.get(entityIndex);
             if( analysisEntity != null ) {
-                RealmList<Double> frequencyList = analysisEntity.getFrequency();
-                if( frequencyList != null ) {
-                    for (int i = 0; i < frequencyList.size(); i++) {
-                        double frequency = frequencyList.get(i);
+                RealmList<Double> frequencyList1 = analysisEntity.getFrequency1();
+                if( frequencyList1 != null ) {
+                    for (int i = 0; i < frequencyList1.size(); i++) {
+                        double frequency = frequencyList1.get(i);
                         data1[i] = (float)frequency;
+                    }
+                }
+                RealmList<Double> frequencyList2 = analysisEntity.getFrequency2();
+                if( frequencyList2 != null ) {
+                    for (int i = 0; i < frequencyList2.size(); i++) {
+                        double frequency = frequencyList2.get(i);
+                        data2[i] = (float)frequency;
+                    }
+                }
+                RealmList<Double> frequencyList3 = analysisEntity.getFrequency3();
+                if( frequencyList3 != null ) {
+                    for (int i = 0; i < frequencyList3.size(); i++) {
+                        double frequency = frequencyList3.get(i);
+                        data3[i] = (float)frequency;
                     }
                 }
             }
         }
 
-        if( data1 == null ) {
-            DefLog.d(TAG, "data1 is null");
+        if( data1 == null || data2 == null || data3 == null ) {
+            DefLog.d(TAG, "data is null");
             return;
         }
 
@@ -277,6 +298,8 @@ public class PipeRecordManagerActivity extends BaseActivity {
         ArrayList<Float> valueList1 = new ArrayList<>();
         ArrayList<Float> valueList2 = new ArrayList<>();
         ArrayList<Float> valueList3 = new ArrayList<>();
+        ArrayList<Float> valueList4 = new ArrayList<>();
+        ArrayList<Float> valueList5 = new ArrayList<>();
 
         try {
             if (data1 != null) {
@@ -293,7 +316,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("concern", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange), false));
+            lineData.addDataSet(generateLineData("pt2", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myblue), false));
 
             if (data3 != null) {
                 for (float v : data3) {
@@ -301,7 +324,23 @@ public class PipeRecordManagerActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("problem", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myred), false));
+            lineData.addDataSet(generateLineData("pt3", valueList3, ContextCompat.getColor(getBaseContext(), R.color.hotpink), false));
+
+            if (data4 != null) {
+                for (float v : data4) {
+                    valueList4.add(v);
+                }
+            }
+
+            lineData.addDataSet(generateLineData("concern", valueList4, ContextCompat.getColor(getBaseContext(), R.color.myorange), false));
+
+            if (data5 != null) {
+                for (float v : data5) {
+                    valueList5.add(v);
+                }
+            }
+
+            lineData.addDataSet(generateLineData("problem", valueList5, ContextCompat.getColor(getBaseContext(), R.color.myred), false));
         } catch (Exception ex) {
             return;
         }
@@ -311,10 +350,11 @@ public class PipeRecordManagerActivity extends BaseActivity {
         lineData.setDrawValues(true);
 
         XAxis xAxis = lineChartRawData.getXAxis();
-        int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
-        xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
-        xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
-        xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+//        int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
+//        xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
+//        xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
+//        xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+        xAxis.setAxisMaximum(Constants.MAX_PIPE_X_VALUE);
 
         lineChartRawData.setData(lineData);
         lineChartRawData.invalidate();
@@ -502,6 +542,8 @@ public class PipeRecordManagerActivity extends BaseActivity {
         LineData lineData = new LineData();
 
         ArrayList<Float> yDataList1 = new ArrayList<>();
+        ArrayList<Float> yDataList2 = new ArrayList<>();
+        ArrayList<Float> yDataList3 = new ArrayList<>();
 
         rmsXDataList.clear();
         lineChartRms.clear();
@@ -513,6 +555,8 @@ public class PipeRecordManagerActivity extends BaseActivity {
                 //float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();
                 for( RmsModel rmsModel : previousRmsModelList ) {
                     yDataList1.add((float) rmsModel.getRms1());
+                    yDataList2.add((float) rmsModel.getRms2());
+                    yDataList3.add((float) rmsModel.getRms3());
 
                     Date created = new Date(rmsModel.getCreated());
                     rmsXDataList.add(created);
@@ -523,6 +567,14 @@ public class PipeRecordManagerActivity extends BaseActivity {
                 LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), true);
                 if (lineDataSet1 != null)
                     lineData.addDataSet(lineDataSet1);
+
+                LineDataSet lineDataSet2 = generateLineData("pt2", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange), true);
+                if (lineDataSet2 != null)
+                    lineData.addDataSet(lineDataSet2);
+
+                LineDataSet lineDataSet3 = generateLineData("pt3", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue), true);
+                if (lineDataSet3 != null)
+                    lineData.addDataSet(lineDataSet3);
 
 //                if( bShowInitPreviousReport ) {
 //                    drawChartRawData((rmsXDataList.size() - 1) < 0 ? 0 : rmsXDataList.size() - 1);    // 하단 차트 초기데이터일때 그리기
@@ -538,6 +590,8 @@ public class PipeRecordManagerActivity extends BaseActivity {
             try {
                 for( AnalysisEntity analysisEntity : analysisEntityList ) {
                     yDataList1.add(analysisEntity.getRms1());
+                    yDataList2.add(analysisEntity.getRms2());
+                    yDataList3.add(analysisEntity.getRms3());
 
                     Date created = new Date(analysisEntity.getCreated());
                     rmsXDataList.add(created);
@@ -546,10 +600,20 @@ public class PipeRecordManagerActivity extends BaseActivity {
                 LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), true);
                 if (lineDataSet1 != null) {
                     lineData.addDataSet(lineDataSet1);
+                }
 
-                    if( bShowInitPreviousReport ) {
-                        drawChartRawData((rmsXDataList.size() - 1) < 0 ? 0 : rmsXDataList.size() - 1);    // 하단 차트 초기데이터일때 그리기
-                    }
+                LineDataSet lineDataSet2 = generateLineData("pt2", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange), true);
+                if (lineDataSet2 != null) {
+                    lineData.addDataSet(lineDataSet2);
+                }
+
+                LineDataSet lineDataSet3 = generateLineData("pt3", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue), true);
+                if (lineDataSet3 != null) {
+                    lineData.addDataSet(lineDataSet3);
+                }
+
+                if( bShowInitPreviousReport ) {
+                    drawChartRawData((rmsXDataList.size() - 1) < 0 ? 0 : rmsXDataList.size() - 1);    // 하단 차트 초기데이터일때 그리기
                 }
 
             } catch (Exception e) {

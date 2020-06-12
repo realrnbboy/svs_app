@@ -916,13 +916,27 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 for( AnalysisEntity analysisEntity : preiviousAnalysisEntityList ) {
                     RmsModel rmsModel = new RmsModel();
                     rmsModel.setRms1(analysisEntity.getRms1());
+                    rmsModel.setRms2(analysisEntity.getRms2());
+                    rmsModel.setRms3(analysisEntity.getRms3());
                     rmsModel.setCreated(analysisEntity.getCreated());
 
-                    float [] newFreq = new float[analysisEntity.getFrequency().size()];
-                    for( int i = 0; i<analysisEntity.getFrequency().size(); i++ ) {
-                        newFreq[i] = analysisEntity.getFrequency().get(i).floatValue();
+                    float [] newFreq1 = new float[analysisEntity.getFrequency1().size()];
+                    for( int i = 0; i<analysisEntity.getFrequency1().size(); i++ ) {
+                        newFreq1[i] = analysisEntity.getFrequency1().get(i).floatValue();
                     }
-                    rmsModel.setFrequency(newFreq);
+                    rmsModel.setFrequency1(newFreq1);
+
+                    float [] newFreq2 = new float[analysisEntity.getFrequency2().size()];
+                    for( int i = 0; i<analysisEntity.getFrequency2().size(); i++ ) {
+                        newFreq2[i] = analysisEntity.getFrequency2().get(i).floatValue();
+                    }
+                    rmsModel.setFrequency2(newFreq2);
+
+                    float [] newFreq3 = new float[analysisEntity.getFrequency3().size()];
+                    for( int i = 0; i<analysisEntity.getFrequency3().size(); i++ ) {
+                        newFreq3[i] = analysisEntity.getFrequency3().get(i).floatValue();
+                    }
+                    rmsModel.setFrequency3(newFreq3);
 
                     rmsModelList.add(rmsModel);
                 }

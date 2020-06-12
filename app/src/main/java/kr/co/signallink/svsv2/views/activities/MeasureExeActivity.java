@@ -40,6 +40,7 @@ import kr.co.signallink.svsv2.dto.SVSCode;
 import kr.co.signallink.svsv2.dto.SVSParam;
 import kr.co.signallink.svsv2.dto.SVSTime;
 import kr.co.signallink.svsv2.dto.UploadData;
+import kr.co.signallink.svsv2.model.Constants;
 import kr.co.signallink.svsv2.services.UartService;
 import kr.co.signallink.svsv2.user.ConnectSVSItem;
 import kr.co.signallink.svsv2.user.ConnectSVSItems;
@@ -77,7 +78,8 @@ public class MeasureExeActivity extends Activity {
     int connectTryCount = 0;    // added by hslee 2020.03.30
     int trySensorNumber = 0;  // 현재 시도 중인 센서
 
-    boolean bModePump = true; // sensor or pipe
+    boolean bModePump = true; // true pump, false pipe
+    int nowMeasurePosition = 1; // 측정하려는 센서 위치
 
     private final BroadcastReceiver StatusChangeReceiverOnMain = new BroadcastReceiver() {
 
@@ -279,7 +281,8 @@ public class MeasureExeActivity extends Activity {
 
         SVS.getInstance().trySensorIndex = 0;
 
-        bModePump = getIntent().getBooleanExtra("modeSensor", true);
+        bModePump = getIntent().getBooleanExtra("modePump", true);
+        nowMeasurePosition = getIntent().getIntExtra("measurePosition", 1);
 
         Log.d("TTTT","SVS AutoMode onCreate");
 
@@ -444,6 +447,15 @@ public class MeasureExeActivity extends Activity {
             if(measureDatas.size() > 0)
             {
                 MeasureData measureData = measureDatas.get(0);
+                if( !bModePump ) {  // added by hslee 2020.06.08 파이프는 rawdata를 300개만 사용
+                    float [] newFreq = new float[Constants.MAX_PIPE_X_VALUE];
+                    float [] freq = measureData.getAxisBuf().getfFreq();
+                    for( int i = 0; i < Constants.MAX_PIPE_X_VALUE; i++ ) {
+                        newFreq[i] = freq[i];
+                    }
+
+                    measureData.getAxisBuf().setfFreq(newFreq);
+                }
 
 //                String td = "";
 //                for( int i = 0; i<1024; i++ ) {
@@ -577,6 +589,12 @@ public class MeasureExeActivity extends Activity {
         String message = equipmentName
                 + " " + connectSVSItems.getCurrentIndexSvsLocation().toString().toUpperCase()
                 + "\n\n"+ subMessage + "...";
+
+        if( !bModePump ) {  // added by hslee 2020.06.02 pipe인 경우
+            message = equipmentName
+                    + " PT" + nowMeasurePosition
+                    + "\n\n"+ subMessage + "...";
+        }
 
         ProgressBar progressBar = findViewById(R.id.progressBar);
         TextView textViewTitle = findViewById(R.id.textViewTitle);

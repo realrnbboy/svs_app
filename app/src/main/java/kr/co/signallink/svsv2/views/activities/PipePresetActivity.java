@@ -55,6 +55,8 @@ public class PipePresetActivity extends BaseActivity {
     SendMessageHandler handler;
 
     float [] measuredFreq1 = null;  // measureActivity에서 측정된 데이터
+    float [] measuredFreq2 = null;  // measureActivity에서 측정된 데이터
+    float [] measuredFreq3 = null;  // measureActivity에서 측정된 데이터
     AnalysisData m_analysisData = null;
 
     boolean bRemeasure = true;  // measureActivity 화면에서 다시 측정해야 할지 여부, 값을 변경하면 측정을 다시해야 함
@@ -123,6 +125,8 @@ public class PipePresetActivity extends BaseActivity {
                     intent.putExtra("analysisData", analysisData);
                     intent.putExtra("equipmentUuid", equipmentUuid);
                     intent.putExtra("measuredFreq1", measuredFreq1);
+                    intent.putExtra("measuredFreq2", measuredFreq2);
+                    intent.putExtra("measuredFreq3", measuredFreq3);
                     startActivityForResult(intent, DefConstant.REQUEST_MEASUREACTIVITY_RESULT);
                     //startActivity(intent);
                 }
@@ -251,10 +255,12 @@ public class PipePresetActivity extends BaseActivity {
 
             if (requestCode == DefConstant.REQUEST_MEASUREACTIVITY_RESULT) {
                 measuredFreq1 = (float[]) data.getSerializableExtra("measuredFreq1");
+                measuredFreq2 = (float[]) data.getSerializableExtra("measuredFreq2");
+                measuredFreq3 = (float[]) data.getSerializableExtra("measuredFreq3");
 
                 m_analysisData = (AnalysisData) data.getSerializableExtra("analysisData");
 
-                if( measuredFreq1 == null ) { // 측정된 데이터가 없는 경우
+                if( measuredFreq1 == null && measuredFreq2 == null && measuredFreq3 == null ) { // 측정된 데이터가 없는 경우
                     bRemeasure = true;
                 }
                 else {  // 측정된 데이터가 있는 경우
@@ -288,7 +294,7 @@ public class PipePresetActivity extends BaseActivity {
 
         // 기존에 측정한 데이터가 있고, 재측정을 안해도 되는 상태인데 값을 변경한 경우
         // 같은 창이 두 번 안뜬 경우
-        if( measuredFreq1 != null && !bRemeasure ) {
+        if( (measuredFreq1 != null || measuredFreq2 != null || measuredFreq3 != null) && !bRemeasure ) {
 
             DialogUtil.yesNo(PipePresetActivity.this,
                     "info",
@@ -297,6 +303,8 @@ public class PipePresetActivity extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             measuredFreq1 = null;
+                            measuredFreq2 = null;
+                            measuredFreq3 = null;
 
                             m_analysisData = null;
 

@@ -116,6 +116,9 @@ public class MonitoringRawDataActivity extends BaseActivity{
     //UUID
     private String svsUuid = null;
 
+    float[] samplingRateTime = new float [MEASURE_AXIS_TIME_ELE_MAX];      // added by hslee 2020.06.17
+    float[] samplingRateFreq = new float [MEASURE_AXIS_FREQ_ELE_MAX];      // added by hslee 2020.06.17
+
     public static Activity thisActivity;
 
     private final BroadcastReceiver StatusChangeReceiverOnChart = new BroadcastReceiver() {
@@ -555,12 +558,53 @@ public class MonitoringRawDataActivity extends BaseActivity{
 
     }
 
+    // added by hslee 2020.06.17
+    private void makeXAxisFloatValue() {
+
+        try {
+            int size = svs.getMeasureDatas().size();
+
+            if( size > 0 ) {
+                ArrayList<MeasureData> measureDatas = svs.getMeasureDatas();
+                int len = measureDatas.size();
+
+                int count = -1;
+
+                //가장 최근 데이터부터 검사
+                for(int i=len-1; i>=0; i--) {
+                    MeasureData measureData = measureDatas.get(i);
+
+                    SVSAxisBuf axisBuf = measureData.getAxisBuf();
+                    if(axisBuf.getInputFreqLength() > 0 || axisBuf.getInputTimeLength() > 0) {  // 값을 있을 경우만 사용
+                        float tSamplingRateTime = 0;
+                        for( int j = 0; j < MEASURE_AXIS_TIME_ELE_MAX; j++ ) {
+                            tSamplingRateTime = (1 / measureData.getfSplFreqMes() + tSamplingRateTime);
+                            samplingRateTime[j] = tSamplingRateTime;
+                        }
+
+                        float tSamplingRateFreq = 0;
+                        for( int j = 0; j < MEASURE_AXIS_FREQ_ELE_MAX; j++ ) {
+                            tSamplingRateFreq = (measureData.getfSplFreqMes() / 1024 / 2 + tSamplingRateFreq);
+                            samplingRateFreq[j] = tSamplingRateFreq;
+                        }
+                        break;
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            DefLog.d(TAG, e.toString());
+        }
+    }
+
     private void applyXAxisOptions(XAxis xAxis, final DefConstant.TrendValue trendValue)
     {
-        final int xAxisDataSize = trendValue == RAW_TIME ? 512 /*MEASURE_AXIS_TIME_ELE_MAX*/ : MEASURE_AXIS_FREQ_ELE_MAX;
+        //final int xAxisDataSize = trendValue == RAW_TIME ? 512 /*MEASURE_AXIS_TIME_ELE_MAX*/ : MEASURE_AXIS_FREQ_ELE_MAX;
+        final int xAxisDataSize = trendValue == RAW_TIME ? MEASURE_AXIS_TIME_ELE_MAX /*MEASURE_AXIS_TIME_ELE_MAX*/ : MEASURE_AXIS_FREQ_ELE_MAX;   // added by hslee 2020.06.17
 
         xAxis.setGranularity(xAxisDataSize / 4);
-        xAxis.setAxisMaximum(xAxisDataSize * MEASURE_AXIS_RATIO);
+        xAxis.setAxisMaximum(xAxisDataSize);   // added by hslee 2020.06.17
+        //xAxis.setAxisMaximum(xAxisDataSize * MEASURE_AXIS_RATIO);
 
         if(trendValue == RAW_TIME)
         {
@@ -607,9 +651,12 @@ public class MonitoringRawDataActivity extends BaseActivity{
                                     tvTimeStamp.setText("Time "+strDate);
 
                                     //x축 표기
-                                    float samplingFreqHz = DefComboBox.samplingfreqToHz(uploadData.getSvsParam().getnSplFreq());
-                                    float xValue = index / samplingFreqHz;
-                                    str = ""+ StringUtil.decimalFormatDot3(xValue);
+//                                    float samplingFreqHz = DefComboBox.samplingfreqToHz(uploadData.getSvsParam().getnSplFreq());
+//                                    float xValue = index / samplingFreqHz;
+//                                    str = ""+ StringUtil.decimalFormatDot3(xValue);   // added by hslee 2020.06.17
+
+                                    //samplingRateTime = (1 / measureData.getfSplFreqMes() + samplingRateTime);
+                                    str = value == 2048 ? String.valueOf(samplingRateTime[(int)value-1]) : String.valueOf(samplingRateTime[(int)value]);   // added by hslee 2020.06.17
 
                                     break;
                                 }
@@ -669,9 +716,11 @@ public class MonitoringRawDataActivity extends BaseActivity{
                                     //tvFreqDomainTimeStamp.setText("Capture "+strDate);
 
                                     //x축 표기
-                                    float samplingFreqHz = DefComboBox.samplingfreqToHz(uploadData.getSvsParam().getnSplFreq());
-                                    float xValue = samplingFreqHz * index / xAxisDataSize;
-                                    str = ""+ StringUtil.decimalFormatDot0(xValue);
+//                                    float samplingFreqHz = DefComboBox.samplingfreqToHz(uploadData.getSvsParam().getnSplFreq());
+//                                    float xValue = samplingFreqHz * index / xAxisDataSize;
+//                                    str = ""+ StringUtil.decimalFormatDot0(xValue);      // added by hslee 2020.06.17
+
+                                    str = value == 1024 ? String.valueOf(samplingRateFreq[(int)value-1]) : String.valueOf(samplingRateFreq[(int)value]);       // added by hslee 2020.06.17
                                     break;
                                 }
                             }
@@ -777,6 +826,8 @@ public class MonitoringRawDataActivity extends BaseActivity{
     };
 
     public void update() {
+
+        makeXAxisFloatValue();  // added by hslee   2020.06.17
 
         uploadData = svs.getUploaddata();
 

@@ -72,9 +72,21 @@ public class APIManager {
                     else
                     {
                         AuthLoginResponse.Datum user = body.user;
-                        if(StringUtil.isEmpty(user.id) || StringUtil.isEmpty(user.company_id) || StringUtil.isEmpty(user.email) || StringUtil.isEmpty(user.full_name))
+                        if(StringUtil.isEmpty(user.id) )
                         {
                             showFailMessage(onApiListener, "Fatal(2):"+"Wrong User Data.");
+                        }
+                        else if( StringUtil.isEmpty(user.company_id) )
+                        {
+                            showFailMessage(onApiListener, "Fatal(3):"+"Wrong User Data.");
+                        }
+                        else if( StringUtil.isEmpty(user.email) )
+                        {
+                            showFailMessage(onApiListener, "Fatal(4):"+"Wrong User Data.");
+                        }
+                        else if(StringUtil.isEmpty(user.full_name))
+                        {
+                            showFailMessage(onApiListener, "Fatal(5):"+"Wrong User Data.");
                         }
                         else
                         {

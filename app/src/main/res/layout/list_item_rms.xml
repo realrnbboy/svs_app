@@ -16,7 +16,7 @@
 
         <TextView
             android:id="@+id/textViewName"
-            android:layout_width="30dp"
+            android:layout_width="75dp"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:layout_gravity="center"
@@ -24,7 +24,7 @@
             android:textSize="@dimen/font_midium"
             android:includeFontPadding="false"
             android:fontFamily=""
-            android:text="PT1"/>
+            android:text="Horizontal"/>
 
         <TextView
             android:id="@+id/textViewRms"

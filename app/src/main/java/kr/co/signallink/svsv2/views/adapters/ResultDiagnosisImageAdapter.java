@@ -1,6 +1,7 @@
 package kr.co.signallink.svsv2.views.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.model.DiagnosisImageModel;
+import kr.co.signallink.svsv2.views.activities.ImageDetailActivity;
 
 
 /**
@@ -30,12 +33,14 @@ import kr.co.signallink.svsv2.model.DiagnosisImageModel;
 public class ResultDiagnosisImageAdapter extends ArrayAdapter<DiagnosisImageModel> {
     private Context context;
     private int itemLayoutResource;
+    int listviewSize;
 
 
     public ResultDiagnosisImageAdapter(Context context, int itemLayoutResource, ArrayList<DiagnosisImageModel> diagnosisImageModel) {
         super(context, itemLayoutResource, diagnosisImageModel);
         this.itemLayoutResource = itemLayoutResource;
         this.context = context;
+        listviewSize = diagnosisImageModel.size();
     }
 
 
@@ -63,7 +68,27 @@ public class ResultDiagnosisImageAdapter extends ArrayAdapter<DiagnosisImageMode
 
             // 만들어진 Bitmap 객체를 이미지뷰에 표시.
             ImageView ImageViewDiagnosis = view.findViewById(R.id.ImageViewDiagnosis);
-            ImageViewDiagnosis.setImageBitmap(bm) ;
+            ImageViewDiagnosis.setImageBitmap(bm);
+
+            if( listviewSize == position + 1 ) { // 마지막 아이템이면 아래 마진 추가
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                params.setMargins(0, 0, 0, 200);
+                ImageViewDiagnosis.setLayoutParams(params);
+            }
+
+            ImageViewDiagnosis.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    // 이미지 상세보기 화면으로 이동
+                    Intent intent = new Intent(getContext(), ImageDetailActivity.class);
+                    intent.putExtra("fileName", diagnosisImageModel.getFileName());
+                    getContext().startActivity(intent);
+                }
+            });
 
             is.close() ;
         } catch (Exception e) {

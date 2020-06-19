@@ -26,8 +26,9 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/equipment"/>
+            android:layout_height="180dp"
+            android:background="@android:color/white"
+            android:src="@drawable/measure_pipe"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,7 +84,7 @@
                     android:button="@android:color/transparent"
                     android:paddingVertical="@dimen/padding_default"
                     android:checked="true"
-                    android:text="PT 1" />
+                    android:text="Vertical" />
 
                 <RadioButton
                     android:id="@+id/radioButtonSensorPosition2"
@@ -95,7 +96,7 @@
                     android:background="@drawable/radiobutton_background"
                     android:button="@android:color/transparent"
                     android:paddingVertical="@dimen/padding_default"
-                    android:text="PT 2" />
+                    android:text="Horizontal" />
 
                 <RadioButton
                     android:id="@+id/radioButtonSensorPosition3"
@@ -107,7 +108,7 @@
                     android:background="@drawable/radiobutton_background"
                     android:button="@android:color/transparent"
                     android:paddingVertical="@dimen/padding_default"
-                    android:text="PT 3" />
+                    android:text="Axial" />
             </RadioGroup>
         </LinearLayout>
 

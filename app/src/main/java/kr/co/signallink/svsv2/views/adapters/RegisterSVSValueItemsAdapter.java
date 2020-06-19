@@ -32,12 +32,18 @@ public class RegisterSVSValueItemsAdapter extends BaseAdapter {
     private ArrayAdapter<DefFile.SVS_LOCATION> svsLocAdapter;
     private List<DefFile.SVS_LOCATION> svsLocations;
 
-    public RegisterSVSValueItemsAdapter(Context context, List<RegisterSVSItem> devices) {
+    public RegisterSVSValueItemsAdapter(Context context, List<RegisterSVSItem> devices, String pipePumpMode) {
         this.context = context;
         inflater = LayoutInflater.from(context);
 
         this.devices = devices;
-        svsLocations = DefFile.SVS_LOCATION.getArrayList();
+        //svsLocations = DefFile.SVS_LOCATION.getArrayList(); // added by hslee
+        if( "pump".equals(pipePumpMode) ) {
+            svsLocations = DefFile.SVS_LOCATION.getArrayList(); // added by hslee
+        }
+        else {
+            svsLocations = DefFile.SVS_LOCATION.getArrayListPipe(); // added by hslee   need to modify 파이프, 펌프 구분
+        }
         svsLocAdapter = new ArrayAdapter<DefFile.SVS_LOCATION>(context, R.layout.spinner_item, svsLocations);
         svsLocAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     }

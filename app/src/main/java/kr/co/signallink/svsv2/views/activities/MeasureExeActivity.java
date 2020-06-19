@@ -591,8 +591,15 @@ public class MeasureExeActivity extends Activity {
                 + "\n\n"+ subMessage + "...";
 
         if( !bModePump ) {  // added by hslee 2020.06.02 pipe인 경우
+
+            String position = " Vertical";
+            if( nowMeasurePosition == 2 )
+                position = " Horizontal";
+            else if( nowMeasurePosition == 3 )
+                position = " Axial";
+
             message = equipmentName
-                    + " PT" + nowMeasurePosition
+                    + position
                     + "\n\n"+ subMessage + "...";
         }
 

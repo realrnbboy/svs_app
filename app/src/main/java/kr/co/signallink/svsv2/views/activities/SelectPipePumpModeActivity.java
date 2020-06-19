@@ -38,18 +38,18 @@ public class SelectPipePumpModeActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_pipe_pump);
+        setContentView(R.layout.activity_select_pipe_pump_new);
 
-        llRoot = findViewById(R.id.llRoot);
-        llMode1 = findViewById(R.id.llMode1);
-        llMode2 = findViewById(R.id.llMode2);
-
-        //그라디언트 뷰
-        AnimateGradientView agv = findViewById(R.id.agv);
-
-        //블러효과
-        llMode1.setBlurredView(llRoot);
-        llMode2.setBlurredView(llRoot);
+//        llRoot = findViewById(R.id.llRoot);
+//        llMode1 = findViewById(R.id.llMode1);
+//        llMode2 = findViewById(R.id.llMode2);
+//
+//        //그라디언트 뷰
+//        AnimateGradientView agv = findViewById(R.id.agv);
+//
+//        //블러효과
+//        llMode1.setBlurredView(llRoot);
+//        llMode2.setBlurredView(llRoot);
 
 
     }

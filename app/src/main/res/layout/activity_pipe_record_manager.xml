@@ -101,6 +101,14 @@
                         android:textColor="@color/myblue"
                         android:textSize="@dimen/font_midium"
                         android:text="endd" />
+
+                    <ImageButton
+                        android:id="@+id/imageButtonSearch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_default"
+                        android:background="@null"
+                        android:src="@drawable/ic_search_8da6d3_24dp"/>
                 </LinearLayout>
 
                     <RelativeLayout

@@ -69,7 +69,8 @@ public class ResultActivity extends BaseActivity {
     boolean bRmsResultGood2 = false;    // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
     boolean bRmsResultGood3 = false;    // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
 
-    boolean bSaved = false; // 저장여부
+    boolean bSavedDb = false; // 저장여부
+    boolean bSavedCsv = false; // 저장여부
 
     boolean bShowChartPt1 = true; // 차트의 pt1 표시 여부
     boolean bShowChartPt2 = true; // 차트의 pt2 표시 여부
@@ -196,8 +197,8 @@ public class ResultActivity extends BaseActivity {
                 // 다음 화면으로 이동
                 Intent intent;
 
-                if( bRmsResultGood1 && bRmsResultGood2 && bRmsResultGood3 ) {   // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
-                    intent = new Intent(getBaseContext(), RecordManagerActivity.class);
+                if( !(bRmsResultGood1 && bRmsResultGood2 && bRmsResultGood3) ) {   // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
+                    intent = new Intent(getBaseContext(), RecordManagerActivity.class); // for test
                 }
                 else {
                     intent = new Intent(getBaseContext(), ResultDiagnosisActivity.class);
@@ -259,7 +260,7 @@ public class ResultActivity extends BaseActivity {
             public void onClick(View v) {
 
                 // db에 진단 결과 데이터 저장
-                if( bSaved ) {
+                if( bSavedDb ) {
                     ToastUtil.showShort("already saved.");
                 }
                 else {
@@ -273,6 +274,10 @@ public class ResultActivity extends BaseActivity {
         buttonSaveCsv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if( bSavedCsv ) {
+                    ToastUtil.showShort("already saved.");
+                    return;
+                }
 
                 float [] data1 = analysisData.csvMeasureData1;
                 float [] data2 = analysisData.csvMeasureData2;
@@ -285,12 +290,13 @@ public class ResultActivity extends BaseActivity {
                 }
 
                 // csv로 raw data 데이터 저장
-                String fileName = Utils.createCsv("pump", new String [] {"X", "PT1", "PT2", "PT3"}, xData, data1, data2, data3, null, null);
+                String fileName = Utils.createCsv("pump", new String [] {"X", "Vertical", "Horizontal", "Axial"}, xData, data1, data2, data3, null, null);
                 if( fileName == null ) {
                     ToastUtil.showShort("failed to save csv.");
                 }
                 else {
                     ToastUtil.showLong("saved as \"/SVSdata/csv/pump/" + fileName + "\"");
+                    bSavedCsv = true;
                 }
 
             }
@@ -397,7 +403,7 @@ public class ResultActivity extends BaseActivity {
                     AnalysisEntity result = realm.copyToRealmOrUpdate(analysisEntity);
                     if( result != null ) {
                         ToastUtil.showShort("save success.");
-                        bSaved = true;
+                        bSavedDb = true;
                     }
                     else {
                         ToastUtil.showShort("failed to save.");
@@ -415,9 +421,9 @@ public class ResultActivity extends BaseActivity {
         RmsModel rmsModel2 = new RmsModel();
         RmsModel rmsModel3 = new RmsModel();
 
-        rmsModel1.setName("PT1");
-        rmsModel2.setName("PT2");
-        rmsModel3.setName("PT3");
+        rmsModel1.setName("Vertical");
+        rmsModel2.setName("Horizontal");
+        rmsModel3.setName("Axial");
 
         float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();
         float rms2 = analysisData.getMeasureData2().getSvsTime().getdRms();
@@ -556,7 +562,7 @@ public class ResultActivity extends BaseActivity {
                     }
                 }
 
-                lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
+                lineData.addDataSet(generateLineData("Vertical", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
             }
 
             if( bShowChartPt2 ) {
@@ -566,7 +572,7 @@ public class ResultActivity extends BaseActivity {
                     }
                 }
 
-                lineData.addDataSet(generateLineData("pt2", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
+                lineData.addDataSet(generateLineData("Horizontal", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
             }
 
             if( bShowChartPt3 ) {
@@ -576,7 +582,7 @@ public class ResultActivity extends BaseActivity {
                     }
                 }
 
-                lineData.addDataSet(generateLineData("pt3", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
+                lineData.addDataSet(generateLineData("Axial", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
             }
         } catch (Exception ex) {
             return;

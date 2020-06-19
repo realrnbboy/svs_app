@@ -352,7 +352,7 @@ public class MeasureActivity extends BaseActivity {
                     }
                 }
 
-                lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
+                lineData.addDataSet(generateLineData("Vertical", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
             }
 
             if( bShowChartPt2 ) {
@@ -362,7 +362,7 @@ public class MeasureActivity extends BaseActivity {
                     }
                 }
 
-                lineData.addDataSet(generateLineData("pt2", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
+                lineData.addDataSet(generateLineData("Horizontal", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
             }
 
             if( bShowChartPt3 ) {
@@ -372,7 +372,7 @@ public class MeasureActivity extends BaseActivity {
                     }
                 }
 
-                lineData.addDataSet(generateLineData("pt3", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
+                lineData.addDataSet(generateLineData("Axial", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
             }
         } catch (Exception ex) {
             return;

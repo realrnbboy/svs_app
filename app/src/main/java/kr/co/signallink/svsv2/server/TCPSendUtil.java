@@ -617,7 +617,7 @@ public class TCPSendUtil {
             tcpSend.send(tcpSendData);
 
             try {
-                //Thread.sleep(1000);
+                //Thread.sleep(1000)s;
             }
             catch (Exception e) {
                 e.printStackTrace();

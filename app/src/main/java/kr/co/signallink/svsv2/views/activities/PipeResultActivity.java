@@ -17,12 +17,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
@@ -43,6 +45,7 @@ import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.Constants;
 import kr.co.signallink.svsv2.model.CriteriaModel;
 import kr.co.signallink.svsv2.model.RmsModel;
+import kr.co.signallink.svsv2.utils.DateUtil;
 import kr.co.signallink.svsv2.utils.ToastUtil;
 import kr.co.signallink.svsv2.utils.Utils;
 import kr.co.signallink.svsv2.views.adapters.CriteriaListAdapter;
@@ -67,7 +70,8 @@ public class PipeResultActivity extends BaseActivity {
 
     String equipmentUuid = null;
 
-    boolean bSaved = false; // 저장여부
+    boolean bSavedDb = false; // 저장여부
+    boolean bSavedCsv = false; // 저장여부
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -211,7 +215,7 @@ public class PipeResultActivity extends BaseActivity {
             public void onClick(View v) {
 
                 // db에 진단 결과 데이터 저장
-                if( bSaved ) {
+                if( bSavedDb ) {
                     ToastUtil.showShort("already saved.");
                 }
                 else {
@@ -224,6 +228,10 @@ public class PipeResultActivity extends BaseActivity {
         buttonSaveCsv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if( bSavedCsv ) {
+                    ToastUtil.showShort("already saved.");
+                    return;
+                }
 
                 float [] data1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
                 float [] data2 = analysisData.getMeasureData2().getAxisBuf().getfFreq();
@@ -238,12 +246,13 @@ public class PipeResultActivity extends BaseActivity {
                 }
 
                 // csv로 raw data 데이터 저장
-                String fileName = Utils.createCsv("pipe", new String [] {"X", "PT1", "PT2", "PT3", "concern", "problem"}, xData, data1, data2, data3, data4, data5);
+                String fileName = Utils.createCsv("pipe", new String [] {"X", "Vertical", "Horizontal", "Axial", "concern", "problem"}, xData, data1, data2, data3, data4, data5);
                 if( fileName == null ) {
                     ToastUtil.showShort("failed to save csv.");
                 }
                 else {
                     ToastUtil.showLong("saved as \"/SVSdata/csv/pipe/" + fileName + "\"");
+                    bSavedCsv = true;
                 }
 
             }
@@ -314,7 +323,7 @@ public class PipeResultActivity extends BaseActivity {
                     AnalysisEntity result = realm.copyToRealmOrUpdate(analysisEntity);
                     if( result != null ) {
                         ToastUtil.showShort("save success.");
-                        bSaved = true;
+                        bSavedDb = true;
                     }
                     else {
                         ToastUtil.showShort("failed to save.");
@@ -370,7 +379,7 @@ public class PipeResultActivity extends BaseActivity {
 
         YAxis leftAxis = lineChartRawData.getAxisLeft();
         leftAxis.setDrawGridLines(false);
-        leftAxis.setAxisMinimum(0);
+        leftAxis.setAxisMinimum(1);
         leftAxis.setTextColor(Color.WHITE);
 
         XAxis xAxis = lineChartRawData.getXAxis();
@@ -382,6 +391,18 @@ public class PipeResultActivity extends BaseActivity {
         //xAxis.setAxisMaximum(80);
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
+
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {   // added by hslee 2020.06.19
+
+                int index = (int)value;
+                if( index == 0 )
+                    return "1";
+                else
+                    return String.valueOf(index);
+            }
+        });
 
         final ScrollView scrollView = findViewById(R.id.scrollView);
         lineChartRawData.setOnTouchListener(new View.OnTouchListener() {    // 차크 클릭 시, 스크롤뷰의 스크롤 기능을 off 하여 차트 스크롤 기능을 방해하지 않게 함.
@@ -433,7 +454,7 @@ public class PipeResultActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
+            lineData.addDataSet(generateLineData("Vertical", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
 
             if (data2 != null) {
                 for (float v : data2) {
@@ -441,7 +462,7 @@ public class PipeResultActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("pt2", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
+            lineData.addDataSet(generateLineData("Horizontal", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
 
             if (data3 != null) {
                 for (float v : data3) {
@@ -449,7 +470,7 @@ public class PipeResultActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("pt3", valueList3, ContextCompat.getColor(getBaseContext(), R.color.hotpink)));
+            lineData.addDataSet(generateLineData("Axial", valueList3, ContextCompat.getColor(getBaseContext(), R.color.hotpink)));
 
             if (data4 != null) {
                 for (float v : data4) {

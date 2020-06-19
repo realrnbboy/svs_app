@@ -1,5 +1,6 @@
 package kr.co.signallink.svsv2.views.activities;
 
+import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,6 +20,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -636,6 +638,15 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         }
     };
 
+
+    private DatePickerDialog.OnDateSetListener datePickerDialoglistenerStart = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            //Toast.makeText(getApplicationContext(), year + "년" + monthOfYear + "월" + dayOfMonth +"일", Toast.LENGTH_SHORT).show();
+        }
+    };
+
     private ItemClickUtil.OnItemClickListener onItemClickListener = new ItemClickUtil.OnItemClickListener() {
         @Override
         public void onItemClicked(RecyclerView recyclerView, final int position, View v) {
@@ -653,17 +664,16 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                     @Override
                     public void onBtnClicked(int viewIdx) {
 
-                        if(viewIdx == 0)
-                        {
+                        if(viewIdx == 0) {
                             svs.setSelectedEquipmentUuid(uuid);
                             goIntent(SVSLocationManualModeActivity.class);
                         }
-                        else if(viewIdx == 1)
-                        {
+                        else if(viewIdx == 1) {
                             svs.setSelectedEquipmentUuid(uuid);
 
                             HashMap map = new HashMap();
                             map.put(EXTRA_EQUIPMENT_UUID, uuid);
+                            map.put("pipePumpMode", pipePumpMode);    // added by hslee 2020.06.18
                             map.put(EXTRA_EQUIPMENT_NAME, name);
                             goIntent(DetailUpdateActivity.class, false, map);
                         }

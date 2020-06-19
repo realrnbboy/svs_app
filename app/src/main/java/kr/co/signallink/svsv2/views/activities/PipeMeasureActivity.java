@@ -21,12 +21,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
@@ -138,13 +140,13 @@ public class PipeMeasureActivity extends BaseActivity {
                 }
                 else {  // 측정을 하지 않은 경우
                     if( measuredFreq1 == null ) {
-                        ToastUtil.showShort("Please measure pt1");
+                        ToastUtil.showShort("Please measure vertical");
                     }
                     else if( measuredFreq2 == null ) {
-                        ToastUtil.showShort("Please measure pt2");
+                        ToastUtil.showShort("Please measure horizontal");
                     }
                     else {
-                        ToastUtil.showShort("Please measure pt3");
+                        ToastUtil.showShort("Please measure axial");
                     }
                 }
             }
@@ -215,12 +217,24 @@ public class PipeMeasureActivity extends BaseActivity {
         xAxis.setDrawGridLines(false);
         //xAxis.setAvoidFirstLastClipping(true); //X 축에서 처음과 끝에 있는 라벨이 짤리는걸 방지해 준다. (index 0번째를 그냥 없앨때도 있다.)
 
-        //xAxis.setAxisMinimum(0);
+        xAxis.setAxisMinimum(0);
         //xAxis.setAxisMaximum(svs.getMeasureDatas().size()-1);
         //xAxis.setAxisMaximum(80);
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
         //applyXAxisDefault(xAxis, l);
+
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {   // added by hslee 2020.06.19
+
+                int index = (int)value;
+                if( index == 0 )
+                    return "1";
+                else
+                    return String.valueOf(index);
+            }
+        });
 
         final ScrollView scrollView = findViewById(R.id.scrollView);
         lineChartRawData.setOnTouchListener(new View.OnTouchListener() {    // 차크 클릭 시, 스크롤뷰의 스크롤 기능을 off 하여 차트 스크롤 기능을 방해하지 않게 함.
@@ -275,7 +289,7 @@ public class PipeMeasureActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("pt1", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
+            lineData.addDataSet(generateLineData("Vertical", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen)));
 
             if (data2 != null) {
                 for (float v : data2) {
@@ -283,7 +297,7 @@ public class PipeMeasureActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("pt2", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
+            lineData.addDataSet(generateLineData("Horizontal", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
 //
             if (data3 != null) {
                 for (float v : data3) {
@@ -291,7 +305,7 @@ public class PipeMeasureActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("pt3", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myred)));
+            lineData.addDataSet(generateLineData("Axial", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myred)));
         } catch (Exception ex) {
             return;
         }

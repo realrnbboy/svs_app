@@ -406,6 +406,7 @@ public class SVSLocationAutoModeActivity extends BaseActivity {
                     connectSVSItem.setSvsUuid(svsEntity.getUuid());
                     connectSVSItem.setAddress(svsEntity.getAddress());
                     connectSVSItem.setSvsLocation(svsEntity.getSvsLocation());
+                    svsEntity.setMeasureOption(DefConstant.MEASURE_OPTION.RAW_WITH_FREQ);  // added by hslee
 
                     connectSVSItems.add(connectSVSItem);
                 }

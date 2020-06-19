@@ -186,7 +186,7 @@ public class RegisterActivity extends BaseActivity implements SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(this);
 
         registerSVSValueItems = new ArrayList<RegisterSVSItem>();
-        registerSVSValueItemsAdapter = new RegisterSVSValueItemsAdapter(this, registerSVSValueItems);
+        registerSVSValueItemsAdapter = new RegisterSVSValueItemsAdapter(this, registerSVSValueItems, pipePumpMode);
 
         ListView newDevicesListView = findViewById(R.id.svs_register);
         newDevicesListView.setAdapter(registerSVSValueItemsAdapter);
@@ -499,8 +499,8 @@ public class RegisterActivity extends BaseActivity implements SwipeRefreshLayout
                 //사진에 맞는 svs가 없을 경우 경고 출력
                 if(!matchingPathToSVS)
                 {
-                    ToastUtil.showLong("Please set the SVS for the "+i+"th Photos");
-                    return false;
+                    //ToastUtil.showLong("Please set the SVS for the "+i+"th Photos");  // added by hslee 2020.06.18
+                    //return false;
                 }
             }
         }

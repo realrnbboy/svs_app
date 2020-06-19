@@ -1,13 +1,17 @@
 package kr.co.signallink.svsv2.views.activities;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -140,6 +144,28 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         }
     }
 
+    private DatePickerDialog.OnDateSetListener datePickerDialoglistenerStart = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            monthOfYear++;  // 1작은 숫자로 반환됨
+            String month = monthOfYear < 10 ? "0"+monthOfYear : String.valueOf(monthOfYear);    // 2자리수 채우기
+            String day = dayOfMonth < 10 ? "0"+dayOfMonth : String.valueOf(dayOfMonth);    // 2자리수 채우기
+            textViewStartd.setText(year + "-" + month + "-" + day);
+        }
+    };
+
+    private DatePickerDialog.OnDateSetListener datePickerDialoglistenerEnd = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            monthOfYear++;  // 1작은 숫자로 반환됨
+            String month = monthOfYear < 10 ? "0"+monthOfYear : String.valueOf(monthOfYear);    // 2자리수 채우기
+            String day = dayOfMonth < 10 ? "0"+dayOfMonth : String.valueOf(dayOfMonth);    // 2자리수 채우기
+            textViewEndd.setText(year + "-" + month + "-" + day);
+        }
+    };
+
     void initView() {
 
         String endd = Utils.getCurrentTime("yyyy-MM-dd");
@@ -150,6 +176,51 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         textViewStartd.setText(startd);
         textViewEndd = findViewById(R.id.textViewEndd);
         textViewEndd.setText(endd);
+
+        textViewStartd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    String []date = textViewStartd.getText().toString().split("-");
+                    int year = Integer.parseInt(date[0]);
+                    int month = Integer.parseInt(date[1]);
+                    int day = Integer.parseInt(date[2]);
+                    DatePickerDialog dialog = new DatePickerDialog(RecordManagerActivity.this, datePickerDialoglistenerStart, year, month-1, day);
+                    dialog.show();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        textViewEndd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    String []date = textViewEndd.getText().toString().split("-");
+                    int year = Integer.parseInt(date[0]);
+                    int month = Integer.parseInt(date[1]);
+                    int day = Integer.parseInt(date[2]);
+                    DatePickerDialog dialog = new DatePickerDialog(RecordManagerActivity.this, datePickerDialoglistenerEnd, year, month-1, day);
+                    dialog.show();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        ImageButton imageButtonSearch = findViewById(R.id.imageButtonSearch);
+        imageButtonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String start = textViewStartd.getText().toString();
+                String endd = Utils.addDateDay(textViewEndd.getText().toString(), 1, "yyyy-MM-dd"); // 00시부터 계산하기 때문에 다음날 0시이전의 데이터를 가져오기 위해 +1해줌
+
+                bShowPreviousData = false;
+                getDataFromDb(false, start, endd);
+            }
+        });
 
         listViewResultDiagnosis = findViewById(R.id.listViewCause);
 
@@ -524,7 +595,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                 if( bShowChartPt1 ) {
                     //yDataList1.add(rms1);
 
-                    LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen));
+                    LineDataSet lineDataSet1 = generateLineData("Vertical", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen));
                     if (lineDataSet1 != null)
                         lineData.addDataSet(lineDataSet1);
                 }
@@ -532,7 +603,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                 if( bShowChartPt2 ) {
                     //yDataList2.add(rms2);
 
-                    LineDataSet lineDataSet2 = generateLineData("pt2", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange));
+                    LineDataSet lineDataSet2 = generateLineData("Horizontal", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange));
                     if (lineDataSet2 != null)
                         lineData.addDataSet(lineDataSet2);
                 }
@@ -540,7 +611,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                 if( bShowChartPt3 ) {
                     //yDataList3.add(rms3);
 
-                    LineDataSet lineDataSet3 = generateLineData("pt3", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue));
+                    LineDataSet lineDataSet3 = generateLineData("Axial", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue));
                     if (lineDataSet3 != null)
                         lineData.addDataSet(lineDataSet3);
                 }
@@ -568,19 +639,19 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
 
 
                 if( bShowChartPt1 ) {
-                    LineDataSet lineDataSet1 = generateLineData("pt1", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen));
+                    LineDataSet lineDataSet1 = generateLineData("Vertical", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen));
                     if (lineDataSet1 != null)
                         lineData.addDataSet(lineDataSet1);
                 }
 
                 if( bShowChartPt2 ) {
-                    LineDataSet lineDataSet2 = generateLineData("pt2", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange));
+                    LineDataSet lineDataSet2 = generateLineData("Horizontal", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange));
                     if (lineDataSet2 != null)
                         lineData.addDataSet(lineDataSet2);
                 }
 
                 if( bShowChartPt3 ) {
-                    LineDataSet lineDataSet3 = generateLineData("pt3", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue));
+                    LineDataSet lineDataSet3 = generateLineData("Axial", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue));
                     if (lineDataSet3 != null)
                         lineData.addDataSet(lineDataSet3);
                 }

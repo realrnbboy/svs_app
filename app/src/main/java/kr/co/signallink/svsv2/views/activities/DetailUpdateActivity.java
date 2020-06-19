@@ -121,6 +121,7 @@ public class DetailUpdateActivity extends BaseActivity implements SwipeRefreshLa
     private int lastSelectIdx = -1;
 
 
+    String pipePumpMode;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,6 +135,7 @@ public class DetailUpdateActivity extends BaseActivity implements SwipeRefreshLa
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        pipePumpMode = getIntent().getStringExtra("pipePumpMode");
 
 
         customListDialog = new CustomListDialog(this, R.array.custom_list_dialog_image);
@@ -216,7 +218,7 @@ public class DetailUpdateActivity extends BaseActivity implements SwipeRefreshLa
         swipeRefreshLayout.setOnRefreshListener(this);
 
         registerSVSValueItems = new ArrayList<RegisterSVSItem>();
-        registerSVSValueItemsAdapter = new RegisterSVSValueItemsAdapter(this, registerSVSValueItems);
+        registerSVSValueItemsAdapter = new RegisterSVSValueItemsAdapter(this, registerSVSValueItems, pipePumpMode);
 
         ListView newDevicesListView = findViewById(R.id.svs_detailupdate);
         newDevicesListView.setAdapter(registerSVSValueItemsAdapter);

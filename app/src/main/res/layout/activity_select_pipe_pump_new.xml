@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:agv="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#282b2f"
+    tools:context=".views.activities.SelectPipePumpModeActivity"
+    android:id="@+id/llRoot"
+    >
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#2799FA"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="MODE SELECTION"
+                    android:textColor="@color/color1"
+                    android:textSize="@dimen/font_large"
+                    android:textStyle="bold"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/linearLayoutPump"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/mode_select_layout_height"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:onClick="mode2"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/layout_round"
+                            android:orientation="horizontal">
+
+                            <ImageButton
+                                android:layout_width="@dimen/mode_select_image_size"
+                                android:layout_height="@dimen/mode_select_image_size"
+                                android:layout_margin="20dp"
+                                android:background="@drawable/pump"
+                                android:onClick="mode2"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="160dp"
+                            android:layout_marginStart="@dimen/mode_select_margin_left"
+                            android:layout_marginEnd="@dimen/mode_select_margin_left"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/font_large_sm"
+                                    android:text="API610"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/font_large_sm"
+                                    android:text="ANSI-HI-9.6.8"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/font_large_sm"
+                                    android:text="ISO 10816"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_default"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/font_large_sm"
+                                    android:textColor="@android:color/white"
+                                    android:text="Rotating"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/font_large_sm"
+                                    android:textColor="@android:color/white"
+                                    android:text="machinery"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/font_larger"
+                                    android:textColor="@android:color/white"
+                                    android:textStyle="bold"
+                                    android:text="PUMP"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayoutPipe"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/mode_select_layout_height"
+                        android:gravity="center"
+                        android:onClick="mode1"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/layout_round"
+                            android:orientation="horizontal">
+
+                            <ImageButton
+                                android:layout_width="@dimen/mode_select_image_size"
+                                android:layout_height="@dimen/mode_select_image_size"
+                                android:layout_margin="20dp"
+                                android:background="@drawable/pipe"
+                                android:onClick="mode1"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="160dp"
+                            android:layout_marginStart="@dimen/mode_select_margin_left"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/font_large_sm"
+                                    android:text="EI GUIDE 2"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:textSize="@dimen/font_small"
+                                    android:layout_gravity="top"
+                                    android:text="nd"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/font_large_sm"
+                                    android:text=" ED"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_default"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/font_larger"
+                                    android:textColor="@android:color/white"
+                                    android:textStyle="bold"
+                                    android:text="PIPE"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/font_larger"
+                                    android:textColor="@android:color/white"
+                                    android:textStyle="bold"
+                                    android:text="SYSTEM"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="28dp"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                        android:textScaleX="1.3"
+                        android:text="HDEC DIAGNOSIS"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_larger"
+                        android:textColor="@android:color/white"
+                        android:text="VER 2.0.0"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:background="#7FC4FD"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_margin="4dp"
+                    android:layout_width="160dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/hyundailogo"/>
+
+                <ImageView
+                    android:layout_margin="4dp"
+                    android:layout_width="160dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/signallink"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="bottom"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color1"
+                    android:text="Copyright 2018-2019. signallink." />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color1"
+                    android:text="All rights reserved." />
+                <TextView
+                    android:id="@+id/appversion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color1"
+                    android:text="SW Ver. " />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

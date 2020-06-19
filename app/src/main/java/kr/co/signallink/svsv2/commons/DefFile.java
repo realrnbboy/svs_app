@@ -145,10 +145,37 @@ public class DefFile {
             return index;
         }
 
-        public static ArrayList<SVS_LOCATION> getArrayList(){
+        public static ArrayList<SVS_LOCATION> getArrayList(){   // 추후 pipe, pump 구분 요청, 대비
 
             ArrayList<SVS_LOCATION> svsLocations = new ArrayList<>();
             for(SVS_LOCATION svsLocation : SVS_LOCATION.values()){
+                if("svs4".equals(svsLocation.title) )
+                    continue;
+
+//                svsLocation.title = "Vertical".equals(svsLocation.title) ? "svs1" : svsLocation.title;
+//                svsLocation.title = "Horizontal".equals(svsLocation.title) ? "svs2" : svsLocation.title;
+//                svsLocation.title = "Axial".equals(svsLocation.title) ? "svs3" : svsLocation.title;
+                svsLocation.title = "svs1".equals(svsLocation.title) ? "Vertical" : svsLocation.title;
+                svsLocation.title = "svs2".equals(svsLocation.title) ? "Horizontal" : svsLocation.title;
+                svsLocation.title = "svs3".equals(svsLocation.title) ? "Axial" : svsLocation.title;
+
+                svsLocations.add(svsLocation);
+            }
+
+            return svsLocations;
+        }
+
+        public static ArrayList<SVS_LOCATION> getArrayListPipe(){   // added by hslee 2020-06-16
+
+            ArrayList<SVS_LOCATION> svsLocations = new ArrayList<>();
+            for(SVS_LOCATION svsLocation : SVS_LOCATION.values()){
+                if("svs4".equals(svsLocation.title) )
+                    continue;
+
+                svsLocation.title = "svs1".equals(svsLocation.title) ? "Vertical" : svsLocation.title;
+                svsLocation.title = "svs2".equals(svsLocation.title) ? "Horizontal" : svsLocation.title;
+                svsLocation.title = "svs3".equals(svsLocation.title) ? "Axial" : svsLocation.title;
+
                 svsLocations.add(svsLocation);
             }
 

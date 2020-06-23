@@ -200,7 +200,16 @@
                 <Button
                     android:id="@+id/buttonClose"
                     style="@style/button_confirm"
+                    android:layout_weight="1"
                     android:text="close"/>
+
+                <Button
+                    android:id="@+id/buttonReport"
+                    style="@style/button_confirm"
+                    android:background="@drawable/btn_red_round"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:text="report"/>
 
             </LinearLayout>
 

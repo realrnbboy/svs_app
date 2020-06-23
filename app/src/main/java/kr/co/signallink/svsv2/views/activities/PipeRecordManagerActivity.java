@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -61,7 +62,6 @@ public class PipeRecordManagerActivity extends BaseActivity {
     private static final String TAG = "PipeRecordManagerActivity";
 
     //String dateFormat = "yyyy-MM-dd HH:mm";
-    AnalysisData analysisData = null;
     String equipmentUuid = null;
 
     LineChart lineChartRms;
@@ -71,12 +71,19 @@ public class PipeRecordManagerActivity extends BaseActivity {
     TextView textViewEndd;
 
     RealmResults<AnalysisEntity> analysisEntityList;
+    AnalysisEntity selectedAnalysisEntity;  // db에서 불러온 데이터 클릭했을 때 사용됨
+    RmsModel selectedRmsModel;  // 이전 화면에서 전달받은 데이터 클릭했을 때 사용됨
     ArrayList<RmsModel> previousRmsModelList;
     ArrayList<Date> rmsXDataList = new ArrayList<>();
     private final float XAXIS_LABEL_DEFAULT_ROATION = 70f;
 
     boolean bUsePreviousActivityData = false;
     boolean bShowPreviousData = true;   // 이전 화면에서 전달한 데이터를 사용할 경우, 아이템 클릭시 널포인트 오류가 나는 부분이 있음, 이를 구분하기 위해 사용
+
+    float[] reportData1;
+    float[] reportData2;
+    float[] reportData3;
+    String reportDate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,25 +108,6 @@ public class PipeRecordManagerActivity extends BaseActivity {
 
         equipmentUuid = intent.getStringExtra("equipmentUuid");
 
-//        // 이전 Activity 에서 전달받은 데이터 가져오기
-//        analysisData = (AnalysisData)intent.getSerializableExtra("analysisData");   // 초기데이터 안보여주기로 함. 2020.04.13
-//        if( analysisData != null ) {
-//
-//            Thread t = new Thread() {
-//                public void run() {
-//
-//                    // 차트 그리기
-//                    bUsePreviousActivityData = true;
-//                    drawChartRms(false);
-//                }
-//            };
-//
-//            t.start();
-//
-//            // 진단결과 값 추가
-//            drawChartRawData(0);
-//        }
-
         // 이전 Activity 에서 전달받은 데이터 가져오기
         previousRmsModelList = (ArrayList<RmsModel>)intent.getSerializableExtra("previousRmsModelList");
         if( previousRmsModelList != null ) {     // 초기데이터는 1주일 치 보여주기로 함. 2020.04.13
@@ -140,9 +128,6 @@ public class PipeRecordManagerActivity extends BaseActivity {
             };
 
             t.start();
-
-            // 진단결과 값 추가
-            //drawChartRawData(0);
         }
 
         //processButtonClickWeek(true);   // added by hslee 2020.04.13 초기화면에 1주일 정보 보여주기
@@ -259,6 +244,37 @@ public class PipeRecordManagerActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
+        Button buttonReport = findViewById(R.id.buttonReport);
+        buttonReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if( reportDate == null ) {
+                    ToastUtil.showShort("please select rms in Overall trend chart.");
+                    return;
+                }
+
+                // report1 화면으로 이동
+                Intent intent = new Intent(getBaseContext(), PipeReport1Activity.class);
+                intent.putExtra("equipmentUuid", equipmentUuid);
+
+                intent.putExtra("date", reportDate);
+                intent.putExtra("data1", reportData1);
+                intent.putExtra("data2", reportData2);
+                intent.putExtra("data3", reportData3);
+
+                String pipeName = bUsePreviousActivityData ? selectedRmsModel.getPipeName() : selectedAnalysisEntity.getPipeName();
+                String pipeImage = bUsePreviousActivityData ? selectedRmsModel.getPipeImage() : selectedAnalysisEntity.getPipeImage();
+                String pipeLocation = bUsePreviousActivityData ? selectedRmsModel.getPipeLocation() : selectedAnalysisEntity.getPipeLocation();
+                String pipeOperationScenario = bUsePreviousActivityData ? selectedRmsModel.getPipeOperationScenario() : selectedAnalysisEntity.getPipeOperationScenario();
+                intent.putExtra("pipeName", pipeName);
+                intent.putExtra("pipeImage", pipeImage);
+                intent.putExtra("pipeLocation", pipeLocation);
+                intent.putExtra("pipeOperationScenario", pipeOperationScenario);
+                startActivity(intent);
+            }
+        });
     }
 
     void processButtonClickWeek(boolean bShowInitPreviousReport) {
@@ -325,6 +341,8 @@ public class PipeRecordManagerActivity extends BaseActivity {
             data1 = previousRmsModelList.get(entityIndex).getFrequency1();
             data2 = previousRmsModelList.get(entityIndex).getFrequency2();
             data3 = previousRmsModelList.get(entityIndex).getFrequency3();
+
+            selectedRmsModel = previousRmsModelList.get(entityIndex);
         }
         else {
             //data1 = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];data1 = new float[Constants.MAX_PIPE_X_VALUE];
@@ -355,8 +373,14 @@ public class PipeRecordManagerActivity extends BaseActivity {
                         data3[i] = (float)frequency;
                     }
                 }
+
+                selectedAnalysisEntity = analysisEntity;
             }
         }
+
+        reportData1 = data1;
+        reportData2 = data2;
+        reportData3 = data3;
 
         if( data1 == null || data2 == null || data3 == null ) {
             DefLog.d(TAG, "data is null");
@@ -789,6 +813,9 @@ public class PipeRecordManagerActivity extends BaseActivity {
 
             TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRmsValue);
             textViewSelectedItemValue.setText(String.format("%.3f", e.getY()));
+
+            String x = lineChartRms.getXAxis().getValueFormatter().getFormattedValue(e.getX(), lineChartRms.getXAxis());
+            reportDate = "2020-" + x;   // 현재 구조에서 년도 가져올 방법이 없음.   // added by hslee 2020-06-22
         }
 
         @Override

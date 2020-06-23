@@ -41,6 +41,8 @@ import kr.co.signallink.svsv2.commons.DefCMDOffset;
 import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.AnalysisEntity;
 import kr.co.signallink.svsv2.databases.DatabaseUtil;
+import kr.co.signallink.svsv2.databases.EquipmentEntity;
+import kr.co.signallink.svsv2.databases.dao.RealmDao;
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.Constants;
 import kr.co.signallink.svsv2.model.CriteriaModel;
@@ -69,6 +71,7 @@ public class PipeResultActivity extends BaseActivity {
     LineChart lineChartRawData;
 
     String equipmentUuid = null;
+    EquipmentEntity selectedEquipmentEntity = null;
 
     boolean bSavedDb = false; // 저장여부
     boolean bSavedCsv = false; // 저장여부
@@ -112,13 +115,15 @@ public class PipeResultActivity extends BaseActivity {
 
         equipmentUuid = intent.getStringExtra("equipmentUuid");
 
+        selectedEquipmentEntity = new RealmDao<>(EquipmentEntity.class).loadByUuid(equipmentUuid);
+
         TextView textViewSiteCode = findViewById(R.id.textViewSiteCode);
         textViewSiteCode.setText(analysisData.pipeSiteCode);
         TextView textViewPumpCode = findViewById(R.id.textViewPumpCode);
         textViewPumpCode.setText(analysisData.pipePumpCode);
         TextView textViewProjectVibSpec = findViewById(R.id.textViewProjectVibSpec);
         textViewProjectVibSpec.setText(analysisData.pipeProjectVibSpec);
-        TextView textViewPipeName = findViewById(R.id.textViewPipeName);
+        final TextView textViewPipeName = findViewById(R.id.textViewPipeName);
         textViewPipeName.setText(analysisData.pipeName);
         TextView textViewLocation = findViewById(R.id.textViewLocation);
         textViewLocation.setText(analysisData.pipeLocation);
@@ -193,6 +198,11 @@ public class PipeResultActivity extends BaseActivity {
                             newFreq3[i] = analysisEntity.getFrequency3().get(i).floatValue();
                         }
                         rmsModel.setFrequency3(newFreq3);
+
+                        rmsModel.setPipeName(selectedEquipmentEntity.getName());
+                        rmsModel.setPipeImage(selectedEquipmentEntity.getImageUri());
+                        rmsModel.setPipeLocation(analysisData.pipeLocation);
+                        rmsModel.setPipeOperationScenario(analysisData.pipeEtcOperatingCondition);
 
                         rmsModelList.add(rmsModel);
                     }
@@ -319,6 +329,11 @@ public class PipeResultActivity extends BaseActivity {
                     }
 
                     analysisEntity.setFrequency3(frequency3);
+
+                    analysisEntity.setPipeName(selectedEquipmentEntity.getName());
+                    analysisEntity.setPipeImage(selectedEquipmentEntity.getImageUri());
+                    analysisEntity.setPipeLocation(analysisData.pipeLocation);
+                    analysisEntity.setPipeOperationScenario(analysisData.pipeEtcOperatingCondition);
 
                     AnalysisEntity result = realm.copyToRealmOrUpdate(analysisEntity);
                     if( result != null ) {

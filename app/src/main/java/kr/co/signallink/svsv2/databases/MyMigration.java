@@ -223,6 +223,15 @@ public class MyMigration implements RealmMigration {
                         .addRealmListField("frequency3", Double.class);
             }
 
+            //버전 19으로 마이그레이션 : AnalysisEntity 필드 추가
+            if( step == 19 ) {
+                schema.get("AnalysisEntity")
+                        .addField("pipeName", String.class)
+                        .addField("pipeImage", String.class)
+                        .addField("pipeLocation", String.class)
+                        .addField("pipeOperationScenario", String.class);
+            }
+
         }
     }
 }

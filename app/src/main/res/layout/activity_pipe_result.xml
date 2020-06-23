@@ -207,7 +207,6 @@
                             android:scrollbars="vertical"
                             android:maxLines="10"
                             android:minLines="1"
-                            android:inputType="textMultiLine"
                             android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
                             android:text="operating condition"/>
                     </LinearLayout>

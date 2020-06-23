@@ -720,7 +720,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 //                            intent.putExtra("equipmentUuid", uuid);
 //                            startActivity(intent);
                         }
-                        else if( viewIdx == 4 ) {   // added by hslee for test Analysis History
+                        else if( viewIdx == 4 ) {   // added by hslee Analysis History
 
                             try {
                                 String endd = Utils.getCurrentTime("yyyy-MM-dd");
@@ -768,7 +768,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                                 e.printStackTrace();
                             }
                         }
-                        else if( viewIdx == 4 ) {   // added by hslee for test Pipe Analysis History
+                        else if( viewIdx == 4 ) {   // added by hslee Pipe Analysis History
 
                             try {
                                 String endd = Utils.getCurrentTime("yyyy-MM-dd");
@@ -947,6 +947,12 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                         newFreq3[i] = analysisEntity.getFrequency3().get(i).floatValue();
                     }
                     rmsModel.setFrequency3(newFreq3);
+
+                    EquipmentEntity selectedEquipmentEntity = new RealmDao<>(EquipmentEntity.class).loadByUuid(uuid);
+                    rmsModel.setPipeName(selectedEquipmentEntity.getName());
+                    rmsModel.setPipeImage(selectedEquipmentEntity.getImageUri());
+                    rmsModel.setPipeLocation(analysisEntity.getPipeLocation());
+                    rmsModel.setPipeOperationScenario(analysisEntity.getPipeOperationScenario());
 
                     rmsModelList.add(rmsModel);
                 }

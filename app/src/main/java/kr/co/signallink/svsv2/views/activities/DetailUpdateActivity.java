@@ -491,8 +491,8 @@ public class DetailUpdateActivity extends BaseActivity implements SwipeRefreshLa
                 //사진에 맞는 svs가 없을 경우 경고 출력
                 if(!matchingPathToSVS)
                 {
-                    ToastUtil.showLong("Please set the SVS for the "+i+"th Photos");
-                    return false;
+                    //ToastUtil.showLong("Please set the SVS for the "+i+"th Photos");  // added by hslee 2020.06.18
+                    //return false;
                 }
             }
         }

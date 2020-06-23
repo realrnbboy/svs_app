@@ -21,6 +21,43 @@ public class RmsModel implements Serializable {
     private float[] frequency2;
     private float[] frequency3;
 
+    private String pipeName;
+    private String pipeImage;
+    private String pipeLocation;
+    private String pipeOperationScenario;
+
+    public String getPipeName() {
+        return pipeName;
+    }
+
+    public void setPipeName(String pipeName) {
+        this.pipeName = pipeName;
+    }
+
+    public String getPipeImage() {
+        return pipeImage;
+    }
+
+    public void setPipeImage(String pipeImage) {
+        this.pipeImage = pipeImage;
+    }
+
+    public String getPipeLocation() {
+        return pipeLocation;
+    }
+
+    public void setPipeLocation(String pipeLocation) {
+        this.pipeLocation = pipeLocation;
+    }
+
+    public String getPipeOperationScenario() {
+        return pipeOperationScenario;
+    }
+
+    public void setPipeOperationScenario(String pipeOperationScenario) {
+        this.pipeOperationScenario = pipeOperationScenario;
+    }
+
     public boolean isbProjectVib() {
         return bProjectVib;
     }

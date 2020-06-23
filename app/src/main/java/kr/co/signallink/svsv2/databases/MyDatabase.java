@@ -14,7 +14,7 @@ import kr.co.signallink.svsv2.utils.FileUtil;
 public class MyDatabase {
 
     private final String REALM_FILE_NAME = "RealmSVSInfos.realm";
-    private final int MigrationVersion = 19; //마이그레이션이 필요할때마다 버전을 1씩 올리고, MyMigration 클래스에 마이그레이션 항목을 정의해야한다.
+    private final int MigrationVersion = 20; //마이그레이션이 필요할때마다 버전을 1씩 올리고, MyMigration 클래스에 마이그레이션 항목을 정의해야한다.
 
     static MyDatabase myDatabase = null;
 

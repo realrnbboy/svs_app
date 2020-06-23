@@ -209,8 +209,7 @@
 
                 <LinearLayout
                     style="@style/item_sub_layout"
-                    android:layout_marginTop="@dimen/margin_default"
-                    android:layout_marginBottom="100dp">
+                    android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
                         android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
@@ -227,6 +226,12 @@
                         style="@style/preset_item_edittext"/>
                 </LinearLayout>
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageViewEquipment"
+                android:layout_marginBottom="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
     </ScrollView>

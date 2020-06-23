@@ -12,12 +12,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,9 +32,12 @@ import java.util.Locale;
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefConstant;
 import kr.co.signallink.svsv2.commons.DefLog;
+import kr.co.signallink.svsv2.databases.EquipmentEntity;
+import kr.co.signallink.svsv2.databases.dao.RealmDao;
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.VARIABLES_1_Type;
 import kr.co.signallink.svsv2.server.SendPost;
+import kr.co.signallink.svsv2.services.MyApplication;
 import kr.co.signallink.svsv2.services.SendMessageHandler;
 import kr.co.signallink.svsv2.utils.DialogUtil;
 import kr.co.signallink.svsv2.utils.ToastUtil;
@@ -61,6 +68,9 @@ public class PipePresetActivity extends BaseActivity {
 
     boolean bRemeasure = true;  // measureActivity 화면에서 다시 측정해야 할지 여부, 값을 변경하면 측정을 다시해야 함
 
+    private RequestManager mGlideRequestManager;
+    private EquipmentEntity selectedEquipmentEntity = null;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +90,7 @@ public class PipePresetActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         findViewById(R.id.button_record).setVisibility(View.GONE);  // 안쓰는 버튼 숨김
 
+        mGlideRequestManager = Glide.with(MyApplication.getInstance().getAppContext());
 
         final String strDate = Utils.getCurrentTime("dd-MMM-yyyy HH:mm", new Locale("en", "US"));
 
@@ -132,6 +143,11 @@ public class PipePresetActivity extends BaseActivity {
                 }
             }
         });
+
+        // 하단 장비 이미지 표시
+        ImageView imageViewEquipment = findViewById(R.id.imageViewEquipment);
+        selectedEquipmentEntity = new RealmDao<>(EquipmentEntity.class).loadByUuid(equipmentUuid);
+        mGlideRequestManager.load(selectedEquipmentEntity.getImageUri()).fitCenter().into(imageViewEquipment);
     }
 
     // measureactivity로 전달할 데이터 구성

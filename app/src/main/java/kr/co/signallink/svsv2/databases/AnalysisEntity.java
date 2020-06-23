@@ -23,6 +23,11 @@ public class AnalysisEntity extends RealmObject {
     private float rms2;
     private float rms3;
 
+    private String pipeName;
+    private String pipeImage;
+    private String pipeLocation;
+    private String pipeOperationScenario;
+
     private boolean bShowCause; // rms1,2,3이 good이면 cause 표시하지 않음
     public RealmList<String> cause;
     public RealmList<String> causeDesc;
@@ -32,6 +37,38 @@ public class AnalysisEntity extends RealmObject {
     public RealmList<Double> frequency1;
     public RealmList<Double> frequency2;
     public RealmList<Double> frequency3;
+
+    public String getPipeImage() {
+        return pipeImage;
+    }
+
+    public void setPipeImage(String pipeImage) {
+        this.pipeImage = pipeImage;
+    }
+
+    public String getPipeName() {
+        return pipeName;
+    }
+
+    public void setPipeName(String pipeName) {
+        this.pipeName = pipeName;
+    }
+
+    public String getPipeLocation() {
+        return pipeLocation;
+    }
+
+    public void setPipeLocation(String pipeLocation) {
+        this.pipeLocation = pipeLocation;
+    }
+
+    public String getPipeOperationScenario() {
+        return pipeOperationScenario;
+    }
+
+    public void setPipeOperationScenario(String pipeOperationScenario) {
+        this.pipeOperationScenario = pipeOperationScenario;
+    }
 
     public boolean isbShowCause() {
         return bShowCause;

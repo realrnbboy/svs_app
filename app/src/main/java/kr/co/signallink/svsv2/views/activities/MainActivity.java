@@ -168,7 +168,13 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         setContentView(R.layout.activity_main);
 
         pipePumpMode = getIntent().getStringExtra("pipePumpMode");
-        customListDialog = new CustomListDialog(this, R.array.custom_list_dialog_equipment);
+
+        if( "pipe".equals(pipePumpMode) ) {
+            customListDialog = new CustomListDialog(this, R.array.custom_list_dialog_equipment_pipe);
+        }
+        else {
+            customListDialog = new CustomListDialog(this, R.array.custom_list_dialog_equipment);
+        }
 
 
         initViews();
@@ -754,6 +760,32 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                                     rmsModel.setbShowCause(analysisEntity.isbShowCause());
                                     rmsModel.setCreated(analysisEntity.getCreated());
 
+                                    // added by hslee 2020.07.10
+                                    if( analysisEntity.cause != null ) {
+                                        rmsModel.cause = new String[analysisEntity.cause.size()];
+                                        for (int i = 0; i < analysisEntity.cause.size(); i++) {
+                                            rmsModel.cause[i] = analysisEntity.cause.get(i);
+                                        }
+                                    }
+                                    if( analysisEntity.causeDesc != null ) {
+                                        rmsModel.causeDesc = new String[analysisEntity.causeDesc.size()];
+                                        for (int i = 0; i < analysisEntity.causeDesc.size(); i++) {
+                                            rmsModel.causeDesc[i] = analysisEntity.causeDesc.get(i);
+                                        }
+                                    }
+                                    if( analysisEntity.rank != null ) {
+                                        rmsModel.rank = new double[analysisEntity.rank.size()];
+                                        for (int i = 0; i < analysisEntity.rank.size(); i++) {
+                                            rmsModel.rank[i] = analysisEntity.rank.get(i);
+                                        }
+                                    }
+                                    if( analysisEntity.ratio != null ) {
+                                        rmsModel.ratio = new double[analysisEntity.ratio.size()];
+                                        for (int i = 0; i < analysisEntity.ratio.size(); i++) {
+                                            rmsModel.ratio[i] = analysisEntity.ratio.get(i);
+                                        }
+                                    }
+
                                     rmsModelList.add(rmsModel);
                                 }
 
@@ -1000,6 +1032,32 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                     rmsModel.setRms3(analysisEntity.getRms3());
                     rmsModel.setbShowCause(analysisEntity.isbShowCause());
                     rmsModel.setCreated(analysisEntity.getCreated());
+
+                    // added by hslee 2020.07.10
+                    if( analysisEntity.cause != null ) {
+                        rmsModel.cause = new String[analysisEntity.cause.size()];
+                        for (int i = 0; i < analysisEntity.cause.size(); i++) {
+                            rmsModel.cause[i] = analysisEntity.cause.get(i);
+                        }
+                    }
+                    if( analysisEntity.causeDesc != null ) {
+                        rmsModel.causeDesc = new String[analysisEntity.causeDesc.size()];
+                        for (int i = 0; i < analysisEntity.causeDesc.size(); i++) {
+                            rmsModel.causeDesc[i] = analysisEntity.causeDesc.get(i);
+                        }
+                    }
+                    if( analysisEntity.rank != null ) {
+                        rmsModel.rank = new double[analysisEntity.rank.size()];
+                        for (int i = 0; i < analysisEntity.rank.size(); i++) {
+                            rmsModel.rank[i] = analysisEntity.rank.get(i);
+                        }
+                    }
+                    if( analysisEntity.ratio != null ) {
+                        rmsModel.ratio = new double[analysisEntity.ratio.size()];
+                        for (int i = 0; i < analysisEntity.ratio.size(); i++) {
+                            rmsModel.ratio[i] = analysisEntity.ratio.get(i);
+                        }
+                    }
 
                     rmsModelList.add(rmsModel);
                 }

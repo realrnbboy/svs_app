@@ -209,7 +209,7 @@ public class PipeMeasureActivity extends BaseActivity {
 
         YAxis leftAxis = lineChartRawData.getAxisLeft();
         //leftAxis.setDrawGridLines(false);
-        leftAxis.setAxisMinimum(0);
+        //leftAxis.setAxisMinimum(1);
         leftAxis.setTextColor(Color.WHITE);
 
         XAxis xAxis = lineChartRawData.getXAxis();
@@ -319,6 +319,7 @@ public class PipeMeasureActivity extends BaseActivity {
         xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
 
         xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+        //xAxis.setAxisMaximum((float) 0.01);
 
         lineChartRawData.setData(lineData);
         lineChartRawData.invalidate();
@@ -329,6 +330,26 @@ public class PipeMeasureActivity extends BaseActivity {
 
         for(int i=0; i<valueList.size(); i++){
             entries.add(new Entry(i, valueList.get(i)));
+        }
+
+        LineDataSet lineDataSet = new LineDataSet(entries, label);
+
+        lineDataSet.setDrawCircleHole(false);
+        lineDataSet.setDrawCircles(false);
+        lineDataSet.setColor(lineColor);
+        lineDataSet.setDrawFilled(false);    // 값 하단 색  채움
+        lineDataSet.setValueTextColor(Color.WHITE);
+        lineDataSet.setDrawValues(true);
+        lineDataSet.setValueTextSize(10f);
+
+        return lineDataSet;
+    }
+
+    private LineDataSet generateLineData2(String label, ArrayList<Float> valueList, int lineColor){
+        ArrayList<Entry> entries = new ArrayList<>();
+
+        for(int i=0; i<valueList.size(); i++){
+            entries.add(new Entry(valueList.get(i), i));
         }
 
         LineDataSet lineDataSet = new LineDataSet(entries, label);

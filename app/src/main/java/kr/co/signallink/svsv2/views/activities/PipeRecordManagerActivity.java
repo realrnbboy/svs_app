@@ -264,14 +264,20 @@ public class PipeRecordManagerActivity extends BaseActivity {
                 intent.putExtra("data2", reportData2);
                 intent.putExtra("data3", reportData3);
 
-                String pipeName = bUsePreviousActivityData ? selectedRmsModel.getPipeName() : selectedAnalysisEntity.getPipeName();
-                String pipeImage = bUsePreviousActivityData ? selectedRmsModel.getPipeImage() : selectedAnalysisEntity.getPipeImage();
-                String pipeLocation = bUsePreviousActivityData ? selectedRmsModel.getPipeLocation() : selectedAnalysisEntity.getPipeLocation();
-                String pipeOperationScenario = bUsePreviousActivityData ? selectedRmsModel.getPipeOperationScenario() : selectedAnalysisEntity.getPipeOperationScenario();
-                intent.putExtra("pipeName", pipeName);
-                intent.putExtra("pipeImage", pipeImage);
-                intent.putExtra("pipeLocation", pipeLocation);
-                intent.putExtra("pipeOperationScenario", pipeOperationScenario);
+                try {
+                    String pipeName = bUsePreviousActivityData ? selectedRmsModel.getPipeName() : selectedAnalysisEntity.getPipeName();
+                    String pipeImage = bUsePreviousActivityData ? selectedRmsModel.getPipeImage() : selectedAnalysisEntity.getPipeImage();
+                    String pipeLocation = bUsePreviousActivityData ? selectedRmsModel.getPipeLocation() : selectedAnalysisEntity.getPipeLocation();
+                    String pipeOperationScenario = bUsePreviousActivityData ? selectedRmsModel.getPipeOperationScenario() : selectedAnalysisEntity.getPipeOperationScenario();
+                    intent.putExtra("pipeName", pipeName);
+                    intent.putExtra("pipeImage", pipeImage);
+                    intent.putExtra("pipeLocation", pipeLocation);
+                    intent.putExtra("pipeOperationScenario", pipeOperationScenario);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtil.showShort("invalid status " + bUsePreviousActivityData + ", " + (selectedRmsModel == null ? "selectedRmsModel null" : "") + (selectedAnalysisEntity == null ? "selectedAnalysisEntity null" : ""));
+                }
                 startActivity(intent);
             }
         });
@@ -558,7 +564,8 @@ public class PipeRecordManagerActivity extends BaseActivity {
 
         YAxis leftAxis = lineChartRawData.getAxisLeft();
         leftAxis.setDrawGridLines(false);
-        leftAxis.setAxisMinimum(1);
+        //leftAxis.setAxisMinimum(1);
+        leftAxis.setAxisMinimum(0);
         leftAxis.setTextColor(Color.WHITE);
 
         XAxis xAxis = lineChartRawData.getXAxis();

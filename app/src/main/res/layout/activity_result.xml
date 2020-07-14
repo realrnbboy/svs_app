@@ -313,6 +313,15 @@
                     android:text="save csv"/>
 
                 <Button
+                    android:id="@+id/buttonExplorer"
+                    style="@style/button_confirm"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    android:background="@drawable/btn_red_round"
+                    android:text="explorer"/>
+
+                <Button
                     android:id="@+id/buttonNext"
                     android:layout_weight="1"
                     android:layout_marginLeft="5dp"

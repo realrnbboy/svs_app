@@ -61,7 +61,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
     private static final String TAG = "RecordManagerActivity";
 
     //String dateFormat = "yyyy-MM-dd HH:mm";
-    AnalysisData analysisData = null;
+    //AnalysisData analysisData = null;
     String equipmentUuid = null;
 
     LinearLayout linearLayoutDefectCause;
@@ -380,17 +380,20 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         resultDiagnosisList.clear();
 
         if( bShowPreviousData ) {    // 이전화면(ResultDiagnosisActivity)에서 전달받은 데이터를 사용할 경우
-            if( analysisData != null ) {
-                if( bShowCause ) {
+            if( previousRmsModelList != null ) {
+                RmsModel rmsModel = previousRmsModelList.get(entityIndex);
+
+                boolean tShowCause = rmsModel.isbShowCause();
+                if( tShowCause ) { // for test
                     linearLayoutDefectCause.setVisibility(View.VISIBLE);
 
-                    for (int i = 0; i < analysisData.resultDiagnosis.length && i < 5; i++) {
+                    for (int i = 0; i < rmsModel.cause.length && i < 5; i++) {
 
                         CauseModel model = new CauseModel();
 
-                        String cause = analysisData.resultDiagnosis[i].cause + "-" + analysisData.resultDiagnosis[i].desc;
+                        String cause = rmsModel.cause[i] + "-" + rmsModel.causeDesc[i];
                         model.setCause(cause);
-                        model.setRatio(analysisData.resultDiagnosis[i].ratio);
+                        model.setRatio(rmsModel.ratio[i]);
 
                         resultDiagnosisList.add(model);
                     }

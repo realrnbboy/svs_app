@@ -60,6 +60,7 @@ import kr.co.signallink.svsv2.utils.Utils;
 
 // added by hslee 2020-03-23
 // 모드 선택
+// -- not used
 public class MeasureModeSelectActivity extends Activity {
 
     private static final String TAG = "MeasureModeSelectActivity";
@@ -188,6 +189,32 @@ public class MeasureModeSelectActivity extends Activity {
                                 rmsModel.setRms3(analysisEntity.getRms3());
                                 rmsModel.setbShowCause(analysisEntity.isbShowCause());
                                 rmsModel.setCreated(analysisEntity.getCreated());
+
+                                // added by hslee 2020.07.10
+                                if( analysisEntity.cause != null ) {
+                                    rmsModel.cause = new String[analysisEntity.cause.size()];
+                                    for (int i = 0; i < analysisEntity.cause.size(); i++) {
+                                        rmsModel.cause[i] = analysisEntity.cause.get(i);
+                                    }
+                                }
+                                if( analysisEntity.causeDesc != null ) {
+                                    rmsModel.causeDesc = new String[analysisEntity.causeDesc.size()];
+                                    for (int i = 0; i < analysisEntity.causeDesc.size(); i++) {
+                                        rmsModel.causeDesc[i] = analysisEntity.causeDesc.get(i);
+                                    }
+                                }
+                                if( analysisEntity.rank != null ) {
+                                    rmsModel.rank = new double[analysisEntity.rank.size()];
+                                    for (int i = 0; i < analysisEntity.rank.size(); i++) {
+                                        rmsModel.rank[i] = analysisEntity.rank.get(i);
+                                    }
+                                }
+                                if( analysisEntity.ratio != null ) {
+                                    rmsModel.ratio = new double[analysisEntity.ratio.size()];
+                                    for (int i = 0; i < analysisEntity.ratio.size(); i++) {
+                                        rmsModel.ratio[i] = analysisEntity.ratio.get(i);
+                                    }
+                                }
 
                                 rmsModelList.add(rmsModel);
                             }

@@ -6,9 +6,9 @@ import java.io.Serializable;
 public class RmsModel implements Serializable {
 
     public String name;
-    public double rms;
-    public double danger;
-    public double warning;
+    public float rms;
+    public float danger;
+    public float warning;
     public String status;
     public boolean bProjectVib = false;
 
@@ -21,10 +21,47 @@ public class RmsModel implements Serializable {
     private float[] frequency2;
     private float[] frequency3;
 
+    public String[] cause;  // added by hslee 2020.07.10
+    public String[] causeDesc;  // added by hslee 2020.07.10
+    public double[] rank;  // added by hslee 2020.07.10
+    public double[] ratio;  // added by hslee 2020.07.10
+
     private String pipeName;
     private String pipeImage;
     private String pipeLocation;
     private String pipeOperationScenario;
+
+    public String[] getCause() {
+        return cause;
+    }
+
+    public void setCause(String[] cause) {
+        this.cause = cause;
+    }
+
+    public String[] getCauseDesc() {
+        return causeDesc;
+    }
+
+    public void setCauseDesc(String[] causeDesc) {
+        this.causeDesc = causeDesc;
+    }
+
+    public double[] getRank() {
+        return rank;
+    }
+
+    public void setRank(double[] rank) {
+        this.rank = rank;
+    }
+
+    public double[] getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(double[] ratio) {
+        this.ratio = ratio;
+    }
 
     public String getPipeName() {
         return pipeName;
@@ -138,11 +175,11 @@ public class RmsModel implements Serializable {
         this.name = name;
     }
 
-    public double getRms() {
+    public float getRms() {
         return rms;
     }
 
-    public void setRms(double rms) {
+    public void setRms(float rms) {
         this.rms = rms;
     }
 
@@ -154,19 +191,19 @@ public class RmsModel implements Serializable {
         this.status = status;
     }
 
-    public double getDanger() {
+    public float getDanger() {
         return danger;
     }
 
-    public void setDanger(double danger) {
+    public void setDanger(float danger) {
         this.danger = danger;
     }
 
-    public double getWarning() {
+    public float getWarning() {
         return warning;
     }
 
-    public void setWarning(double warning) {
+    public void setWarning(float warning) {
         this.warning = warning;
     }
 }

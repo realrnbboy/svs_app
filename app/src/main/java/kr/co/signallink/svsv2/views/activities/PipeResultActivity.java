@@ -394,7 +394,8 @@ public class PipeResultActivity extends BaseActivity {
 
         YAxis leftAxis = lineChartRawData.getAxisLeft();
         leftAxis.setDrawGridLines(false);
-        leftAxis.setAxisMinimum(1);
+        //leftAxis.setAxisMinimum(1);
+        leftAxis.setAxisMinimum(0);
         leftAxis.setTextColor(Color.WHITE);
 
         XAxis xAxis = lineChartRawData.getXAxis();

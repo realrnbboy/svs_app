@@ -40,9 +40,6 @@ public class PipeReport1Activity extends BaseActivity {
 
     LineChart lineChartRawData;
 
-    boolean bUsePreviousActivityData = false;
-    boolean bShowPreviousData = true;   // 이전 화면에서 전달한 데이터를 사용할 경우, 아이템 클릭시 널포인트 오류가 나는 부분이 있음, 이를 구분하기 위해 사용
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,7 +191,8 @@ public class PipeReport1Activity extends BaseActivity {
 
         YAxis leftAxis = lineChartRawData.getAxisLeft();
         leftAxis.setDrawGridLines(false);
-        leftAxis.setAxisMinimum(1);
+        //leftAxis.setAxisMinimum(1);
+        leftAxis.setAxisMinimum(0);
         leftAxis.setTextColor(Color.WHITE);
 
         XAxis xAxis = lineChartRawData.getXAxis();

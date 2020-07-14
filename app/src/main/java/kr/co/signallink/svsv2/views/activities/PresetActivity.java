@@ -154,7 +154,7 @@ public class PresetActivity extends BaseActivity {
         editTextSiteCode.addTextChangedListener(textWatcherInput);
         editTextEquipmentName.addTextChangedListener(textWatcherInput);
         editTextInputPower.addTextChangedListener(textWatcherInput);
-        editTextEquipmentRpm.addTextChangedListener(textWatcherInput);
+        editTextEquipmentRpm.addTextChangedListener(textWatcherInputRpm);
         editTextBladeVane.addTextChangedListener(textWatcherInput);
         editTextNoOfBalls.addTextChangedListener(textWatcherInput);
         editTextTagNo.addTextChangedListener(textWatcherInput);
@@ -427,7 +427,7 @@ public class PresetActivity extends BaseActivity {
         diagVar1.nRPM = equipmentRpm;
         diagVar1.nBladeCount = bladeVane;
         diagVar1.nBallCount = noOfBalls;
-        diagVar1.nPitchDiameter =pitchDiameter;
+        diagVar1.nPitchDiameter = pitchDiameter;
         diagVar1.nBallDiameter = ballDiameter;
         diagVar1.nRPS = rps;
         diagVar1.nContactAngle = contactAngle;
@@ -907,13 +907,17 @@ public class PresetActivity extends BaseActivity {
         editTextInputPower.setText(preset[i][7]);
         int lineFrequency = Integer.parseInt(preset[i][8]);
         int equipmentType = Integer.parseInt(preset[i][9]);
-        editTextEquipmentRpm.setText(preset[i][10]);
+        editTextEquipmentRpm.setText(preset[i][10]);    // rps 값 자동 계산을 위해 여기에 위치 시킴
         editTextBladeVane.setText(preset[i][11]);
         int bearingType = Integer.parseInt(preset[i][12]);
         editTextNoOfBalls.setText(preset[i][13]);
         editTextPitchDiameter.setText(preset[i][14]);
         editTextBallDiameter.setText(preset[i][15]);
-        editTextRps.setText(preset[i][16]);
+        //editTextRps.setText(preset[i][16]);
+
+        //String rps = getRpsFromRpm(preset[i][16]);
+        //editTextRps.setText(rps); // added by hslee 2020.07.13 rpm에 따라 자동 계산되므로 삭제
+
         editTextContactAngle.setText(preset[i][17]);
 
         spinnerEquipmentCode.setSelection(equipmentCode);
@@ -944,12 +948,9 @@ public class PresetActivity extends BaseActivity {
 //                measuredFreq2 = new float[2048];  // for test
 //                measuredFreq3 = new float[2048];  // for test
 
-                if( measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null ) { // 측정된 데이터가 없는 경우
-                    bRemeasure = true;
-                }
-                else {  // 측정된 데이터가 있는 경우
-                    bRemeasure = false;
-                }
+                // 측정된 데이터가 없는 경우
+                // 측정된 데이터가 있는 경우
+                bRemeasure = measuredFreq1 == null || measuredFreq2 == null || measuredFreq3 == null;
             }
         }
     }
@@ -960,7 +961,7 @@ public class PresetActivity extends BaseActivity {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             // TODO Auto-generated method stub
 
-           // valueChanged(null);
+            //valueChanged(null);
         }
 
         @Override
@@ -973,6 +974,46 @@ public class PresetActivity extends BaseActivity {
             // TODO Auto-generated method stub
         }
     };
+
+    TextWatcher textWatcherInputRpm = new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // TODO Auto-generated method stub
+
+            //valueChanged(null);
+
+            String rps = getRpsFromRpm(s.toString());
+            editTextRps.setText(rps);
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // TODO Auto-generated method stub
+        }
+    };
+
+    String getRpsFromRpm(String rpm) {
+        try {
+            if( rpm == null ) {
+
+            }
+            else {
+                String rps = String.valueOf(Integer.parseInt(rpm) / 60);
+                return rps;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "0";
+    }
 
     public void valueChanged(DialogInterface.OnClickListener cancel) {
 

@@ -2,7 +2,9 @@ package kr.co.signallink.svsv2.views.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +30,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -197,8 +200,8 @@ public class ResultActivity extends BaseActivity {
                 // 다음 화면으로 이동
                 Intent intent;
 
-                if( !(bRmsResultGood1 && bRmsResultGood2 && bRmsResultGood3) ) {   // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
-                    intent = new Intent(getBaseContext(), RecordManagerActivity.class); // for test
+                if( bRmsResultGood1 && bRmsResultGood2 && bRmsResultGood3 ) {   // rms 결과가 모두 good일 경우 next 버튼을 눌렀을때, DiagnosisActivity를 표시하지 않고, 바로 recordManager 화면을 표시한다.
+                    intent = new Intent(getBaseContext(), RecordManagerActivity.class);
                 }
                 else {
                     intent = new Intent(getBaseContext(), ResultDiagnosisActivity.class);
@@ -237,6 +240,32 @@ public class ResultActivity extends BaseActivity {
                         rmsModel.setbShowCause(analysisEntity.isbShowCause());
                         rmsModel.setCreated(analysisEntity.getCreated());
 
+                        // added by hslee 2020.07.10
+                        if( analysisEntity.cause != null ) {
+                            rmsModel.cause = new String[analysisEntity.cause.size()];
+                            for (int i = 0; i < analysisEntity.cause.size(); i++) {
+                                rmsModel.cause[i] = analysisEntity.cause.get(i);
+                            }
+                        }
+                        if( analysisEntity.causeDesc != null ) {
+                            rmsModel.causeDesc = new String[analysisEntity.causeDesc.size()];
+                            for (int i = 0; i < analysisEntity.causeDesc.size(); i++) {
+                                rmsModel.causeDesc[i] = analysisEntity.causeDesc.get(i);
+                            }
+                        }
+                        if( analysisEntity.rank != null ) {
+                            rmsModel.rank = new double[analysisEntity.rank.size()];
+                            for (int i = 0; i < analysisEntity.rank.size(); i++) {
+                                rmsModel.rank[i] = analysisEntity.rank.get(i);
+                            }
+                        }
+                        if( analysisEntity.ratio != null ) {
+                            rmsModel.ratio = new double[analysisEntity.ratio.size()];
+                            for (int i = 0; i < analysisEntity.ratio.size(); i++) {
+                                rmsModel.ratio[i] = analysisEntity.ratio.get(i);
+                            }
+                        }
+
                         rmsModelList.add(rmsModel);
                     }
 
@@ -267,6 +296,20 @@ public class ResultActivity extends BaseActivity {
                     save();
                 }
 
+            }
+        });
+
+        Button buttonExplorer = findViewById(R.id.buttonExplorer);  // for test
+        buttonExplorer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = getPackageManager().getLaunchIntentForPackage("com.sec.android.app.myfiles");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "SVSdata" + File.separator + "csv" + File.separator + "pump" + File.separator;
+                intent.setData(Uri.parse(path));
+                startActivity(intent);
             }
         });
 
@@ -431,6 +474,8 @@ public class ResultActivity extends BaseActivity {
         rmsModel1.setRms(rms1);
         rmsModel2.setRms(rms2);
         rmsModel3.setRms(rms3);
+//        rmsModel2.setRms(5);    // for test
+//        rmsModel3.setRms(5);    // for test
 
         if( analysisData.getDiagVar1().nCode == 4 ) {   // added by hslee 2020.05.25 사용자 입력값 사용할 경우
             rmsModel1.setbProjectVib(true);
@@ -447,6 +492,8 @@ public class ResultActivity extends BaseActivity {
             float danger2 = analysisData.getMeasureData2().getRmsDanger();
             float danger3 = analysisData.getMeasureData3().getRmsDanger();
             rmsModel1.setDanger(danger1);
+//            rmsModel2.setDanger(6);    // for test
+//            rmsModel3.setDanger(0.005);    // for test
             rmsModel2.setDanger(danger2);
             rmsModel3.setDanger(danger3);
 

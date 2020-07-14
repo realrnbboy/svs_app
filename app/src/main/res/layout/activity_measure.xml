@@ -187,6 +187,15 @@
                 android:text="test data"/>
 
             <Button
+                android:id="@+id/buttonExplorer"
+                style="@style/button_confirm"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:background="@drawable/btn_red_round"
+                android:text="explorer1"/>
+
+            <Button
                 android:id="@+id/buttonAnalysis"
                 style="@style/button_confirm"
                 android:layout_weight="1"

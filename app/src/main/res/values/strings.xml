@@ -144,11 +144,20 @@
 
     <string-array name="custom_list_dialog_equipment">
         <!--<item>Sensors</item>--> <!--deleted by hslee 2020.03.30 시그널링크 요청으로 삭제-->
-        <item>센서 \u0026 등록</item>
-        <item>펌프 측정 위치에 대한 진단</item>
-        <item>펌프 측정에 대한 DB</item>
-<!--        <item>Pipe Analysis History</item>-->
-<!--        <item>TEST DATA</item>-->
+        <item>Detail \u0026 Update</item>
+        <item>Pump Diagnostic analysis</item>
+        <item>Pump History</item>
+        <!--        <item>Pipe Analysis History</item>-->
+        <!--        <item>TEST DATA</item>-->
+    </string-array>
+
+    <string-array name="custom_list_dialog_equipment_pipe">
+        <!--<item>Sensors</item>--> <!--deleted by hslee 2020.03.30 시그널링크 요청으로 삭제-->
+        <item>Detail \u0026 Update</item>
+        <item>Pipe Diagnostic analysis</item>
+        <item>Pipe History</item>
+        <!--        <item>Pipe Analysis History</item>-->
+        <!--        <item>TEST DATA</item>-->
     </string-array>
 
     <string-array name="custom_list_dialog_svslocation">

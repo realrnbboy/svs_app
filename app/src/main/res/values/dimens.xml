@@ -6,13 +6,13 @@
     <dimen name="nav_header_vertical_spacing2">35dp</dimen>
     <dimen name="nav_header_height">216dp</dimen>
 
-    <dimen name="font_small">10sp</dimen>
-    <dimen name="font_midsmall">13sp</dimen>
-    <dimen name="font_midium">15sp</dimen>
-    <dimen name="font_large_sm">18sp</dimen>
-    <dimen name="font_large">20sp</dimen>
-    <dimen name="font_larger">25sp</dimen>
-    <dimen name="font_nav_header">24sp</dimen>
+    <dimen name="font_small">10dp</dimen>
+    <dimen name="font_midsmall">13dp</dimen>
+    <dimen name="font_midium">15dp</dimen>
+    <dimen name="font_large_sm">18dp</dimen>
+    <dimen name="font_large">20dp</dimen>
+    <dimen name="font_larger">25dp</dimen>
+    <dimen name="font_nav_header">24dp</dimen>
 
     <dimen name="preset_item_other_contents">16dp</dimen>
     <dimen name="preset_item_layout">15dp</dimen>

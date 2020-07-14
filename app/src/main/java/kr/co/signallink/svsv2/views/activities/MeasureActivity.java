@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +32,7 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -150,6 +153,20 @@ public class MeasureActivity extends BaseActivity {
                 else {  // 측정을 하지 않은 경우
                     ToastUtil.showShort("Please measure first");
                 }
+            }
+        });
+
+        Button buttonExplorer = findViewById(R.id.buttonExplorer);  // for test
+        buttonExplorer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = getPackageManager().getLaunchIntentForPackage("com.sec.android.app.myfiles");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "SVSdata" + File.separator + "csv" + File.separator + "pump" + File.separator;
+                intent.setData(Uri.parse(path));
+                startActivity(intent);
             }
         });
 

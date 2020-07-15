@@ -48,6 +48,7 @@ import kr.co.signallink.svsv2.utils.Utils;
 public class PipePresetActivity extends BaseActivity {
 
     private static final String TAG = "PipePresetActivity";
+    static final String PRESET_USER_DEFINITION = "User Definition";
 
     EditText editTextSiteCode;
     EditText editTextPumpCode;
@@ -115,6 +116,17 @@ public class PipePresetActivity extends BaseActivity {
         editTextMedium.addTextChangedListener(textWatcherInput);
         editTextEtcOperatingCondition.addTextChangedListener(textWatcherInput);
 
+        // 내부 저장소에서 저장된 preset 가져오기
+        ArrayList<String> userDefinitionPreset = Utils.getSharedPreferencesStringArray(this, "preset", "userpreset"+equipmentUuid); // 2020.07.15
+        if( userDefinitionPreset != null && userDefinitionPreset.size() == 6 ) {
+            editTextSiteCode.setText(userDefinitionPreset.get(0));
+            editTextPumpCode.setText(userDefinitionPreset.get(1));
+            editTextProjectVibSpec.setText(userDefinitionPreset.get(2));
+            editTextLocation.setText(userDefinitionPreset.get(3));
+            editTextPipeNo.setText(userDefinitionPreset.get(4));
+            editTextEtcOperatingCondition.setText(userDefinitionPreset.get(5));
+        }
+
         Button buttonNext = findViewById(R.id.buttonNext);
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +153,14 @@ public class PipePresetActivity extends BaseActivity {
                     startActivityForResult(intent, DefConstant.REQUEST_MEASUREACTIVITY_RESULT);
                     //startActivity(intent);
                 }
+            }
+        });
+
+        Button buttonSave = findViewById(R.id.buttonSave);  // added by hslee 2020.07.15
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                save();
             }
         });
 
@@ -189,6 +209,32 @@ public class PipePresetActivity extends BaseActivity {
         editTextPipeNo.setText(String.valueOf(m_analysisData.pipeNo));
         editTextMedium.setText(String.valueOf(m_analysisData.pipeMedium));
         editTextEtcOperatingCondition.setText(String.valueOf(m_analysisData.pipeEtcOperatingCondition));
+    }
+
+    private void save() {   // 2020.07.15
+
+        if(validateForm()) {
+
+            String siteCode = editTextSiteCode.getText().toString();
+            String pumpCode = editTextPumpCode.getText().toString();
+            String projectVibSpec = editTextProjectVibSpec.getText().toString();
+            String location = editTextLocation.getText().toString();
+            String pipeNo = editTextPipeNo.getText().toString();
+            String etcOperatingCondition = editTextEtcOperatingCondition.getText().toString();
+
+            ArrayList userDefinitionPreset = new ArrayList<>();
+            userDefinitionPreset.add(siteCode);
+            userDefinitionPreset.add(pumpCode);
+            userDefinitionPreset.add(projectVibSpec);
+            userDefinitionPreset.add(location);
+            userDefinitionPreset.add(pipeNo);
+            userDefinitionPreset.add(etcOperatingCondition);
+
+            // 내부 저장소에 저장
+            Utils.setSharedPreferencesStringArray(this, "preset", "userpreset"+equipmentUuid, userDefinitionPreset);
+
+            ToastUtil.showShort("Save Success");
+        }
     }
 
     @Override

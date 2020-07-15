@@ -1,5 +1,6 @@
 package kr.co.signallink.svsv2.utils;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -9,6 +10,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import kr.co.signallink.svsv2.commons.DefCMDOffset;
@@ -294,5 +297,59 @@ public class Utils {
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+
+    public static void setSharedPreferencesStringArray(Context context, String store, String key, ArrayList<String> data) {
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(store, 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        JSONArray a = new JSONArray();
+        for (int i = 0; i < data.size(); i++) {
+            a.put(data.get(i));
+        }
+        if (!data.isEmpty()) {
+            editor.putString(key, a.toString());
+        } else {
+            editor.putString(key, null);
+        }
+        editor.commit();
+    }
+
+
+    public static ArrayList<String> getSharedPreferencesStringArray(Context context, String store, String key) {
+
+        SharedPreferences prefs = context.getSharedPreferences(store, 0);
+        String json = prefs.getString(key, null);
+        ArrayList<String> ret = new ArrayList<String>();
+        if (json != null) {
+            try {
+                JSONArray a = new JSONArray(json);
+                for (int i = 0; i < a.length(); i++) {
+                    String url = a.optString(i);
+                    ret.add(url);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return ret;
+    }
+
+    public static void setSharedPreferencesString(Context context, String store, String key, String data) {
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(store, 0);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+
+        edit.putString(key, data);
+        edit.commit();
+    }
+
+
+    public static String getSharedPreferencesString(Context context, String store, String key, String defaultValue) {
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(store, 0);
+
+        String ret = sharedPreferences.getString(key, defaultValue);
+        return ret;
     }
 }

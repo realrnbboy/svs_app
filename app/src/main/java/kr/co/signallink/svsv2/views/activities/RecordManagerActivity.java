@@ -384,7 +384,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
                 RmsModel rmsModel = previousRmsModelList.get(entityIndex);
 
                 boolean tShowCause = rmsModel.isbShowCause();
-                if( tShowCause ) { // for test
+                if( tShowCause ) {
                     linearLayoutDefectCause.setVisibility(View.VISIBLE);
 
                     for (int i = 0; i < rmsModel.cause.length && i < 5; i++) {

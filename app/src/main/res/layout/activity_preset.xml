@@ -460,7 +460,16 @@
                 android:padding="5dp">
 
                 <Button
+                    android:id="@+id/buttonSave"
+                    style="@style/button_confirm"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_red_round"
+                    android:text="save"/>
+
+                <Button
                     android:id="@+id/buttonNext"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
                     style="@style/button_confirm"
                     android:text="next"/>
 

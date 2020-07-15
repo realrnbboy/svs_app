@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
@@ -23,7 +24,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Set;
 
 import kr.co.signallink.svsv2.R;
 import kr.co.signallink.svsv2.commons.DefConstant;
@@ -41,6 +45,7 @@ import kr.co.signallink.svsv2.utils.Utils;
 public class PresetActivity extends BaseActivity {
 
     private static final String TAG = "PresetActivity";
+    static final String PRESET_USER_DEFINITION = "User Definition";
 
     ArrayList arrayListPreset = new ArrayList<>();
     ArrayList arrayListEquipmentCode = new ArrayList<>();
@@ -80,6 +85,7 @@ public class PresetActivity extends BaseActivity {
     SendMessageHandler handler;
 
     private String [][] preset;
+    private ArrayList<String> userDefinitionPreset = null; // 2020.07.15
     public boolean bExistPreset = false;
     public boolean bResponsePreset = false;
 
@@ -125,6 +131,9 @@ public class PresetActivity extends BaseActivity {
         setContentView(R.layout.activity_preset);
 
         equipmentUuid = getIntent().getStringExtra("equipmentUuid");
+
+        // 내부 저장소에서 저장된 preset 가져오기
+        userDefinitionPreset = Utils.getSharedPreferencesStringArray(this, "preset", "userpreset"+equipmentUuid);
 
         handler = new SendMessageHandler(this);
 
@@ -190,6 +199,14 @@ public class PresetActivity extends BaseActivity {
                     startActivityForResult(intent, DefConstant.REQUEST_MEASUREACTIVITY_RESULT);
                     //startActivity(intent);
                 }
+            }
+        });
+
+        Button buttonSave = findViewById(R.id.buttonSave);  // added by hslee 2020.07.15
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                save();
             }
         });
 
@@ -554,7 +571,7 @@ public class PresetActivity extends BaseActivity {
             arrayListEquipmentSubCode.add("Field POR");
             arrayListEquipmentSubCode.add("Field AOR");
 
-            spinnerEquipmentSubCode.setSelection(0);
+            //spinnerEquipmentSubCode.setSelection(0);
             linearLayoutProjectVibSpec.setVisibility(View.GONE);
         }
         else if( position == 1 ) {    // API 610
@@ -571,7 +588,7 @@ public class PresetActivity extends BaseActivity {
             arrayListEquipmentSubCode.add("FAT POR");
             arrayListEquipmentSubCode.add("FAT AOR");
 
-            spinnerEquipmentSubCode.setSelection(0);
+            //spinnerEquipmentSubCode.setSelection(0);
             linearLayoutProjectVibSpec.setVisibility(View.GONE);
         }
         else {  // Project VIB Spec
@@ -683,7 +700,7 @@ public class PresetActivity extends BaseActivity {
     }
 
 
-//    private void save() {
+//    private void save_activity() {
 //
 //        if(validateForm()) {
 //
@@ -775,6 +792,83 @@ public class PresetActivity extends BaseActivity {
 //        }
 //    }
 
+    private void save() {   // 2020.07.15
+
+        if(validateForm()) {
+
+            int code = (int)spinnerEquipmentCode.getSelectedItemId();
+            int subCode = (int)spinnerEquipmentSubCode.getSelectedItemId();
+            int equipmentType = (int)spinnerEquipmentType.getSelectedItemId();
+            int bearingType = (int)spinnerBearingType.getSelectedItemId();
+            int lineFrequency = (int)spinnerLineFrequency.getSelectedItemId();
+
+            int projectVibSpec = Integer.parseInt(editTextProjectVibSpec.getText().toString());
+            String siteCode = editTextSiteCode.getText().toString();
+            String equipmentName = editTextEquipmentName.getText().toString();
+            String tagNo = editTextTagNo.getText().toString();
+            int inputPower = Integer.parseInt(editTextInputPower.getText().toString());
+            int equipmentRpm = Integer.parseInt(editTextEquipmentRpm.getText().toString());
+            int bladeVane = Integer.parseInt(editTextBladeVane.getText().toString());
+            int noOfBalls = Integer.parseInt(editTextNoOfBalls.getText().toString());
+            int pitchDiameter = Integer.parseInt(editTextPitchDiameter.getText().toString());
+            int ballDiameter = Integer.parseInt(editTextBallDiameter.getText().toString());
+            int rps = Integer.parseInt(editTextRps.getText().toString());
+            int contactAngle = Integer.parseInt(editTextContactAngle.getText().toString());
+
+            userDefinitionPreset = null;
+            userDefinitionPreset = new ArrayList<>();
+            userDefinitionPreset.add("6");
+            userDefinitionPreset.add(PRESET_USER_DEFINITION);
+            userDefinitionPreset.add(String.valueOf(code));
+            userDefinitionPreset.add(editTextProjectVibSpec.getText().toString());
+            userDefinitionPreset.add(editTextSiteCode.getText().toString());
+            userDefinitionPreset.add(editTextEquipmentName.getText().toString());
+            userDefinitionPreset.add(editTextTagNo.getText().toString());
+            userDefinitionPreset.add(editTextInputPower.getText().toString());
+            userDefinitionPreset.add(String.valueOf(lineFrequency));
+            userDefinitionPreset.add(String.valueOf(equipmentType));
+            userDefinitionPreset.add(editTextEquipmentRpm.getText().toString());
+            userDefinitionPreset.add(editTextBladeVane.getText().toString());
+            userDefinitionPreset.add(String.valueOf(bearingType));
+            userDefinitionPreset.add(editTextNoOfBalls.getText().toString());
+            userDefinitionPreset.add(editTextPitchDiameter.getText().toString());
+            userDefinitionPreset.add(editTextBallDiameter.getText().toString());
+            userDefinitionPreset.add(editTextRps.getText().toString());
+            userDefinitionPreset.add(editTextContactAngle.getText().toString());
+            userDefinitionPreset.add(String.valueOf(subCode));
+
+            // 내부 저장소에 저장
+            Utils.setSharedPreferencesStringArray(this, "preset", "userpreset"+equipmentUuid, userDefinitionPreset);
+
+            preset[5][0] = userDefinitionPreset.get(0);
+            preset[5][1] = userDefinitionPreset.get(1);
+            preset[5][2] = userDefinitionPreset.get(2);
+            preset[5][3] = userDefinitionPreset.get(3);
+            preset[5][4] = userDefinitionPreset.get(4);
+            preset[5][5] = userDefinitionPreset.get(5);
+            preset[5][6] = userDefinitionPreset.get(6);
+            preset[5][7] = userDefinitionPreset.get(7);
+            preset[5][8] = userDefinitionPreset.get(8);
+            preset[5][9] = userDefinitionPreset.get(9);
+            preset[5][10] = userDefinitionPreset.get(10);
+            preset[5][11] = userDefinitionPreset.get(11);
+            preset[5][12] = userDefinitionPreset.get(12);
+            preset[5][13] = userDefinitionPreset.get(13);
+            preset[5][14] = userDefinitionPreset.get(14);
+            preset[5][15] = userDefinitionPreset.get(15);
+            preset[5][16] = userDefinitionPreset.get(16);
+            preset[5][17] = userDefinitionPreset.get(17);
+            preset[5][18] = userDefinitionPreset.get(18);
+
+            if( arrayListPreset.size() == 5 ) { // 콤보박스에, 기존에 저장된 것이 없으면 추가
+
+                arrayListPreset.add(PRESET_USER_DEFINITION);
+            }
+
+            ToastUtil.showShort("Save Success");
+        }
+    }
+
 
 //    private void dialogSave(){
 //
@@ -812,11 +906,12 @@ public class PresetActivity extends BaseActivity {
             //ToastUtil.showShort("failed get preset from server. use in local storage");
 
             preset = new String[][]{
-                    {"1", "Charge Pump #1", "1", "1", "HDO", "Charge Pump", "PP-L25-51", "980", "1", "0", "3579", "5", "3", "0", "0", "0", "0", "0"},
-                    {"2", "Charge Pump #2", "2", "2", "HDO", "Charge Pump", "PP-L25-01", "1080", "1", "0", "3600", "8", "2", "4", "200", "20", "1600", "180"},
-                    {"3", "test2", "3", "1", "dodo1", "motor", "p-02", "200", "1", "0", "3600", "8", "2", "8", "1", "2", "3", "4"},
-                    {"4", "test3", "0", "0", "dodo1", "valve", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "4"},
-                    {"5", "test4", "4", "9", "dodo1", "pump", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "60"}};
+                    {"1", "Charge Pump #1", "1", "1", "HDO", "Charge Pump", "PP-L25-51", "980", "1", "0", "3579", "5", "3", "0", "0", "0", "0", "0", "0"},
+                    {"2", "Charge Pump #2", "2", "2", "HDO", "Charge Pump", "PP-L25-01", "1080", "1", "0", "3600", "8", "2", "4", "200", "20", "1600", "180", "0"},
+                    {"3", "test2", "3", "1", "dodo1", "motor", "p-02", "200", "1", "0", "3600", "8", "2", "8", "1", "2", "3", "4", "0"},
+                    {"4", "test3", "0", "0", "dodo1", "valve", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "4", "0"},
+                    {"5", "test4", "4", "9", "dodo1", "pump", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "60", "0"},
+                    {"6", PRESET_USER_DEFINITION, "4", "9", "dodo1", "pump", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "60", "0", ""}};
 
             arrayListPreset.add("Charge Pump #1");
             arrayListPreset.add("Charge Pump #2");
@@ -830,7 +925,7 @@ public class PresetActivity extends BaseActivity {
                 JSONObject jsonOrgObject = new JSONObject(jsonString);
                 JSONArray jsonArray = jsonOrgObject.getJSONArray("list");
 
-                String[][] arrayPreset = new String[jsonArray.length()][18];
+                String[][] arrayPreset = new String[jsonArray.length()+1][19];
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObj = jsonArray.getJSONObject(i);
@@ -887,12 +982,41 @@ public class PresetActivity extends BaseActivity {
 
         }
 
+        // 2020.07.15   사용자가 저장한 데이터가 있으면 불러오기
+        if( userDefinitionPreset != null && userDefinitionPreset.size() == 19 ) {
+
+            preset[5][0] = userDefinitionPreset.get(0);//no;
+            preset[5][1] = userDefinitionPreset.get(1);//preset_name;
+            preset[5][2] = userDefinitionPreset.get(2);//code;
+            preset[5][3] = userDefinitionPreset.get(3);//vib_spec;
+            preset[5][4] = userDefinitionPreset.get(4);//site_code;
+            preset[5][5] = userDefinitionPreset.get(5);//equipment_name;
+            preset[5][6] = userDefinitionPreset.get(6);//tag_no;
+            preset[5][7] = userDefinitionPreset.get(7);//input_power;
+            preset[5][8] = userDefinitionPreset.get(8);//line_freq;
+            preset[5][9] = userDefinitionPreset.get(9);//equpment_type;
+            preset[5][10] = userDefinitionPreset.get(10);//rpm;
+            preset[5][11] = userDefinitionPreset.get(11); //blade_vane;
+            preset[5][12] = userDefinitionPreset.get(12);//bearing_type;
+            preset[5][13] = userDefinitionPreset.get(13);//ball_count;
+            preset[5][14] = userDefinitionPreset.get(14);//pitch_diameter;
+            preset[5][15] = userDefinitionPreset.get(15);//ball_diameter;
+            preset[5][16] = userDefinitionPreset.get(16);//rps;
+            preset[5][17] = userDefinitionPreset.get(17);//angle;
+            preset[5][18] = userDefinitionPreset.get(18);//sub_code;
+
+            // 기존 추가된 세트가 5개이면 추가
+            if( arrayListPreset.size() < 6 ) {
+                arrayListPreset.add(PRESET_USER_DEFINITION);
+            }
+        }
+
         arrayAdapterPreset.notifyDataSetChanged();
 
         setViewData(0);
     }
 
-    // 처음 서버에서 데이터를 받아올 때, preset spinner의 값이 변경될 때, 적절한 값일 넣어준다.
+    // 처음 서버에서 데이터를 받아올 때, preset spinner의 값이 변경될 때, 적절한 값을 넣어준다.
     void setViewData(int i) {
         if( preset == null || preset.length < i ) {
             //ToastUtil.showShort("preset data is null");
@@ -918,8 +1042,6 @@ public class PresetActivity extends BaseActivity {
         //String rps = getRpsFromRpm(preset[i][16]);
         //editTextRps.setText(rps); // added by hslee 2020.07.13 rpm에 따라 자동 계산되므로 삭제
 
-        editTextContactAngle.setText(preset[i][17]);
-
         spinnerEquipmentCode.setSelection(equipmentCode);
         //spinnerEquipmentSubCode.setSelection(0);
         spinnerLineFrequency.setSelection(lineFrequency);
@@ -927,6 +1049,12 @@ public class PresetActivity extends BaseActivity {
         spinnerBearingType.setSelection(bearingType);
 
         setDefaultSubCodeItem(equipmentCode);
+
+        editTextContactAngle.setText(preset[i][17]);
+        if( i == 5 ) {  // 사용자 정의이면
+            spinnerEquipmentSubCode.setSelection(Integer.parseInt(preset[5][18]));
+            arrayAdapterEquipmentSubCode.notifyDataSetChanged();
+        }
     }
 
     @Override

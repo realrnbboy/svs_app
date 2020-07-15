@@ -28,6 +28,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="180dp"
+            android:background="@android:color/white"
             android:src="@drawable/measure_pump"/>
 
         <LinearLayout
@@ -185,15 +186,6 @@
                 android:visibility="gone"
                 android:background="@drawable/btn_red_round"
                 android:text="test data"/>
-
-            <Button
-                android:id="@+id/buttonExplorer"
-                style="@style/button_confirm"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1"
-                android:visibility="gone"
-                android:background="@drawable/btn_red_round"
-                android:text="explorer1"/>
 
             <Button
                 android:id="@+id/buttonAnalysis"

@@ -250,24 +250,24 @@ public class Utils {
     }
 
     static public float[] getConcernDataList() {
-        int MAX_X_VALUE = Constants.MAX_PIPE_X_VALUE;
-        //MAX_X_VALUE = DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX;
+        //int MAX_X_VALUE = Constants.MAX_PIPE_X_VALUE;
+        int MAX_X_VALUE = DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX;
         float[] list = new float[MAX_X_VALUE];
 
         for( int i = 0; i<MAX_X_VALUE; i++ ) {
-            list[i] = (float) (10 * ((log10(i+1) + 0.48017) / 2.127612));
+            list[i] = (float) (10 * ((Math.log(i+1) + 0.48017) / 2.127612));
         }
 
         return list;
     }
 
     static public float[] getProblemDataList() {
-        int MAX_X_VALUE = Constants.MAX_PIPE_X_VALUE;
-        //MAX_X_VALUE = DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX;
+        //int MAX_X_VALUE = Constants.MAX_PIPE_X_VALUE;
+        int MAX_X_VALUE = DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX;
         float[] list = new float[MAX_X_VALUE];
 
         for( int i = 0; i<MAX_X_VALUE; i++ ) {
-            list[i] = (float) (10 * ((log10(i+1) + 1.871083) / 2.084547));
+            list[i] = (float) (10 * ((Math.log(i+1) + 1.871083) / 2.084547));
         }
 
         return list;

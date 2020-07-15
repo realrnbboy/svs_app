@@ -352,9 +352,9 @@ public class PipeRecordManagerActivity extends BaseActivity {
         }
         else {
             //data1 = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];data1 = new float[Constants.MAX_PIPE_X_VALUE];
-            data1 = new float[Constants.MAX_PIPE_X_VALUE];
-            data2 = new float[Constants.MAX_PIPE_X_VALUE];
-            data3 = new float[Constants.MAX_PIPE_X_VALUE];
+            data1 = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
+            data2 = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
+            data3 = new float[DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX];
 
             AnalysisEntity analysisEntity = analysisEntityList.get(entityIndex);
             if( analysisEntity != null ) {
@@ -404,6 +404,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
         try {
             if (data1 != null) {
                 for (float v : data1) {
+                    v = (float)Math.log(v);
                     valueList1.add(v);
                 }
             }
@@ -412,19 +413,21 @@ public class PipeRecordManagerActivity extends BaseActivity {
 
             if (data2 != null) {
                 for (float v : data2) {
+                    v = (float)Math.log(v);
                     valueList2.add(v);
                 }
             }
 
-            lineData.addDataSet(generateLineData("Horizontal", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myblue), false));
+            lineData.addDataSet(generateLineData("Horizontal", valueList2, ContextCompat.getColor(getBaseContext(), android.R.color.white), false));
 
             if (data3 != null) {
                 for (float v : data3) {
+                    v = (float)Math.log(v);
                     valueList3.add(v);
                 }
             }
 
-            lineData.addDataSet(generateLineData("Axial", valueList3, ContextCompat.getColor(getBaseContext(), R.color.hotpink), false));
+            lineData.addDataSet(generateLineData("Axial", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myBlueLight), false));
 
             if (data4 != null) {
                 for (float v : data4) {
@@ -454,7 +457,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
 //        xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
 //        xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
 //        xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
-        xAxis.setAxisMaximum(Constants.MAX_PIPE_X_VALUE);
+        xAxis.setAxisMaximum(DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX);
 
         lineChartRawData.setData(lineData);
         lineChartRawData.invalidate();
@@ -547,6 +550,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
         //lineChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
         lineChartRawData.setNoDataText("no data.");
         lineChartRawData.setOnChartValueSelectedListener(onChartValueSelectedListenerRawData);
+        lineChartRawData.setScaleXEnabled(false);   // added by hslee 2020.07.15 x측 zoom하면 임시로 넣은 label값이 맞지 않게 됨
 
         Legend l = lineChartRawData.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
@@ -577,14 +581,19 @@ public class PipeRecordManagerActivity extends BaseActivity {
         //xAxis.setAxisMaximum(80);
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
+        xAxis.setLabelCount(4);
 
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {   // added by hslee 2020.06.19
+            public String getFormattedValue(float value, AxisBase axis) {
 
                 int index = (int)value;
-                if( index == 0 )
-                    return "1";
+                if( value == 300 )// added by hslee 2020.07.15
+                    return "100";
+                else if( value == 600 )
+                    return "200";
+                else if( value == 900 )
+                    return "300";
                 else
                     return String.valueOf(index);
             }
@@ -681,11 +690,11 @@ public class PipeRecordManagerActivity extends BaseActivity {
                 if (lineDataSet1 != null)
                     lineData.addDataSet(lineDataSet1);
 
-                LineDataSet lineDataSet2 = generateLineData("Horizontal", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange), true);
+                LineDataSet lineDataSet2 = generateLineData("Horizontal", yDataList2, ContextCompat.getColor(getBaseContext(), android.R.color.white), true);
                 if (lineDataSet2 != null)
                     lineData.addDataSet(lineDataSet2);
 
-                LineDataSet lineDataSet3 = generateLineData("Axial", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue), true);
+                LineDataSet lineDataSet3 = generateLineData("Axial", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myBlueLight), true);
                 if (lineDataSet3 != null)
                     lineData.addDataSet(lineDataSet3);
 
@@ -715,12 +724,12 @@ public class PipeRecordManagerActivity extends BaseActivity {
                     lineData.addDataSet(lineDataSet1);
                 }
 
-                LineDataSet lineDataSet2 = generateLineData("Horizontal", yDataList2, ContextCompat.getColor(getBaseContext(), R.color.myorange), true);
+                LineDataSet lineDataSet2 = generateLineData("Horizontal", yDataList2, ContextCompat.getColor(getBaseContext(), android.R.color.white), true);
                 if (lineDataSet2 != null) {
                     lineData.addDataSet(lineDataSet2);
                 }
 
-                LineDataSet lineDataSet3 = generateLineData("Axial", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myblue), true);
+                LineDataSet lineDataSet3 = generateLineData("Axial", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myBlueLight), true);
                 if (lineDataSet3 != null) {
                     lineData.addDataSet(lineDataSet3);
                 }

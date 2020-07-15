@@ -299,16 +299,16 @@ public class ResultActivity extends BaseActivity {
             }
         });
 
-        Button buttonExplorer = findViewById(R.id.buttonExplorer);  // for test
+        Button buttonExplorer = findViewById(R.id.buttonExplorer);
         buttonExplorer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = getPackageManager().getLaunchIntentForPackage("com.sec.android.app.myfiles");
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "SVSdata" + File.separator + "csv" + File.separator + "pump" + File.separator;
-                intent.setData(Uri.parse(path));
+                // not work
+                //String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "SVSdata" + File.separator + "csv" + File.separator + "pump" + File.separator;
+                //intent.setData(Uri.parse(path));
                 startActivity(intent);
             }
         });
@@ -415,13 +415,13 @@ public class ResultActivity extends BaseActivity {
                     long createdLong = analysisData.getMeasureData1().getCaptureTime().getTime();   // 측정된 시간으로 저장하기
                     analysisEntity.setCreated(createdLong);
 
-                    float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();
-                    float rms2 = analysisData.getMeasureData2().getSvsTime().getdRms();
-                    float rms3 = analysisData.getMeasureData3().getSvsTime().getdRms();
+//                    float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();   // added by hslee 2020.07.15
+//                    float rms2 = analysisData.getMeasureData2().getSvsTime().getdRms();
+//                    float rms3 = analysisData.getMeasureData3().getSvsTime().getdRms();
 
-                    analysisEntity.setRms1(rms1);
-                    analysisEntity.setRms2(rms2);
-                    analysisEntity.setRms3(rms3);
+                    analysisEntity.setRms1(matrix2.rms1);
+                    analysisEntity.setRms2(matrix2.rms2);
+                    analysisEntity.setRms3(matrix2.rms3);
 
                     RealmList<String> cause = new RealmList<>();
                     RealmList<String> causeDesc = new RealmList<>();
@@ -459,6 +459,9 @@ public class ResultActivity extends BaseActivity {
     }
 
     // rms 값 추가
+    // 2020.07.15
+    // 기존방식은 센서에서 올라오는 측정값 rms값과 기준값 warning, danger를 이용하여 판단했는데
+    // 07.15이후는 측정값 matrix2의 rms값과 기준값 analysisData.rmsLimit를 이용하여 판단-> 기준값 1개를 넘으면 problem으로 표시
     private void addRmsItem() {
         RmsModel rmsModel1 = new RmsModel();
         RmsModel rmsModel2 = new RmsModel();
@@ -489,19 +492,22 @@ public class ResultActivity extends BaseActivity {
 
         }
         else {
-            float danger1 = analysisData.getMeasureData1().getRmsDanger();
-            float danger2 = analysisData.getMeasureData2().getRmsDanger();
-            float danger3 = analysisData.getMeasureData3().getRmsDanger();
-            rmsModel1.setDanger(danger1);
-            rmsModel2.setDanger(danger2);
-            rmsModel3.setDanger(danger3);
-
-            float warning1 = analysisData.getMeasureData1().getRmsWarning();
-            float warning2 = analysisData.getMeasureData2().getRmsWarning();
-            float warning3 = analysisData.getMeasureData3().getRmsWarning();
-            rmsModel1.setWarning(warning1);
-            rmsModel2.setWarning(warning2);
-            rmsModel3.setWarning(warning3);
+            rmsModel1.setDanger(analysisData.rmsLimit);
+            rmsModel2.setDanger(analysisData.rmsLimit);
+            rmsModel3.setDanger(analysisData.rmsLimit);
+//            float danger1 = analysisData.getMeasureData1().getRmsDanger();
+//            float danger2 = analysisData.getMeasureData2().getRmsDanger();
+//            float danger3 = analysisData.getMeasureData3().getRmsDanger();
+//            rmsModel1.setDanger(danger1);
+//            rmsModel2.setDanger(danger2);
+//            rmsModel3.setDanger(danger3);
+//
+//            float warning1 = analysisData.getMeasureData1().getRmsWarning();
+//            float warning2 = analysisData.getMeasureData2().getRmsWarning();
+//            float warning3 = analysisData.getMeasureData3().getRmsWarning();
+//            rmsModel1.setWarning(warning1);
+//            rmsModel2.setWarning(warning2);
+//            rmsModel3.setWarning(warning3);
         }
 
         rmsList.add(rmsModel1);

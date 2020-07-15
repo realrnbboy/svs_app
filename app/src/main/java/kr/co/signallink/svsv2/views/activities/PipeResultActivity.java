@@ -234,6 +234,20 @@ public class PipeResultActivity extends BaseActivity {
             }
         });
 
+        Button buttonExplorer = findViewById(R.id.buttonExplorer);
+        buttonExplorer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = getPackageManager().getLaunchIntentForPackage("com.sec.android.app.myfiles");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                // not work
+                //String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "SVSdata" + File.separator + "csv" + File.separator + "pump" + File.separator;
+                //intent.setData(Uri.parse(path));
+                startActivity(intent);
+            }
+        });
+
         Button buttonSaveCsv = findViewById(R.id.buttonSaveCsv);
         buttonSaveCsv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -377,6 +391,7 @@ public class PipeResultActivity extends BaseActivity {
         //lineChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
         lineChartRawData.setNoDataText("no data.");
         lineChartRawData.setOnChartValueSelectedListener(onChartValueSelectedListenerRawData);
+        lineChartRawData.setScaleXEnabled(false);   // added by hslee 2020.07.15 x측 zoom하면 임시로 넣은 label값이 맞지 않게 됨
 
         Legend l = lineChartRawData.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
@@ -407,14 +422,19 @@ public class PipeResultActivity extends BaseActivity {
         //xAxis.setAxisMaximum(80);
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
+        xAxis.setLabelCount(4);
 
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {   // added by hslee 2020.06.19
+            public String getFormattedValue(float value, AxisBase axis) {
 
                 int index = (int)value;
-                if( index == 0 )
-                    return "1";
+                if( value == 300 )// added by hslee 2020.07.15
+                    return "100";
+                else if( value == 600 )
+                    return "200";
+                else if( value == 900 )
+                    return "300";
                 else
                     return String.valueOf(index);
             }
@@ -466,6 +486,7 @@ public class PipeResultActivity extends BaseActivity {
 
             if (data1 != null) {
                 for (float v : data1) {
+                    v = (float)Math.log(v);
                     valueList1.add(v);
                 }
             }
@@ -474,19 +495,21 @@ public class PipeResultActivity extends BaseActivity {
 
             if (data2 != null) {
                 for (float v : data2) {
+                    v = (float)Math.log(v);
                     valueList2.add(v);
                 }
             }
 
-            lineData.addDataSet(generateLineData("Horizontal", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myblue)));
+            lineData.addDataSet(generateLineData("Horizontal", valueList2, ContextCompat.getColor(getBaseContext(), android.R.color.white)));
 
             if (data3 != null) {
                 for (float v : data3) {
+                    v = (float)Math.log(v);
                     valueList3.add(v);
                 }
             }
 
-            lineData.addDataSet(generateLineData("Axial", valueList3, ContextCompat.getColor(getBaseContext(), R.color.hotpink)));
+            lineData.addDataSet(generateLineData("Axial", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myBlueLight)));
 
             if (data4 != null) {
                 for (float v : data4) {
@@ -513,11 +536,11 @@ public class PipeResultActivity extends BaseActivity {
         lineData.setDrawValues(true);
 
         XAxis xAxis = lineChartRawData.getXAxis();
-//        int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
-//        xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
-//        xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
-//        xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
-        xAxis.setAxisMaximum(Constants.MAX_PIPE_X_VALUE);
+        int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
+        xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
+        xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
+        xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+        //xAxis.setAxisMaximum(Constants.MAX_PIPE_X_VALUE);
 
         lineChartRawData.setData(lineData);
         lineChartRawData.invalidate();

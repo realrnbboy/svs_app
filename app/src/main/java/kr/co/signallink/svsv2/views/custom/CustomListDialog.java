@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -29,6 +30,8 @@ import kr.co.signallink.svsv2.utils.ValueUtil;
 
 public class CustomListDialog extends Dialog implements View.OnClickListener {
 
+    Context m_context;
+
     //LayoutIds
     private final int dialogLayoutId = R.layout.custom_list_dialog;
     private final int commonButtonLayoutId = R.layout.custom_list_dialog_element_common_button;
@@ -51,6 +54,8 @@ public class CustomListDialog extends Dialog implements View.OnClickListener {
     //생성자
     public CustomListDialog(Context context, int stringArrayId) {
         super(context);
+
+        m_context = context;
 
         //화면 초기화
         initView();
@@ -125,6 +130,7 @@ public class CustomListDialog extends Dialog implements View.OnClickListener {
             Button button = (Button)inflater.inflate(commonButtonLayoutId, null);
             button.setText(buttonNames[i]);
             button.setOnClickListener(this);
+            button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, m_context.getResources().getDimension(R.dimen.font_midium) / m_context.getResources().getDisplayMetrics().density);    // added by hslee 2020.07.15 폰트사이즈 맞춤
             button.setTag(new Integer(i+1));
             commonButtons.add(button);
 
@@ -134,6 +140,7 @@ public class CustomListDialog extends Dialog implements View.OnClickListener {
         //취소 버튼 추가
         cancelButton = (Button)inflater.inflate(cancelButtonLayoutId, null);
         cancelButton.setText("CANCEL");
+        cancelButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, m_context.getResources().getDimension(R.dimen.font_midium) / m_context.getResources().getDisplayMetrics().density);    // added by hslee 2020.07.15 폰트사이즈 맞춤
         cancelButton.setOnClickListener(this);
         buttonContainer.addView(cancelButton);
 

@@ -195,6 +195,7 @@ public class PipeMeasureActivity extends BaseActivity {
         lineChartRawData.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorContent));
         lineChartRawData.setNoDataText("no data. please measure first");
         lineChartRawData.setOnChartValueSelectedListener(onChartValueSelectedListenerRawData);
+        lineChartRawData.setScaleXEnabled(false);   // added by hslee 2020.07.15 x측 zoom하면 임시로 넣은 label값이 맞지 않게 됨
 
         Legend l = lineChartRawData.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
@@ -209,7 +210,7 @@ public class PipeMeasureActivity extends BaseActivity {
 
         YAxis leftAxis = lineChartRawData.getAxisLeft();
         //leftAxis.setDrawGridLines(false);
-        //leftAxis.setAxisMinimum(1);
+        //leftAxis.setAxisMinimum(0);   // 다른 pipe 차트는 log계산 후 표시하지만, measure는 그냥 표시함.
         leftAxis.setTextColor(Color.WHITE);
 
         XAxis xAxis = lineChartRawData.getXAxis();
@@ -223,14 +224,19 @@ public class PipeMeasureActivity extends BaseActivity {
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
         //applyXAxisDefault(xAxis, l);
+        xAxis.setLabelCount(4);
 
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {   // added by hslee 2020.06.19
+            public String getFormattedValue(float value, AxisBase axis) {
 
                 int index = (int)value;
-                if( index == 0 )
-                    return "1";
+                if( value == 300 )// added by hslee 2020.07.15
+                    return "100";
+                else if( value == 600 )
+                    return "200";
+                else if( value == 900 )
+                    return "300";
                 else
                     return String.valueOf(index);
             }
@@ -297,7 +303,7 @@ public class PipeMeasureActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("Horizontal", valueList2, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
+            lineData.addDataSet(generateLineData("Horizontal", valueList2, ContextCompat.getColor(getBaseContext(), android.R.color.white)));
 //
             if (data3 != null) {
                 for (float v : data3) {
@@ -305,7 +311,7 @@ public class PipeMeasureActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("Axial", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myred)));
+            lineData.addDataSet(generateLineData("Axial", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myBlueLight)));
         } catch (Exception ex) {
             return;
         }

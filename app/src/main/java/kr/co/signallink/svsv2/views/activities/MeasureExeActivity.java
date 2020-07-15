@@ -448,13 +448,12 @@ public class MeasureExeActivity extends Activity {
             {
                 MeasureData measureData = measureDatas.get(0);
                 if( !bModePump ) {  // added by hslee 2020.06.08 파이프는 rawdata를 300개만 사용
-                    float [] newFreq = new float[Constants.MAX_PIPE_X_VALUE];
-                    float [] freq = measureData.getAxisBuf().getfFreq();
-                    for( int i = 0; i < Constants.MAX_PIPE_X_VALUE; i++ ) {
-                        newFreq[i] = freq[i];
-                    }
-
-                    measureData.getAxisBuf().setfFreq(newFreq);
+//                    float [] newFreq = new float[Constants.MAX_PIPE_X_VALUE];
+//                    for( int i = 0; i < Constants.MAX_PIPE_X_VALUE; i++ ) {
+//                        newFreq[i] = freq[i];
+//                    }
+//
+//                    measureData.getAxisBuf().setfFreq(freq);
                 }
 
 //                String td = "";

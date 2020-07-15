@@ -83,6 +83,7 @@
                     android:background="@drawable/radiobutton_background"
                     android:button="@android:color/transparent"
                     android:paddingVertical="@dimen/padding_default"
+                    android:textSize="@dimen/font_midium"
                     android:checked="true"
                     android:text="Vertical" />
 
@@ -96,6 +97,7 @@
                     android:background="@drawable/radiobutton_background"
                     android:button="@android:color/transparent"
                     android:paddingVertical="@dimen/padding_default"
+                    android:textSize="@dimen/font_midium"
                     android:text="Horizontal" />
 
                 <RadioButton
@@ -108,6 +110,7 @@
                     android:background="@drawable/radiobutton_background"
                     android:button="@android:color/transparent"
                     android:paddingVertical="@dimen/padding_default"
+                    android:textSize="@dimen/font_midium"
                     android:text="Axial" />
             </RadioGroup>
         </LinearLayout>

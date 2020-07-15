@@ -101,6 +101,7 @@
     <style name="button_confirm">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">40dp</item>
+        <item name="android:textSize">14dp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:background">@drawable/btn_orange_round</item>
     </style>
@@ -116,7 +117,7 @@
         <item name="android:background">@drawable/btn_primary</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">14dp</item>
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
 

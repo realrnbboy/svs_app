@@ -156,20 +156,6 @@ public class MeasureActivity extends BaseActivity {
             }
         });
 
-        Button buttonExplorer = findViewById(R.id.buttonExplorer);  // for test
-        buttonExplorer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = getPackageManager().getLaunchIntentForPackage("com.sec.android.app.myfiles");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "SVSdata" + File.separator + "csv" + File.separator + "pump" + File.separator;
-                intent.setData(Uri.parse(path));
-                startActivity(intent);
-            }
-        });
-
         Button buttonMeasure = findViewById(R.id.buttonMeasure);
         buttonMeasure.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -339,8 +339,10 @@ public class DiagnosisInfo {
                     resultMatrix2.aData1[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[17]);
                 else if (col == 15) // Noise Floor 2
                     resultMatrix2.aData1[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[18]);
-                else if (col == 21) // RMS인 경우
+                else if (col == 21) { // RMS인 경우
                     resultMatrix2.aData1[col + 3] = svsCommon.fnSQRT_SUMSQ(tmpData, true);
+                    resultMatrix2.rms1 = resultMatrix2.aData1[col + 3];     // added by hslee 2020.07.15 측정된 값이 아닌 계산된 값을 사용
+                }
                 else // A>R, R<A, OA RMS 이외의 경우
                     resultMatrix2.aData1[col + 3] = svsCommon.fnSQRT_SUMSQ(tmpData, false);
             }
@@ -355,8 +357,10 @@ public class DiagnosisInfo {
                     resultMatrix2.aData2[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[17]);
                 else if (col == 15) // Noise Floor 2
                     resultMatrix2.aData2[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[18]);
-                else if (col == 21) // RMS인 경우
+                else if (col == 21) { // RMS인 경우
                     resultMatrix2.aData2[col + 3] = svsCommon.fnSQRT_SUMSQ(tmpData, true);
+                    resultMatrix2.rms2 = resultMatrix2.aData2[col + 3];     // added by hslee 2020.07.15 측정된 값이 아닌 계산된 값을 사용
+                }
                 else // A>R, R<A, OA RMS 이외의 경우
                     resultMatrix2.aData2[col + 3] = svsCommon.fnSQRT_SUMSQ(tmpData, false);
             }
@@ -371,8 +375,10 @@ public class DiagnosisInfo {
                     resultMatrix2.aData3[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[17]);
                 else if (col == 15) // Noise Floor 2
                     resultMatrix2.aData3[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[18]);
-                else if (col == 21) // RMS인 경우
+                else if (col == 21) { // RMS인 경우
                     resultMatrix2.aData3[col + 3] = svsCommon.fnSQRT_SUMSQ(tmpData, true);
+                    resultMatrix2.rms3 = resultMatrix2.aData3[col + 3];     // added by hslee 2020.07.15 측정된 값이 아닌 계산된 값을 사용
+                }
                 else // A>R, R<A, OA RMS 이외의 경우
                     resultMatrix2.aData3[col + 3] = svsCommon.fnSQRT_SUMSQ(tmpData, false);
             }

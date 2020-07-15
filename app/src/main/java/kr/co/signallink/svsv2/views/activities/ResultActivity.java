@@ -468,14 +468,15 @@ public class ResultActivity extends BaseActivity {
         rmsModel2.setName("Horizontal");
         rmsModel3.setName("Axial");
 
-        float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();
-        float rms2 = analysisData.getMeasureData2().getSvsTime().getdRms();
-        float rms3 = analysisData.getMeasureData3().getSvsTime().getdRms();
-        rmsModel1.setRms(rms1);
-        rmsModel2.setRms(rms2);
-        rmsModel3.setRms(rms3);
-//        rmsModel2.setRms(5);    // for test
-//        rmsModel3.setRms(5);    // for test
+//        float rms1 = analysisData.getMeasureData1().getSvsTime().getdRms();   // deleted by hslee 2020.07.15
+//        float rms2 = analysisData.getMeasureData2().getSvsTime().getdRms();
+//        float rms3 = analysisData.getMeasureData3().getSvsTime().getdRms();
+//        rmsModel1.setRms(rms1);
+//        rmsModel2.setRms(rms2);
+//        rmsModel3.setRms(rms3);
+        rmsModel1.setRms(matrix2.rms1);
+        rmsModel2.setRms(matrix2.rms2);
+        rmsModel3.setRms(matrix2.rms3);
 
         if( analysisData.getDiagVar1().nCode == 4 ) {   // added by hslee 2020.05.25 사용자 입력값 사용할 경우
             rmsModel1.setbProjectVib(true);
@@ -492,8 +493,6 @@ public class ResultActivity extends BaseActivity {
             float danger2 = analysisData.getMeasureData2().getRmsDanger();
             float danger3 = analysisData.getMeasureData3().getRmsDanger();
             rmsModel1.setDanger(danger1);
-//            rmsModel2.setDanger(6);    // for test
-//            rmsModel3.setDanger(0.005);    // for test
             rmsModel2.setDanger(danger2);
             rmsModel3.setDanger(danger3);
 

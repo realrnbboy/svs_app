@@ -1123,8 +1123,8 @@ public class MainData {
             for (int j = 0; j < nFeatureCols; j++) // 첫번째 컬럼(C1, C2, ... C21) 제외
             {
                 try {
-                    //featureInfos.infos[i].fValues[j] = Float.parseFloat(feature[i][j]);   // for test
-                    featureInfos.infos[i].fValues[j] = 1;   // for test
+                    featureInfos.infos[i].fValues[j] = Float.parseFloat(feature[i][j]);
+                    //featureInfos.infos[i].fValues[j] = 1;   // for test
                     // System.out.println("i: " + i + ", j : " + j + " : " + xlFeature[i+1 ][j+1 ]);
                 }
                 catch (Exception e) {

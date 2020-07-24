@@ -40,7 +40,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="Defeact cause"
+                        android:text="Defect cause"
                         android:textColor="@color/myblue"
                         android:textSize="@dimen/font_midium" />
                 </LinearLayout>

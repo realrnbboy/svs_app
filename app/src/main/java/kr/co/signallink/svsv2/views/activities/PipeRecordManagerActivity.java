@@ -404,7 +404,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
         try {
             if (data1 != null) {
                 for (float v : data1) {
-                    v = (float)Math.log(v);
+                    // v = (float)Math.log(v);
                     valueList1.add(v);
                 }
             }
@@ -413,7 +413,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
 
             if (data2 != null) {
                 for (float v : data2) {
-                    v = (float)Math.log(v);
+                    // v = (float)Math.log(v);
                     valueList2.add(v);
                 }
             }
@@ -422,7 +422,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
 
             if (data3 != null) {
                 for (float v : data3) {
-                    v = (float)Math.log(v);
+                    // v = (float)Math.log(v);
                     valueList3.add(v);
                 }
             }

@@ -230,6 +230,15 @@
                         android:textSize="@dimen/font_larger"
                         android:textColor="@android:color/white"
                         android:text="VER 2.0.0"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/color1"
+                        android:textSize="@dimen/font_large_sm"
+                        android:textAlignment="center"
+                        android:onClick="manual"
+                        android:text="Manual" />
                 </LinearLayout>
             </LinearLayout>
 

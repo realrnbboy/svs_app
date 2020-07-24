@@ -1,10 +1,16 @@
 package kr.co.signallink.svsv2.views.activities;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,6 +18,11 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.fivehundredpx.android.blur.BlurringView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import io.realm.RealmResults;
 import kr.co.signallink.svsv2.R;
@@ -21,7 +32,10 @@ import kr.co.signallink.svsv2.databases.web.WebLoginEntity;
 import kr.co.signallink.svsv2.services.UartService;
 import kr.co.signallink.svsv2.user.SVS;
 import kr.co.signallink.svsv2.utils.DialogUtil;
+import kr.co.signallink.svsv2.utils.FileUtil;
 import kr.co.signallink.svsv2.utils.SharedUtil;
+import kr.co.signallink.svsv2.utils.ToastUtil;
+import kr.co.signallink.svsv2.utils.Utils;
 import kr.pe.burt.android.lib.animategradientview.AnimateGradientView;
 
 import static java.lang.System.exit;
@@ -50,7 +64,6 @@ public class SelectPipePumpModeActivity extends BaseActivity {
 //        //블러효과
 //        llMode1.setBlurredView(llRoot);
 //        llMode2.setBlurredView(llRoot);
-
 
     }
 
@@ -96,6 +109,51 @@ public class SelectPipePumpModeActivity extends BaseActivity {
         startActivity(intent);
 
         SVS.getInstance().setScreenMode(DefConstant.SCREEN_MODE.LOCAL);
+    }
+
+    //pump 클릭
+    public void manual(View view) { // added by hslee 2020.07.16
+
+        AssetManager assetManager = getAssets();
+
+        try {
+            String fileName = "manual.pdf";
+            InputStream in = assetManager.open(fileName);   // assets 폴더의 원본 파일 설정
+            File file = new File(SVS.rootDir, fileName); // 저장할 파일 설정
+            OutputStream out = new FileOutputStream(SVS.rootDir+fileName);
+
+            // 내부저장소에 저장하는 방식 - not work
+            //File file = new File(getFilesDir(), fileName); // 저장할 파일 설정
+            //OutputStream out = openFileOutput(file.getName(), Context.MODE_PRIVATE);    // output stream 설정
+
+            Utils.copyFile(in, out);    // 파일 복사
+
+            in.close();
+            out.flush();
+            out.close();
+
+            if( !file.exists() ) {
+                ToastUtil.showShort("manual file deleted or error.");
+                return;
+            }
+
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();    // for pdf open
+            StrictMode.setVmPolicy(builder.build());
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType( Uri.fromFile(file), "application/pdf");
+
+            // 내부저장소에 저장하는 방식 - not work
+            //intent.setDataAndType( Uri.parse("file//" + getFilesDir() + fileName), "application/pdf");
+
+            startActivity(intent);
+        }
+        catch (ActivityNotFoundException e) {
+            ToastUtil.showShort("please install pdf viewer app.");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

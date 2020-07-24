@@ -134,6 +134,29 @@ public class MeasureActivity extends BaseActivity {
 
     void initView() {
 
+        Button buttonExplorer = findViewById(R.id.buttonExplorer);
+        buttonExplorer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = getPackageManager().getLaunchIntentForPackage("com.sec.android.app.myfiles");
+                if( intent == null ) {
+                    intent = getPackageManager().getLaunchIntentForPackage("com.lge.filemanager");
+                }
+
+                if( intent == null ) {
+                    ToastUtil.showShort("not support open file manager.");
+                    return;
+                }
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                // not work
+                //String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "SVSdata" + File.separator + "csv" + File.separator + "pump" + File.separator;
+                //intent.setData(Uri.parse(path));
+                startActivity(intent);
+            }
+        });
+
         Button buttonAnalysis = findViewById(R.id.buttonAnalysis);
         buttonAnalysis.setOnClickListener(new View.OnClickListener() {
             @Override

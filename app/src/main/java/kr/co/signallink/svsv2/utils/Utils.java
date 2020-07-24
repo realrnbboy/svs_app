@@ -15,6 +15,8 @@ import org.json.JSONException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.text.DateFormat;
@@ -258,7 +260,9 @@ public class Utils {
         float[] list = new float[MAX_X_VALUE];
 
         for( int i = 0; i<MAX_X_VALUE; i++ ) {
-            list[i] = (float) (10 * ((Math.log(i+1) + 0.48017) / 2.127612));
+            //list[i] = (float) (10 * ((Math.log(i+1) + 0.48017) / 2.127612));
+           // list[i] = (float) (10 * (((i+1) + 0.48017) / 2.127612));
+            list[i] = (float) Math.pow(10, ((Math.log10(i+1) + 0.48017) / 2.127612));
         }
 
         return list;
@@ -270,7 +274,9 @@ public class Utils {
         float[] list = new float[MAX_X_VALUE];
 
         for( int i = 0; i<MAX_X_VALUE; i++ ) {
-            list[i] = (float) (10 * ((Math.log(i+1) + 1.871083) / 2.084547));
+            //list[i] = (float) (10 * ((Math.log(i+1) + 1.871083) / 2.084547));
+            //list[i] = (float) (10 * (((i+1) + 1.871083) / 2.084547));
+            list[i] = (float) Math.pow(10, ((Math.log10(i+1) + 1.871083) / 2.084547));
         }
 
         return list;
@@ -351,5 +357,16 @@ public class Utils {
 
         String ret = sharedPreferences.getString(key, defaultValue);
         return ret;
+    }
+
+
+    public static void copyFile(InputStream in, OutputStream out) throws Exception
+    {
+        byte[] buffer = new byte[1024];
+        int read;
+        while ((read = in.read(buffer)) != -1)
+        {
+            out.write(buffer, 0, read);
+        }
     }
 }

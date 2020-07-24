@@ -240,6 +240,14 @@ public class PipeResultActivity extends BaseActivity {
             public void onClick(View v) {
 
                 Intent intent = getPackageManager().getLaunchIntentForPackage("com.sec.android.app.myfiles");
+                if( intent == null ) {
+                    intent = getPackageManager().getLaunchIntentForPackage("com.lge.filemanager");
+                }
+
+                if( intent == null ) {
+                    ToastUtil.showShort("not support open file manager.");
+                    return;
+                }
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 // not work
                 //String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "SVSdata" + File.separator + "csv" + File.separator + "pump" + File.separator;
@@ -486,7 +494,7 @@ public class PipeResultActivity extends BaseActivity {
 
             if (data1 != null) {
                 for (float v : data1) {
-                    v = (float)Math.log(v);
+                    // v = (float)Math.log(v);
                     valueList1.add(v);
                 }
             }
@@ -495,7 +503,7 @@ public class PipeResultActivity extends BaseActivity {
 
             if (data2 != null) {
                 for (float v : data2) {
-                    v = (float)Math.log(v);
+                    // v = (float)Math.log(v);
                     valueList2.add(v);
                 }
             }
@@ -504,7 +512,7 @@ public class PipeResultActivity extends BaseActivity {
 
             if (data3 != null) {
                 for (float v : data3) {
-                    v = (float)Math.log(v);
+                    // v = (float)Math.log(v);
                     valueList3.add(v);
                 }
             }

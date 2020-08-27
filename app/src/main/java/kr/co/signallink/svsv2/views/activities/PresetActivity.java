@@ -48,6 +48,7 @@ public class PresetActivity extends BaseActivity {
     static final String PRESET_USER_DEFINITION = "User Definition";
 
     ArrayList arrayListPreset = new ArrayList<>();
+    final int SAVED_PRESET_COUNT = 9;
     ArrayList arrayListEquipmentCode = new ArrayList<>();
     ArrayList arrayListEquipmentSubCode = new ArrayList<>();
     ArrayList arrayListLineFrequency = new ArrayList<>();
@@ -380,7 +381,8 @@ public class PresetActivity extends BaseActivity {
         spinnerBearingType.setAdapter(arrayAdapterBearingType);
 
         // 서버에서 preset 정보 불러오기
-        getPresetFromServer();
+        //getPresetFromServer();    // 임시 삭제 2020.08.27
+        parsePreset("");
 
        // mainData = new MainData(this);
     }
@@ -802,7 +804,7 @@ public class PresetActivity extends BaseActivity {
             int bearingType = (int)spinnerBearingType.getSelectedItemId();
             int lineFrequency = (int)spinnerLineFrequency.getSelectedItemId();
 
-            int projectVibSpec = Integer.parseInt(editTextProjectVibSpec.getText().toString());
+            //int projectVibSpec = Integer.parseInt(editTextProjectVibSpec.getText().toString());
             String siteCode = editTextSiteCode.getText().toString();
             String equipmentName = editTextEquipmentName.getText().toString();
             String tagNo = editTextTagNo.getText().toString();
@@ -840,27 +842,27 @@ public class PresetActivity extends BaseActivity {
             // 내부 저장소에 저장
             Utils.setSharedPreferencesStringArray(this, "preset", "userpreset"+equipmentUuid, userDefinitionPreset);
 
-            preset[5][0] = userDefinitionPreset.get(0);
-            preset[5][1] = userDefinitionPreset.get(1);
-            preset[5][2] = userDefinitionPreset.get(2);
-            preset[5][3] = userDefinitionPreset.get(3);
-            preset[5][4] = userDefinitionPreset.get(4);
-            preset[5][5] = userDefinitionPreset.get(5);
-            preset[5][6] = userDefinitionPreset.get(6);
-            preset[5][7] = userDefinitionPreset.get(7);
-            preset[5][8] = userDefinitionPreset.get(8);
-            preset[5][9] = userDefinitionPreset.get(9);
-            preset[5][10] = userDefinitionPreset.get(10);
-            preset[5][11] = userDefinitionPreset.get(11);
-            preset[5][12] = userDefinitionPreset.get(12);
-            preset[5][13] = userDefinitionPreset.get(13);
-            preset[5][14] = userDefinitionPreset.get(14);
-            preset[5][15] = userDefinitionPreset.get(15);
-            preset[5][16] = userDefinitionPreset.get(16);
-            preset[5][17] = userDefinitionPreset.get(17);
-            preset[5][18] = userDefinitionPreset.get(18);
+            preset[SAVED_PRESET_COUNT][0] = userDefinitionPreset.get(0);
+            preset[SAVED_PRESET_COUNT][1] = userDefinitionPreset.get(1);
+            preset[SAVED_PRESET_COUNT][2] = userDefinitionPreset.get(2);
+            preset[SAVED_PRESET_COUNT][3] = userDefinitionPreset.get(3);
+            preset[SAVED_PRESET_COUNT][4] = userDefinitionPreset.get(4);
+            preset[SAVED_PRESET_COUNT][5] = userDefinitionPreset.get(5);
+            preset[SAVED_PRESET_COUNT][6] = userDefinitionPreset.get(6);
+            preset[SAVED_PRESET_COUNT][7] = userDefinitionPreset.get(7);
+            preset[SAVED_PRESET_COUNT][8] = userDefinitionPreset.get(8);
+            preset[SAVED_PRESET_COUNT][9] = userDefinitionPreset.get(9);
+            preset[SAVED_PRESET_COUNT][10] = userDefinitionPreset.get(10);
+            preset[SAVED_PRESET_COUNT][11] = userDefinitionPreset.get(11);
+            preset[SAVED_PRESET_COUNT][12] = userDefinitionPreset.get(12);
+            preset[SAVED_PRESET_COUNT][13] = userDefinitionPreset.get(13);
+            preset[SAVED_PRESET_COUNT][14] = userDefinitionPreset.get(14);
+            preset[SAVED_PRESET_COUNT][15] = userDefinitionPreset.get(15);
+            preset[SAVED_PRESET_COUNT][16] = userDefinitionPreset.get(16);
+            preset[SAVED_PRESET_COUNT][17] = userDefinitionPreset.get(17);
+            preset[SAVED_PRESET_COUNT][18] = userDefinitionPreset.get(18);
 
-            if( arrayListPreset.size() == 5 ) { // 콤보박스에, 기존에 저장된 것이 없으면 추가
+            if( arrayListPreset.size() == SAVED_PRESET_COUNT ) { // 콤보박스에, 기존에 저장된 것이 없으면 추가
 
                 arrayListPreset.add(PRESET_USER_DEFINITION);
             }
@@ -906,18 +908,33 @@ public class PresetActivity extends BaseActivity {
             //ToastUtil.showShort("failed get preset from server. use in local storage");
 
             preset = new String[][]{
-                    {"1", "Charge Pump #1", "1", "1", "HDO", "Charge Pump", "PP-L25-51", "980", "1", "0", "3579", "5", "3", "0", "0", "0", "0", "0", "0"},
-                    {"2", "Charge Pump #2", "2", "2", "HDO", "Charge Pump", "PP-L25-01", "1080", "1", "0", "3600", "8", "2", "4", "200", "20", "1600", "180", "0"},
-                    {"3", "test2", "3", "1", "dodo1", "motor", "p-02", "200", "1", "0", "3600", "8", "2", "8", "1", "2", "3", "4", "0"},
-                    {"4", "test3", "0", "0", "dodo1", "valve", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "4", "0"},
-                    {"5", "test4", "4", "9", "dodo1", "pump", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "60", "0"},
-                    {"6", PRESET_USER_DEFINITION, "4", "9", "dodo1", "pump", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "60", "0", ""}};
+                {"1","CWP_IBON","2","0","IBON","Circulating Water Pump","P2PAC10AP001","3086","0","1","425","5","2","0","0","0","0","0"},
+                {"2","BFP#1_IBON","2","0","IBON","Motor Driven Boiler Feedwater Pump","P2LAC13AP010KP02","7356.8","0","0","5583","0","2","0","0","0","0","0"},
+                {"3","BFP#2_IBON","2","0","IBON","Turbine Driven Boiler Feedwater Pump","P2LAC11AP010KP02","17943.7","0","0","5857","0","2","0","0","0","0","0"},
+                {"4","CEP_IBON","2","0","IBON","Condensate Extraction Pump","P2LCB10AP010","1276.9","0","1","1486","0","2","0","0","0","0","0"},
+                {"5","CWP_FA30","2","0","FA30","Circulating Water Pump","12PAC10AP001","439.5","1","0","893","0","0","9","0","0","0","0"},
+                {"6","BFP_FA30","2","0","FA30","Boiler Feedwater Pump","12LAC11AP001","1249.4","1","0","3570","0","2","0","0","0","0","0"},
+                {"7","CEP_FA30","2","0","FA30","Condensate Extraction Pump","12LCB11AP001","259.5","1","1","1784","0","1","0","0","0","0","0"},
+                {"8","MCWP_RAPO","4","7.11","RAPO","Main Cooling Water Pump","P00PAC11","2264","0","1","424","5","2","0","0","0","0","0"},
+                {"9","CTBDP_RAPO","4","7.11","RAPO","Cooling Tower BlowDown Pump","P00PAD11","1980","0","1","494","4","3","0","0","0","0","0"},
+                {"10", PRESET_USER_DEFINITION, "4", "9", "dodo1", "pump", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "60", "0", ""}
+//                    {"1", "Charge Pump #1", "1", "1", "HDO", "Charge Pump", "PP-L25-51", "980", "1", "0", "3579", "5", "3", "0", "0", "0", "0", "0", "0"},
+//                    {"2", "Charge Pump #2", "2", "2", "HDO", "Charge Pump", "PP-L25-01", "1080", "1", "0", "3600", "8", "2", "4", "200", "20", "1600", "180", "0"},
+//                    {"3", "test2", "3", "1", "dodo1", "motor", "p-02", "200", "1", "0", "3600", "8", "2", "8", "1", "2", "3", "4", "0"},
+//                    {"4", "test3", "0", "0", "dodo1", "valve", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "4", "0"},
+//                    {"5", "test4", "4", "9", "dodo1", "pump", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "60", "0"},
+//                    {"6", PRESET_USER_DEFINITION, "4", "9", "dodo1", "pump", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "60", "0", ""}
+            };
 
-            arrayListPreset.add("Charge Pump #1");
-            arrayListPreset.add("Charge Pump #2");
-            arrayListPreset.add("test2");
-            arrayListPreset.add("test3");
-            arrayListPreset.add("test4");
+            arrayListPreset.add("CWP_IBON");
+            arrayListPreset.add("BFP#1_IBON");
+            arrayListPreset.add("BFP#2_IBON");
+            arrayListPreset.add("CEP_IBON");
+            arrayListPreset.add("CWP_FA30");
+            arrayListPreset.add("BFP_FA30");
+            arrayListPreset.add("CEP_FA30");
+            arrayListPreset.add("MCWP_RAPO");
+            arrayListPreset.add("CTBDP_RAPO");
         }
         else {
 
@@ -985,28 +1002,28 @@ public class PresetActivity extends BaseActivity {
         // 2020.07.15   사용자가 저장한 데이터가 있으면 불러오기
         if( userDefinitionPreset != null && userDefinitionPreset.size() == 19 ) {
 
-            preset[5][0] = userDefinitionPreset.get(0);//no;
-            preset[5][1] = userDefinitionPreset.get(1);//preset_name;
-            preset[5][2] = userDefinitionPreset.get(2);//code;
-            preset[5][3] = userDefinitionPreset.get(3);//vib_spec;
-            preset[5][4] = userDefinitionPreset.get(4);//site_code;
-            preset[5][5] = userDefinitionPreset.get(5);//equipment_name;
-            preset[5][6] = userDefinitionPreset.get(6);//tag_no;
-            preset[5][7] = userDefinitionPreset.get(7);//input_power;
-            preset[5][8] = userDefinitionPreset.get(8);//line_freq;
-            preset[5][9] = userDefinitionPreset.get(9);//equpment_type;
-            preset[5][10] = userDefinitionPreset.get(10);//rpm;
-            preset[5][11] = userDefinitionPreset.get(11); //blade_vane;
-            preset[5][12] = userDefinitionPreset.get(12);//bearing_type;
-            preset[5][13] = userDefinitionPreset.get(13);//ball_count;
-            preset[5][14] = userDefinitionPreset.get(14);//pitch_diameter;
-            preset[5][15] = userDefinitionPreset.get(15);//ball_diameter;
-            preset[5][16] = userDefinitionPreset.get(16);//rps;
-            preset[5][17] = userDefinitionPreset.get(17);//angle;
-            preset[5][18] = userDefinitionPreset.get(18);//sub_code;
+            preset[SAVED_PRESET_COUNT][0] = userDefinitionPreset.get(0);//no;
+            preset[SAVED_PRESET_COUNT][1] = userDefinitionPreset.get(1);//preset_name;
+            preset[SAVED_PRESET_COUNT][2] = userDefinitionPreset.get(2);//code;
+            preset[SAVED_PRESET_COUNT][3] = userDefinitionPreset.get(3);//vib_spec;
+            preset[SAVED_PRESET_COUNT][4] = userDefinitionPreset.get(4);//site_code;
+            preset[SAVED_PRESET_COUNT][5] = userDefinitionPreset.get(5);//equipment_name;
+            preset[SAVED_PRESET_COUNT][6] = userDefinitionPreset.get(6);//tag_no;
+            preset[SAVED_PRESET_COUNT][7] = userDefinitionPreset.get(7);//input_power;
+            preset[SAVED_PRESET_COUNT][8] = userDefinitionPreset.get(8);//line_freq;
+            preset[SAVED_PRESET_COUNT][9] = userDefinitionPreset.get(9);//equpment_type;
+            preset[SAVED_PRESET_COUNT][10] = userDefinitionPreset.get(10);//rpm;
+            preset[SAVED_PRESET_COUNT][11] = userDefinitionPreset.get(11); //blade_vane;
+            preset[SAVED_PRESET_COUNT][12] = userDefinitionPreset.get(12);//bearing_type;
+            preset[SAVED_PRESET_COUNT][13] = userDefinitionPreset.get(13);//ball_count;
+            preset[SAVED_PRESET_COUNT][14] = userDefinitionPreset.get(14);//pitch_diameter;
+            preset[SAVED_PRESET_COUNT][15] = userDefinitionPreset.get(15);//ball_diameter;
+            preset[SAVED_PRESET_COUNT][16] = userDefinitionPreset.get(16);//rps;
+            preset[SAVED_PRESET_COUNT][17] = userDefinitionPreset.get(17);//angle;
+            preset[SAVED_PRESET_COUNT][18] = userDefinitionPreset.get(18);//sub_code;
 
-            // 기존 추가된 세트가 5개이면 추가
-            if( arrayListPreset.size() < 6 ) {
+            // 기존 추가된 세트가 9개이면 추가
+            if( arrayListPreset.size() < SAVED_PRESET_COUNT + 1 ) {
                 arrayListPreset.add(PRESET_USER_DEFINITION);
             }
         }
@@ -1051,8 +1068,8 @@ public class PresetActivity extends BaseActivity {
         setDefaultSubCodeItem(equipmentCode);
 
         editTextContactAngle.setText(preset[i][17]);
-        if( i == 5 ) {  // 사용자 정의이면
-            spinnerEquipmentSubCode.setSelection(Integer.parseInt(preset[5][18]));
+        if( i == SAVED_PRESET_COUNT ) {  // 사용자 정의이면
+            spinnerEquipmentSubCode.setSelection(Integer.parseInt(preset[SAVED_PRESET_COUNT][18]));
             arrayAdapterEquipmentSubCode.notifyDataSetChanged();
         }
     }

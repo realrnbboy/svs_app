@@ -746,7 +746,7 @@ public class RecordManagerActivity extends BaseActivity implements OnChartValueS
         @Override
         public void onValueSelected(Entry e, Highlight h) {
             TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRmsValue);
-            textViewSelectedItemValue.setText(String.format("%.3f", e.getY()));
+            textViewSelectedItemValue.setText(String.format("%.3fmm/s", e.getY()));
 
             int i = (int) e.getX();
             redrawResultDiagnosisItem(i);

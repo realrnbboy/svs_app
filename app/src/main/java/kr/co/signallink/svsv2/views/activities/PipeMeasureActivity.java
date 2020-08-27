@@ -464,7 +464,7 @@ public class PipeMeasureActivity extends BaseActivity {
         @Override
         public void onValueSelected(Entry e, Highlight h) {
             TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRawDataValue);
-            textViewSelectedItemValue.setText(String.format("%.3f", e.getY()));
+            textViewSelectedItemValue.setText(String.format("%.3fmm/s", e.getY()));
         }
 
         @Override

@@ -99,7 +99,7 @@
                     <TextView
                         android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
                         style="@style/preset_item_textview"
-                        android:text="Pump Code :"/>
+                        android:text="Guideline for Vibration or Assessment Guideline :"/>
 
                     <EditText
                         android:id="@+id/editTextPumpCode"
@@ -110,7 +110,8 @@
                 <LinearLayout
                     android:id="@+id/linearLayoutProjectVibSpec"
                     style="@style/item_sub_layout"
-                    android:layout_marginTop="@dimen/margin_default">
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/margin_default">   <!--2020.08.27 숨김 요청-->
 
                     <TextView
                         android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"

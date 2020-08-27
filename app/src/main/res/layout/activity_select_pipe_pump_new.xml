@@ -40,6 +40,31 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center|end"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:src="@drawable/book"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:textColor="@color/color1"
+                        android:textSize="@dimen/font_large"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="4dp"
+                        android:textAlignment="center"
+                        android:background="@drawable/btn_gray_round"
+                        android:onClick="manual"
+                        android:text="Manual" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="40dp"
                     android:orientation="vertical">
 
@@ -230,15 +255,6 @@
                         android:textSize="@dimen/font_larger"
                         android:textColor="@android:color/white"
                         android:text="VER 2.0.0"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/color1"
-                        android:textSize="@dimen/font_large_sm"
-                        android:textAlignment="center"
-                        android:onClick="manual"
-                        android:text="Manual" />
                 </LinearLayout>
             </LinearLayout>
 

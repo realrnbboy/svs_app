@@ -257,7 +257,10 @@ public class PipeReport1Activity extends BaseActivity {
         try {
 
             for(int i=0; i<yDataList.size(); i++) {
-                entries.add(new Entry(i, yDataList.get(i)));
+               // entries.add(new Entry(i, yDataList.get(i)));
+                if( i < 9 ) // added by hslee 2020.08.27 9개까지 데이터 넣지 말아달라고함.
+                    continue;
+                entries.add(new Entry(i-9, yDataList.get(i)));
             }
 
             lineDataSet = new LineDataSet(entries, label);
@@ -303,7 +306,7 @@ public class PipeReport1Activity extends BaseActivity {
         @Override
         public void onValueSelected(Entry e, Highlight h) {
             TextView textViewSelectedItemValue = findViewById(R.id.textViewSelectedRawDataValue);
-            textViewSelectedItemValue.setText(String.format("%.3f", e.getY()));
+            textViewSelectedItemValue.setText(String.format("%.3fmm/s", e.getY()));
         }
 
         @Override

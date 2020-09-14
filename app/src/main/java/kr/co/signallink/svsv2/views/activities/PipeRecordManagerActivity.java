@@ -409,7 +409,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("Vertical", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), false));
+            lineData.addDataSet(generateLineData("Vertical", valueList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), false, true));
 
             if (data2 != null) {
                 for (float v : data2) {
@@ -418,7 +418,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("Horizontal", valueList2, ContextCompat.getColor(getBaseContext(), android.R.color.white), false));
+            lineData.addDataSet(generateLineData("Horizontal", valueList2, ContextCompat.getColor(getBaseContext(), android.R.color.white), false, true));
 
             if (data3 != null) {
                 for (float v : data3) {
@@ -427,7 +427,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("Axial", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myBlueLight), false));
+            lineData.addDataSet(generateLineData("Axial", valueList3, ContextCompat.getColor(getBaseContext(), R.color.myBlueLight), false, true));
 
             if (data4 != null) {
                 for (float v : data4) {
@@ -435,7 +435,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("concern", valueList4, ContextCompat.getColor(getBaseContext(), R.color.myorange), false));
+            lineData.addDataSet(generateLineData("concern", valueList4, ContextCompat.getColor(getBaseContext(), R.color.myorange), false, true));
 
             if (data5 != null) {
                 for (float v : data5) {
@@ -443,7 +443,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("problem", valueList5, ContextCompat.getColor(getBaseContext(), R.color.myred), false));
+            lineData.addDataSet(generateLineData("problem", valueList5, ContextCompat.getColor(getBaseContext(), R.color.myred), false, true));
         } catch (Exception ex) {
             return;
         }
@@ -457,7 +457,8 @@ public class PipeRecordManagerActivity extends BaseActivity {
 //        xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
 //        xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
 //        xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
-        xAxis.setAxisMaximum(DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX);
+        //xAxis.setAxisMaximum(DefCMDOffset.MEASURE_AXIS_FREQ_ELE_MAX);
+        xAxis.setAxisMaximum(300);
 
         lineChartRawData.setData(lineData);
         lineChartRawData.invalidate();
@@ -588,7 +589,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
             public String getFormattedValue(float value, AxisBase axis) {
 
                 int index = (int)value;
-                if( value == 300 )// added by hslee 2020.07.15
+                if( value == 3000 )// added by hslee 2020.07.15
                     return "100";
                 else if( value == 600 )
                     return "200";
@@ -686,15 +687,15 @@ public class PipeRecordManagerActivity extends BaseActivity {
 
                 //yDataList1.add(rms1);
 
-                LineDataSet lineDataSet1 = generateLineData("Vertical", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), true);
+                LineDataSet lineDataSet1 = generateLineData("Vertical", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), true, false);
                 if (lineDataSet1 != null)
                     lineData.addDataSet(lineDataSet1);
 
-                LineDataSet lineDataSet2 = generateLineData("Horizontal", yDataList2, ContextCompat.getColor(getBaseContext(), android.R.color.white), true);
+                LineDataSet lineDataSet2 = generateLineData("Horizontal", yDataList2, ContextCompat.getColor(getBaseContext(), android.R.color.white), true, false);
                 if (lineDataSet2 != null)
                     lineData.addDataSet(lineDataSet2);
 
-                LineDataSet lineDataSet3 = generateLineData("Axial", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myBlueLight), true);
+                LineDataSet lineDataSet3 = generateLineData("Axial", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myBlueLight), true, false);
                 if (lineDataSet3 != null)
                     lineData.addDataSet(lineDataSet3);
 
@@ -719,17 +720,17 @@ public class PipeRecordManagerActivity extends BaseActivity {
                     rmsXDataList.add(created);
                 }
 
-                LineDataSet lineDataSet1 = generateLineData("Vertical", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), true);
+                LineDataSet lineDataSet1 = generateLineData("Vertical", yDataList1, ContextCompat.getColor(getBaseContext(), R.color.mygreen), true, false);
                 if (lineDataSet1 != null) {
                     lineData.addDataSet(lineDataSet1);
                 }
 
-                LineDataSet lineDataSet2 = generateLineData("Horizontal", yDataList2, ContextCompat.getColor(getBaseContext(), android.R.color.white), true);
+                LineDataSet lineDataSet2 = generateLineData("Horizontal", yDataList2, ContextCompat.getColor(getBaseContext(), android.R.color.white), true, false);
                 if (lineDataSet2 != null) {
                     lineData.addDataSet(lineDataSet2);
                 }
 
-                LineDataSet lineDataSet3 = generateLineData("Axial", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myBlueLight), true);
+                LineDataSet lineDataSet3 = generateLineData("Axial", yDataList3, ContextCompat.getColor(getBaseContext(), R.color.myBlueLight), true, false);
                 if (lineDataSet3 != null) {
                     lineData.addDataSet(lineDataSet3);
                 }
@@ -751,7 +752,7 @@ public class PipeRecordManagerActivity extends BaseActivity {
             //combinedData.setData(lineData);
 
             XAxis xAxis = lineChartRms.getXAxis();
-            int xAxisMaximum = yDataList1.size() <= 0 ? 0 : yDataList1.size()-1;
+            int xAxisMaximum = yDataList1.size() <= 0 ? 0 : yDataList1.size() - 1;
             xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
 
             lineChartRms.setData(lineData);
@@ -759,16 +760,20 @@ public class PipeRecordManagerActivity extends BaseActivity {
         }
     }
 
-    private LineDataSet generateLineData(String label, ArrayList<Float> yDataList, int lineColor, boolean bDrawCircle){
+    private LineDataSet generateLineData(String label, ArrayList<Float> yDataList, int lineColor, boolean bDrawCircle, boolean bIgnoreFrontData){
         ArrayList<Entry> entries = new ArrayList<>();
         LineDataSet lineDataSet = null;
         try {
 
             for(int i=0; i<yDataList.size(); i++) {
-                //entries.add(new Entry(i, yDataList.get(i)));
-                if( i < 9 ) // added by hslee 2020.08.27 9개까지 데이터 넣지 말아달라고함.
-                    continue;
-                entries.add(new Entry(i-9, yDataList.get(i)));
+                if( bIgnoreFrontData ) {
+                    if (i < 9 || i > 300) // added by hslee 2020.08.27 9개까지 데이터 넣지 말아달라고함.
+                        continue;
+                    entries.add(new Entry(i - 9, yDataList.get(i)));
+                }
+                else {
+                    entries.add(new Entry(i, yDataList.get(i)));
+                }
             }
 
             lineDataSet = new LineDataSet(entries, label);

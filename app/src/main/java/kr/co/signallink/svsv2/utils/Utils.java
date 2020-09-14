@@ -262,7 +262,8 @@ public class Utils {
         for( int i = 0; i<MAX_X_VALUE; i++ ) {
             //list[i] = (float) (10 * ((Math.log(i+1) + 0.48017) / 2.127612));
             //list[i] = (float) (10 * (((i+1) + 0.48017) / 2.127612));
-            list[i] = (float) Math.pow(10, ((Math.log10(i+1) + 0.48017) / 2.127612));
+            //list[i] = (float) Math.pow(10, ((Math.log10(i+1) + 0.48017) / 2.127612));
+            list[i] = (float) Math.pow(10, ((Math.log10(i*(400/(float)1024)+1) + 0.48017) / 2.127612));
         }
 
         return list;
@@ -276,7 +277,8 @@ public class Utils {
         for( int i = 0; i<MAX_X_VALUE; i++ ) {
             //list[i] = (float) (10 * ((Math.log(i+1) + 1.871083) / 2.084547));
             //list[i] = (float) (10 * (((i+1) + 1.871083) / 2.084547));
-            list[i] = (float) Math.pow(10, ((Math.log10(i+1) + 1.871083) / 2.084547));
+            //list[i] = (float) Math.pow(10, ((Math.log10(i+1) + 1.871083) / 2.084547));
+            list[i] = (float) Math.pow(10, ((Math.log10(i*(400/(float)1024)+1) + 1.871083) / 2.084547));
         }
 
         return list;

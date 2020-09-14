@@ -437,7 +437,7 @@ public class PipeResultActivity extends BaseActivity {
             public String getFormattedValue(float value, AxisBase axis) {
 
                 int index = (int)value;
-                if( value == 300 )// added by hslee 2020.07.15
+                if( value == 3000 )// added by hslee 2020.07.15
                     return "100";
                 else if( value == 600 )
                     return "200";
@@ -547,7 +547,8 @@ public class PipeResultActivity extends BaseActivity {
         int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
         xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
         xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
-        xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+        //xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+        xAxis.setAxisMaximum(300);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
         //xAxis.setAxisMaximum(Constants.MAX_PIPE_X_VALUE);
 
         lineChartRawData.setData(lineData);
@@ -558,7 +559,7 @@ public class PipeResultActivity extends BaseActivity {
         ArrayList<Entry> entries = new ArrayList<>();
 
         for(int i=0; i<valueList.size(); i++){
-            if( i < 9 ) // added by hslee 2020.08.27 9개까지 데이터 넣지 말아달라고함.
+            if( i < 9 || i > 300 ) // added by hslee 2020.08.27 9개까지 데이터 넣지 말아달라고함.
                 continue;
             entries.add(new Entry(i-9, valueList.get(i)));
             //entries.add(new Entry(i, valueList.get(i)));

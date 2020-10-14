@@ -74,19 +74,20 @@
                         <TextView
                             android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
                             style="@style/preset_item_textview"
-                            android:text="Pump code :" />
+                            android:text="Guideline for Vibration :" />
 
                         <TextView
                             android:id="@+id/textViewPumpCode"
                             android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
                             style="@style/preset_item_edittext"
-                            android:text="pump code"/>
+                            android:text="Guideline for Vibration"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/linearLayoutProjectVibSpec"
                         style="@style/item_sub_layout"
-                        android:layout_marginTop="@dimen/margin_default">
+                        android:visibility="gone"
+                        android:layout_marginTop="@dimen/margin_default">      <!--2020.09.24 숨김 요청-->
 
                         <TextView
                             android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
@@ -320,7 +321,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/btn_red_round"
-                    android:text="explorer"/>
+                    android:text="my folder"/>
 
                 <Button
                     android:id="@+id/buttonNext"

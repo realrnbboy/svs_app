@@ -97,9 +97,9 @@
                     android:layout_marginTop="@dimen/margin_default">
 
                     <TextView
-                        android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
                         style="@style/preset_item_textview"
-                        android:text="Guideline for Vibration or Assessment Guideline :"/>
+                        android:layout_marginBottom="@dimen/margin_preset_item_title_bottom"
+                        android:text="Guideline for Vibration :" />
 
                     <EditText
                         android:id="@+id/editTextPumpCode"

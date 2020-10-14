@@ -194,7 +194,7 @@
                 android:layout_weight="1"
                 android:visibility="gone"
                 android:background="@drawable/btn_red_round"
-                android:text="explorer"/>
+                android:text="my folder"/>
 
             <Button
                 android:id="@+id/buttonAnalysis"

@@ -384,7 +384,7 @@ public class PipeResultActivity extends BaseActivity {
 
         criteriaModel1.setCriteria("High risk of fatigue damage");
         criteriaModel2.setCriteria("Potential of fatigue damage");
-        criteriaModel3.setCriteria("Allowable range");
+        criteriaModel3.setCriteria("Allowable range\n(Below the concern line)");
 
         criteriaList.add(criteriaModel1);
         criteriaList.add(criteriaModel2);

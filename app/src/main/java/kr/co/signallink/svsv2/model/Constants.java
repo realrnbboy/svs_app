@@ -21,8 +21,7 @@ public class Constants {
     public static final byte CHECKSUM_INIT = (byte) 0xA5;
     public static final int MAX_TRANSFER_SIZE = 1024;
     public static final int XFR_MAX = 2048;
-    public static final int MAX_DATA = 10240;
-    public static final int MAX_BUF = 4096;
+    public static final int MAX_DATA = 40960;   // 2020.10.14
 
     // 자료 구조 관련
     public static final int MAX_SVS = 3;
@@ -36,8 +35,8 @@ public class Constants {
     public static final int LENGTH_HELLO_DATA = 49; // 2019.06
     public static final int LENGTH_SERIALNO = 32; // 2019.06
     // public static final int LENGTH_UPLOAD_DATA = 6673;
-    public static final int LENGTH_UPLOAD_DATA = 6677; // 2019.08
-    public static final int LENGTH_MEASURE_DATA = 6229;
+    public static final int LENGTH_UPLOAD_DATA = 12821; // 2019.08  // 2020.10.14
+    public static final int LENGTH_MEASURE_DATA = 12373;    // 2020.10.14
 
     // 타이머 관련
     public static final int TIMEOUT = 1000;
@@ -52,6 +51,9 @@ public class Constants {
     // for HDEC
     public static final int MAX_PRESET = 100;
     public static final int FEATURE_COUNT = 25;
+    public static final int RANGE_COUNT = FEATURE_COUNT - 2;    // 2020.10.14
+    public static final int FEQ_LOWER_LIMIT = 5;         // 2020.09 // 2020.10.14
+    public static final int FEQ_UPPER_LIMIT = 1024;    // 2020.09   // 2020.10.14
 
     public static final int MAX_PIPE_X_VALUE = 300; // added by hslee 2020.06.08
 }

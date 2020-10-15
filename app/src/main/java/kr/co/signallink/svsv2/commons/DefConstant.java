@@ -17,13 +17,13 @@ public class DefConstant {
 
     public static final String 보안키 = "1234520191313210";
 
-    public static final String DEFAULT_SERVER_IP = "112.166.14.38";
+    public static final String DEFAULT_SERVER_IP = "211.33.40.189";
     public static final String DEFAULT_SERVER_PORT = "5010";
 
-    public static final String WEB_URL = "http://112.166.14.38";
+    public static final String WEB_URL = "http://211.33.40.189";
     public static final String WEB_FILE_TEST_URL = "http://www.script-tutorials.com/demos/199/index.html";
 
-    public static final String API_URL = "http://112.166.14.38/";
+    public static final String API_URL = "http://211.33.40.189/";
 
 
     public static final int SVSTRASACTION_INIT = 0;

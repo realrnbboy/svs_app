@@ -24,7 +24,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -370,5 +372,13 @@ public class Utils {
         {
             out.write(buffer, 0, read);
         }
+    }
+
+    public static double getMaxDouble(double array[]) {
+        List<Double> list = new ArrayList<Double>();
+        for (int i = 0; i < array.length; i++) {
+            list.add(array[i]);
+        }
+        return Collections.max(list);
     }
 }

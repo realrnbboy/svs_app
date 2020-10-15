@@ -7,7 +7,8 @@ package kr.co.signallink.svsv2.model;
         public int nNo;
         public String strName;
         public int nCode;   // 0:ANSI HI 9.6.4, 1:API 610, 2:ISO 10816 Cat.1, 3:ISO 10816 Cat.2, 4:Project VIB Spec.
-        public int nPrjVibSpec;
+        public int nCodeType;       // 2020.03.12   // 2020.10.14
+        public float fCodeValue;    // 2020.03.12   // 2020.10.14
         public String strSiteCode;
         public String strEquipName; // Pump, Pipe Name
         public String strTagNo;

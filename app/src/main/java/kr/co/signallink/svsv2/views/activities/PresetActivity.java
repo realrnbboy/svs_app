@@ -1056,8 +1056,9 @@ public class PresetActivity extends BaseActivity {
         editTextBallDiameter.setText(preset[i][15]);
         //editTextRps.setText(preset[i][16]);
 
-        //String rps = getRpsFromRpm(preset[i][16]);
-        //editTextRps.setText(rps); // added by hslee 2020.07.13 rpm에 따라 자동 계산되므로 삭제
+        String rps = getRpsFromRpm(preset[i][16]);
+        editTextRps.setText(rps); // added by hslee 2020.07.13 rpm에 따라 자동 계산되므로 삭제
+        //editTextRps.setText(preset[i][16]); // // for test
 
         spinnerEquipmentCode.setSelection(equipmentCode);
         //spinnerEquipmentSubCode.setSelection(0);

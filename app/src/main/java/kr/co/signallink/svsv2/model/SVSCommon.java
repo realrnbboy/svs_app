@@ -71,7 +71,8 @@ public class SVSCommon {
                 dSumSQ += Math.pow(data[i], 2);
 
             if (bRMS)
-                dResult = Math.sqrt(dSumSQ / 1.5);
+                //dResult = Math.sqrt(dSumSQ / 1.5);
+                dResult = Math.sqrt(dSumSQ / (float)1.5f);  // 2020.10.14
             else
                 dResult = Math.sqrt(dSumSQ);
         }
@@ -116,7 +117,7 @@ public class SVSCommon {
     /// <param name="sequence"></param>
     /// <param name="fPercentile"></param>
     /// <returns></returns>
-    public double fnPercentile(double[] sequence, double fPercentile)
+    public double fnPercentileOld(double[] sequence, double fPercentile)
     {
         Arrays.sort(sequence);
         int N = sequence.length;
@@ -131,6 +132,39 @@ public class SVSCommon {
             int k = (int)n;
             double d = n - k;
             return sequence[k - 1] + d * (sequence[k] - sequence[k - 1]);
+        }
+    }
+
+    public double fnPercentile(double[] sequence, double fPercentile)   // 2020.10.14
+    {
+        int nLen = 0;
+        double[] tmpArr = new double[sequence.length];
+        for (int i = 0; i < sequence.length; i++)
+        {
+            if (sequence[i] > 0)
+            {
+                tmpArr[nLen] = sequence[i];
+                nLen++;
+            }
+        }
+        //Array.Sort(tmpArr);
+
+        double[] data = new double[nLen];
+        data = Arrays.copyOf(tmpArr, nLen);
+        Arrays.sort(data);
+        //////////////////////////////////////////////////////////////////
+        int N = data.length;
+        double n = (float)(N - 1) * (float)fPercentile + 1;
+        // Another method: double n = (N + 1) * excelPercentile;
+        if (n == 1d)
+            return data[0];
+        else if (n == N)
+            return data[N - 1];
+        else
+        {
+            int k = (int)n;
+            double d = n - k;
+            return (float)data[k - 1] + (float)d * ((float)data[k] - (float)data[k - 1]);
         }
     }
 

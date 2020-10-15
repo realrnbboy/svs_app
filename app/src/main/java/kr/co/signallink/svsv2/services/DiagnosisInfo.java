@@ -1,18 +1,20 @@
 package kr.co.signallink.svsv2.services;
 
+import com.google.android.gms.common.util.ArrayUtils;
+
 import kr.co.signallink.svsv2.dto.AnalysisData;
 import kr.co.signallink.svsv2.model.MainData;
 import kr.co.signallink.svsv2.model.SVSCommon;
 import kr.co.signallink.svsv2.model.VARIABLES_1_Type;
 import kr.co.signallink.svsv2.model.VARIABLES_2_Type;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import kr.co.signallink.svsv2.model.Constants;
 import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.utils.Utils;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 // using System;
 // using System.Collections.Generic;
@@ -34,8 +36,8 @@ public class DiagnosisInfo {
 
     public double[][] resultDiagnosis;
 
-    private float nFreq_Lower = 5;
-    private float nFreq_Upper = 1000;
+    private float nFreq_Lower = Constants.FEQ_LOWER_LIMIT;  // 2020.10.14
+    private float nFreq_Upper = Constants.FEQ_UPPER_LIMIT;  // 2020.10.14
     public float[] aFeatureValues;
     public float[] aFeatureRanges;
     public float[] aFeatureLowers;
@@ -50,8 +52,10 @@ public class DiagnosisInfo {
 
     public VARIABLES_1_Type diagVar1;
     public VARIABLES_2_Type valueVar2, rangeVar2, lowerVar2, upperVar2;
-    private double[][] tableFeature; // Mainform에서 초기 저장한 Feature 가중치 테이블
-    private double[][] tableResult; // Matrix2 결과와 tableFeature 연산 결과 저장용 테이블
+//    private double[][] tableFeature; // Mainform에서 초기 저장한 Feature 가중치 테이블
+//    private double[][] tableResult; // Matrix2 결과와 tableFeature 연산 결과 저장용 테이블
+    private float[][] tableFeature; // Mainform에서 초기 저장한 Feature 가중치 테이블    // 2020.10.14
+    private float[][] tableResult;  // Matrix2 결과와 tableFeature 연산 결과 저장용 테이블   // 2020.10.14
     private int nCauseCount = 0;
 
     // 2020.03.10
@@ -88,8 +92,8 @@ public class DiagnosisInfo {
         upperVar2 = analysisData.upperVar2;
 
         nCauseCount = analysisData.featureInfos.nCount;
-        tableFeature = new double[nCauseCount][Constants.FEATURE_COUNT];
-        tableResult = new double[nCauseCount][Constants.FEATURE_COUNT];
+        tableFeature = new float[nCauseCount][Constants.FEATURE_COUNT]; // 2020.10.14
+        tableResult = new float[nCauseCount][Constants.FEATURE_COUNT];  // 2020.10.14
 
         // 2020.03.10, BearingFreq Table 설정
         if (diagVar1.nBallCount > 0)
@@ -220,11 +224,20 @@ public class DiagnosisInfo {
             for (int i = 0; i < Constants.FEATURE_COUNT; i++) {
                 if (i != 14 && i != 15) // NoiseFloor1, 2가 아닌 경우
                 {
-                    lower.data[i] = Utils.floatFloor((float) (value.data[i] * (1 - (range.data[i] * 0.01))));
-                    upper.data[i] = Utils.floatFloor((float) (value.data[i] * (1 + (range.data[i] * 0.01))));
-                    double t = (double) (value.data[i] * (1 + (range.data[i] * 0.01)));
-                    t = 59.65 * (1 + (3 * 0.01));
-                    t =t;
+//                    lower.data[i] = Utils.floatFloor((float) (value.data[i] * (1 - (range.data[i] * 0.01)))); // 2020.10.14
+//                    upper.data[i] = Utils.floatFloor((float) (value.data[i] * (1 + (range.data[i] * 0.01))));
+                    if (i == 6) // 8X인 경우   // 2020.10.14
+                    {
+                        lower.data[i] = (float)(Math.floor((value.data[i] * (1 - range.data[i] / 100)) * 10) / 10);
+                        upper.data[i] = (float)(Math.floor((value.data[i] * (1 + range.data[i] / 100)) * 10) / 10);
+                    }
+                    else
+                    {
+                        lower.data[i] = (float)(value.data[i] * (1 - range.data[i] / 100));
+                        upper.data[i] = (float)(value.data[i] * (1 + range.data[i] / 100));
+                    }
+
+
                 } else if (i == 14) // NoiseFloor1인 경우
                 {
                     lower.data[i] = 1;
@@ -260,6 +273,9 @@ public class DiagnosisInfo {
         resultMatrix2.aDataMax = new double[Constants.FEATURE_COUNT + 3];
         resultMatrix2.aDataMed = new double[Constants.FEATURE_COUNT + 3];
         resultMatrix2.aResult = new double[Constants.FEATURE_COUNT + 3];
+
+        double sumMeasure1, sumMeasure2, sumMeasure3;   // 2020.10.14
+        sumMeasure1 = sumMeasure2 = sumMeasure3 = 0;
 
         try {
             // raw 데이터별 index 생성 및 저장용
@@ -297,17 +313,27 @@ public class DiagnosisInfo {
                     measureData2.dPwrSpectrum[i] = 0;
                     measureData3.dPwrSpectrum[i] = 0;
                 }
+
+                sumMeasure1 += measureData1.dPwrSpectrum[i];    // 2020.10.14
+                sumMeasure2 += measureData2.dPwrSpectrum[i];    // 2020.10.14
+                sumMeasure3 += measureData3.dPwrSpectrum[i];    // 2020.10.14
             }
 
             // 측정 raw 데이터별 Matrix 2 추출용 배열 생성(FREQ_ELE x Feature 수)
+            double[] nf1Data1 = new double[Constants.FREQ_ELE]; // 2020.10.14
+            double[] nf1Data2 = new double[Constants.FREQ_ELE]; // 2020.10.14
+            double[] nf1Data3 = new double[Constants.FREQ_ELE]; // 2020.10.14
+            double[] nf2Data1 = new double[Constants.FREQ_ELE]; // 2020.10.14
+            double[] nf2Data2 = new double[Constants.FREQ_ELE]; // 2020.10.14
+            double[] nf2Data3 = new double[Constants.FREQ_ELE]; // 2020.10.14
+
             for (int row = 0; row < Constants.FREQ_ELE; row++) {
                 // 해당 DataIndex가 Variable2의 해당 Feature의 Lower보다 크고,
                 // 해당 Feature의 Upper보다 작으면 측정 raw 데이터
                 // 그렇지 않으면, 0
                 // A>R, R>A는 절차에서 Skip
                 for (int col = 0; col < Constants.FEATURE_COUNT; col++) {
-                    if (row == 45)
-                        row = row;
+
                     aVar2Data1[row][col] = (aFreqData1[row] > aFeatureLowers[col + 3]
                             && aFreqData1[row] < aFeatureUppers[col + 3]) ? measureData1.dPwrSpectrum[row] : 0;
 
@@ -316,6 +342,21 @@ public class DiagnosisInfo {
 
                     aVar2Data3[row][col] = (aFreqData3[row] > aFeatureLowers[col + 3]
                             && aFreqData3[row] < aFeatureUppers[col + 3]) ? measureData3.dPwrSpectrum[row] : 0;
+
+
+                    if (col == 14)  // for NF1  // 2020.10.14
+                    {
+                        nf1Data1[row] = (aFreqData1[row] > aFeatureLowers[col + 3] && aFreqData1[row] < aFeatureUppers[col + 3]) ? measureData1.dPwrSpectrum[row] : -1;
+                        nf1Data2[row] = (aFreqData2[row] > aFeatureLowers[col + 3] && aFreqData2[row] < aFeatureUppers[col + 3]) ? measureData2.dPwrSpectrum[row] : -1;
+                        nf1Data3[row] = (aFreqData3[row] > aFeatureLowers[col + 3] && aFreqData3[row] < aFeatureUppers[col + 3]) ? measureData3.dPwrSpectrum[row] : -1;
+                    }
+
+                    if (col == 15)  // for NF2  // 2020.10.14
+                    {
+                        nf2Data1[row] = (aFreqData1[row] > aFeatureLowers[col + 3] && aFreqData1[row] < aFeatureUppers[col + 3]) ? measureData1.dPwrSpectrum[row] : -1;
+                        nf2Data2[row] = (aFreqData2[row] > aFeatureLowers[col + 3] && aFreqData2[row] < aFeatureUppers[col + 3]) ? measureData2.dPwrSpectrum[row] : -1;
+                        nf2Data3[row] = (aFreqData3[row] > aFeatureLowers[col + 3] && aFreqData3[row] < aFeatureUppers[col + 3]) ? measureData3.dPwrSpectrum[row] : -1;
+                    }
                 }
             }
 
@@ -336,9 +377,11 @@ public class DiagnosisInfo {
                 }
 
                 if (col == 14) // Noise Floor 1
-                    resultMatrix2.aData1[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[17]);
+                    //resultMatrix2.aData1[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[17]);
+                    resultMatrix2.aData1[col + 3] = fnNoiseFloor(nf1Data1, aFeatureRanges[17] / 100);   // 2020.10.14
                 else if (col == 15) // Noise Floor 2
-                    resultMatrix2.aData1[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[18]);
+                    //resultMatrix2.aData1[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[18]);
+                    resultMatrix2.aData1[col + 3] = fnNoiseFloor(nf2Data1, aFeatureRanges[18] / 100);   // 2020.10.14
                 else if (col == 21) { // RMS인 경우
                     resultMatrix2.aData1[col + 3] = svsCommon.fnSQRT_SUMSQ(tmpData, true);
                     resultMatrix2.rms1 = (float)resultMatrix2.aData1[col + 3];     // added by hslee 2020.07.15 측정된 값이 아닌 계산된 값을 사용
@@ -354,9 +397,11 @@ public class DiagnosisInfo {
                     tmpData[row] = (double) aVar2Data2[row][col];
 
                 if (col == 14) // Noise Floor 1
-                    resultMatrix2.aData2[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[17]);
+                    //resultMatrix2.aData2[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[17]);
+                    resultMatrix2.aData2[col + 3] = fnNoiseFloor(nf1Data2, aFeatureRanges[17] / 100);   // 2020.10.14
                 else if (col == 15) // Noise Floor 2
-                    resultMatrix2.aData2[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[18]);
+                    //resultMatrix2.aData2[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[18]);
+                    resultMatrix2.aData2[col + 3] = fnNoiseFloor(nf2Data2, aFeatureRanges[18] / 100);   // 2020.10.14
                 else if (col == 21) { // RMS인 경우
                     resultMatrix2.aData2[col + 3] = svsCommon.fnSQRT_SUMSQ(tmpData, true);
                     resultMatrix2.rms2 = (float)resultMatrix2.aData2[col + 3];     // added by hslee 2020.07.15 측정된 값이 아닌 계산된 값을 사용
@@ -372,9 +417,11 @@ public class DiagnosisInfo {
                     tmpData[row] = (double) aVar2Data3[row][col];
 
                 if (col == 14) // Noise Floor 1
-                    resultMatrix2.aData3[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[17]);
+                    //resultMatrix2.aData3[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[17]);
+                    resultMatrix2.aData3[col + 3] = fnNoiseFloor(nf1Data3, aFeatureRanges[17] / 100);
                 else if (col == 15) // Noise Floor 2
-                    resultMatrix2.aData3[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[18]);
+                    //resultMatrix2.aData3[col + 3] = fnNoiseFloor(tmpData, aFeatureRanges[18]);
+                    resultMatrix2.aData3[col + 3] = fnNoiseFloor(nf2Data3, aFeatureRanges[18] / 100);
                 else if (col == 21) { // RMS인 경우
                     resultMatrix2.aData3[col + 3] = svsCommon.fnSQRT_SUMSQ(tmpData, true);
                     resultMatrix2.rms3 = (float)resultMatrix2.aData3[col + 3];     // added by hslee 2020.07.15 측정된 값이 아닌 계산된 값을 사용
@@ -395,7 +442,7 @@ public class DiagnosisInfo {
 
             for (int i = 0; i < 5; i++) {
                 dSum_Data1_1x5x += resultMatrix2.aData1[i + 3];
-                dSum_Data2_1x5x += resultMatrix2.aData3[i + 3];
+                dSum_Data2_1x5x += resultMatrix2.aData2[i + 3];     // 2020.10.14
                 dSum_Data3_1x5x += resultMatrix2.aData3[i + 3];
                 aData1_1x5x[i] = resultMatrix2.aData1[i + 3];
                 aData2_1x5x[i] = resultMatrix2.aData2[i + 3];
@@ -409,18 +456,42 @@ public class DiagnosisInfo {
             // - Data1의 Axial > Radial 값은
             // . Data1의 SUM(1x..5x) < 0이거나 Data3의 SUM(1x..5x) < 0 이면, 0
             // . 그렇지 않으면, SQRT(SUMSQ(Data3의 1x..5x) - SQRT(SUMSQ(Data1의 1x..5x)
-            if (dSum_Data1_1x5x <= 0 || dSum_Data3_1x5x <= 0)
+//            if (dSum_Data1_1x5x <= 0 || dSum_Data3_1x5x <= 0) // 2020.10.14
+//                resultMatrix2.aData1[0] = 0;
+//            else
+//                resultMatrix2.aData1[0] = dSQRT_Data3 - dSQRT_Data1;
+            if (sumMeasure1 < 0 || sumMeasure3 < 0) // 2020.10.14
                 resultMatrix2.aData1[0] = 0;
             else
-                resultMatrix2.aData1[0] = dSQRT_Data3 - dSQRT_Data1;
+            {
+                if (dSQRT_Data3 - dSQRT_Data1 < 0)
+                    resultMatrix2.aData1[0] = 0;
+                else
+                {
+                    if (dSQRT_Data3 - dSQRT_Data1 < 0)
+                        resultMatrix2.aData1[0] = 0;
+                    else
+                        resultMatrix2.aData1[0] = dSQRT_Data3 - dSQRT_Data1;
+                }
+            }
 
             // - Data2의 Axial > Radial 값은
             // . Data2의 SUM(1x..5x) < 0이거나 Data3의 SUM(1x..5x) < 0 이면, 0
             // . 그렇지 않으면, SQRT(SUMSQ(Data3의 1x..5x) - SQRT(SUMSQ(Data2의 1x..5x)
-            if (dSum_Data2_1x5x <= 0 || dSum_Data3_1x5x <= 0)
+//            if (dSum_Data2_1x5x <= 0 || dSum_Data3_1x5x <= 0) // 2020.10.14
+//                resultMatrix2.aData2[0] = 0;
+//            else
+//                resultMatrix2.aData2[0] = dSQRT_Data3 - dSQRT_Data2;
+            if (sumMeasure2 < 0 || sumMeasure3 < 0) // 2020.10.14
                 resultMatrix2.aData2[0] = 0;
             else
-                resultMatrix2.aData2[0] = dSQRT_Data3 - dSQRT_Data2;
+            {
+                if (dSQRT_Data3 - dSQRT_Data2 < 0)
+                    resultMatrix2.aData2[0] = 0;
+                else
+                    resultMatrix2.aData2[0] = dSQRT_Data3 - dSQRT_Data2;
+            }
+
 
             // - Data3의 Axial > Radial은 Skip
             resultMatrix2.aData3[0] = 0;
@@ -428,18 +499,36 @@ public class DiagnosisInfo {
             // - Data1의 Radial > Axial 값은
             // . Data1의 SUM(1x..5x) < 0이거나 Data3의 SUM(1x..5x) < 0 이면, 0
             // . 그렇지 않으면, SQRT(SUMSQ(Data1의 1x..5x) - SQRT(SUMSQ(Data3의 1x..5x)
-            if (dSum_Data1_1x5x <= 0 || dSum_Data3_1x5x <= 0)
+//            if (dSum_Data1_1x5x <= 0 || dSum_Data3_1x5x <= 0) // 2020.10.14
+//                resultMatrix2.aData1[1] = 0;
+//            else
+//                resultMatrix2.aData1[1] = dSQRT_Data1 - dSQRT_Data3;
+            if (sumMeasure1 < 0 || sumMeasure3 < 0) // 2020.10.14
                 resultMatrix2.aData1[1] = 0;
             else
-                resultMatrix2.aData1[1] = dSQRT_Data1 - dSQRT_Data3;
+            {
+                if (dSQRT_Data1 - dSQRT_Data3 < 0)
+                    resultMatrix2.aData1[1] = 0;
+                else
+                    resultMatrix2.aData1[1] = dSQRT_Data1 - dSQRT_Data3;
+            }
 
             // - Data2의 Radial > Axial 값은
             // . Data2의 SUM(1x..5x) < 0이거나 Data3의 SUM(1x..5x) < 0 이면, 0
             // . 그렇지 않으면, SQRT(SUMSQ(Data2의 1x..5x) - SQRT(SUMSQ(Data3의 1x..5x)
-            if (dSum_Data2_1x5x <= 0 || dSum_Data3_1x5x <= 0)
+//            if (dSum_Data2_1x5x <= 0 || dSum_Data3_1x5x <= 0) // 2020.10.14
+//                resultMatrix2.aData2[1] = 0;
+//            else
+//                resultMatrix2.aData2[1] = dSQRT_Data2 - dSQRT_Data3;
+            if (sumMeasure2 < 0 || sumMeasure3 < 0) // 2020.10.14
                 resultMatrix2.aData2[1] = 0;
             else
-                resultMatrix2.aData2[1] = dSQRT_Data2 - dSQRT_Data3;
+            {
+                if (dSQRT_Data2 - dSQRT_Data3 < 0)
+                    resultMatrix2.aData2[1] = 0;
+                else
+                    resultMatrix2.aData2[1] = dSQRT_Data2 - dSQRT_Data3;
+            }
 
             // - Data3의 Radial > Axial은 Skip
             resultMatrix2.aData3[1] = 0;
@@ -462,12 +551,15 @@ public class DiagnosisInfo {
                             || resultMatrix2.aData3[col] <= 0)
                         resultMatrix2.aDataMax[col] = 0;
                     else {
-                        if (diagVar1.nEquipType == 1) // Horizontal (BB&OH)
-                            resultMatrix2.aDataMax[col] = resultMatrix2.aData1[col];
-                        else if (diagVar1.nEquipType == 2) // Vertical (VS)
-                            resultMatrix2.aDataMax[col] = resultMatrix2.aData3[col];
-                        else
-                            resultMatrix2.aDataMax[col] = 0;
+                        /* 2020.09, ver1.0.091
+                            if (diagVar1.nEquipType == 1)  // Horizontal (BB&OH)
+                                resultMatrix2.aDataMax[col] = resultMatrix2.aData1[col];
+                            else if (diagVar1.nEquipType == 2)  // Vertical (VS)
+                                resultMatrix2.aDataMax[col] = resultMatrix2.aData3[col];
+                            else
+                                resultMatrix2.aDataMax[col] = 0;
+                            */
+                        resultMatrix2.aDataMax[col] = resultMatrix2.aData1[col];    // 2020.10.14
                     }
                 }
             }
@@ -478,14 +570,26 @@ public class DiagnosisInfo {
                 if (col != 2) {
                     resultMatrix2.aDataMed[col] = svsCommon.fnMedian(resultMatrix2.aData1[col],
                             resultMatrix2.aData2[col], resultMatrix2.aData3[col]);
-                } else // HORZ/VERT
+                }
+                else // HORZ/VERT
                 {
-                    if (diagVar1.nEquipType == 1) // Horizontal (BB&OH)
-                        resultMatrix2.aDataMed[col] = Math.max(resultMatrix2.aData1[col], resultMatrix2.aData1[col]);
-                    else if (diagVar1.nEquipType == 2) // Vertical (VS)
-                        resultMatrix2.aDataMed[col] = Math.max(resultMatrix2.aData2[col], resultMatrix2.aData3[col]);
+                    /* 2020.09, ver1.0.091
+                        if (diagVar1.nEquipType == 1)  // Horizontal (BB&OH)
+                            resultMatrix2.aDataMed[col] = Math.Max(resultMatrix2.aData1[col], resultMatrix2.aData1[col]);
+                        else if (diagVar1.nEquipType == 2)  // Vertical (VS)
+                            resultMatrix2.aDataMed[col] = Math.Max(resultMatrix2.aData2[col], resultMatrix2.aData3[col]);
+                        else
+                            resultMatrix2.aDataMed[col] = 0;
+                        */
+                    if (resultMatrix2.aData1[col] <= 0 || resultMatrix2.aData2[col] <= 0 || // 2020.10.14
+                            resultMatrix2.aData3[col] <= 0)
+                    {
+                        resultMatrix2.aDataMax[col] = 0;
+                    }
                     else
-                        resultMatrix2.aDataMed[col] = 0;
+                    {
+                        resultMatrix2.aDataMed[col] = Math.max(resultMatrix2.aData2[col], resultMatrix2.aData3[col]);
+                    }
                 }
             }
 
@@ -493,21 +597,36 @@ public class DiagnosisInfo {
             // - 각 Feature별
             // - MAX(Data1 Feature 값..Data3 Feature 값)^2 / MAX(Data1 RMS..Data3 RMS)^2
             for (int i = 0; i < Constants.FEATURE_COUNT + 3; i++) {
-                if (i != 2) {
-                    resultMatrix2.aResult[i] = fnMatrix2Result(resultMatrix2.aData1[i], resultMatrix2.aData2[i],
-                            resultMatrix2.aData3[i], resultMatrix2.aData1[24], resultMatrix2.aData2[24],
-                            resultMatrix2.aData3[24]);
-                } else // HORZ/VERT
+//                if (i != 2) { // 2020.10.14
+//                    resultMatrix2.aResult[i] = fnMatrix2Result(resultMatrix2.aData1[i], resultMatrix2.aData2[i],
+//                            resultMatrix2.aData3[i], resultMatrix2.aData1[24], resultMatrix2.aData2[24],
+//                            resultMatrix2.aData3[24]);
+//                } else // HORZ/VERT
+//                {
+//                    resultMatrix2.aResult[i] = fnMatrix2HVResult(resultMatrix2.aData1, resultMatrix2.aData2,
+//                            resultMatrix2.aData3);
+//                }
+                // 현대건설 알고리즘 변경 반영 : 2020.08    // 2020.10.14
+                if (i == 0 || i == 1)     // Axial or Radial 추가, 2020.08
                 {
-                    resultMatrix2.aResult[i] = fnMatrix2HVResult(resultMatrix2.aData1, resultMatrix2.aData2,
-                            resultMatrix2.aData3);
+                    resultMatrix2.aResult[i] = fnMatrix2HorzOrAxialResult(resultMatrix2.aData1[i], resultMatrix2.aData2[i], resultMatrix2.aData3[i],
+                            resultMatrix2.aData1[24], resultMatrix2.aData2[24], resultMatrix2.aData3[24]);
+                }
+                else if (i == 2)    // Axial/Horz
+                {
+                    resultMatrix2.aResult[i] = fnMatrix2HorzAndVertResult(resultMatrix2.aData1, resultMatrix2.aData2, resultMatrix2.aData3, resultMatrix2.aDataMed[2], resultMatrix2.aDataMax[2]);
+                }
+                else
+                {
+                    resultMatrix2.aResult[i] = fnMatrix2Result(resultMatrix2.aData1[i], resultMatrix2.aData2[i], resultMatrix2.aData3[i],
+                            resultMatrix2.aData1[24], resultMatrix2.aData2[24], resultMatrix2.aData3[24]);
                 }
             }
 
             // Matrix2의 result와 Feature 가중치 테이블(cause x feature, 21 x 25)과 연산(곱셈)
             for (int row = 0; row < nCauseCount; row++) {
                 for (int col = 0; col < Constants.FEATURE_COUNT; col++) {
-                    tableResult[row][col] = resultMatrix2.aResult[col] * tableFeature[row][col];
+                    tableResult[row][col] = (float)resultMatrix2.aResult[col] * tableFeature[row][col]; // 2020.10.14
                 }
             }
 
@@ -560,16 +679,38 @@ public class DiagnosisInfo {
 
     private double fnNoiseFloor(double[] data, double dPercentile) {
         double dNoiseFloor = 0;
+        double dNF = 0; // 2020.10.14
         double dSum = 0;
+        int nPercentile = (int)(dPercentile * 100); // 2020.10.14
+        int nDataCount = 0; // 2020.10.14
 
         try {
             for (int i = 0; i < data.length; i++)
-                dSum += data[i];
+                //dSum += data[i];  // 2020.10.14
+            {   // 2020.10.14
+                if (data[i] > -1)
+                {
+                    dSum += data[i];
+                    nDataCount++;
+                }
+            }
 
             if (dSum > 0) {
-                dNoiseFloor = svsCommon.fnPercentile(data, dPercentile);
+                //dNoiseFloor = svsCommon.fnPercentile(data, dPercentile);  // 2020.10.14
                 //dNoiseFloor = Statistics.Percentile(data, 35);  //  2020.03
                 // dNoiseFloor = Statistics.Quantile(data, 0.35);
+                double[] validData = new double[nDataCount];    // 2020.10.14
+                int j = 0;
+                for (int i = 0; i < data.length; i++)
+                {
+                    if (data[i] > -1)
+                    {
+                        validData[j] = (double)data[i];
+                        j++;
+                    }
+                }
+
+                dNoiseFloor = svsCommon.fnPercentile(validData, dPercentile);  // 2020.10.14
             }
         } catch (Exception ex) {
             System.out.println("[Exception: fnNoiseFloor] " + ex.getMessage());
@@ -601,7 +742,25 @@ public class DiagnosisInfo {
         dMaxRMS = Math.max(rms1, rms2);
         dMaxRMS = Math.max(dMaxRMS, rms3);
 
-        result = Math.pow(dMaxFeature, 2) / Math.pow(dMaxRMS, 2);
+        //result = Math.pow(dMaxFeature, 2) / Math.pow(dMaxRMS, 2); // 2020.10.14
+        result = (float)Math.pow(dMaxFeature, 2) / (float)Math.pow(dMaxRMS, 2); // 2020.10.14
+
+        return result;
+    }
+
+    private double fnMatrix2HorzOrAxialResult(double feature1, double feature2, double feature3, double rms1, double rms2, double rms3) // 2020.10.14
+    {
+        double result = 0;
+
+        double dMaxFeature = 0;
+        double dMaxRMS = 0;
+
+        dMaxFeature = Math.max(feature1, feature2);
+
+        dMaxRMS = Math.max(rms1, rms2);
+        dMaxRMS = Math.max(dMaxRMS, rms3);
+
+        result = (float)Math.pow(dMaxFeature, 2) / (float)Math.pow(dMaxRMS, 2);
 
         return result;
     }
@@ -613,7 +772,7 @@ public class DiagnosisInfo {
     /// <param name="aData2"></param>
     /// <param name="aData3"></param>
     /// <returns></returns>
-    private double fnMatrix2HVResult(double[] aData1, double[] aData2, double[] aData3) {
+    private double fnMatrix2HVResult_old(double[] aData1, double[] aData2, double[] aData3) {   // 2020.10.14
         double result = 0;
 
         double[] dTmp = new double[24]; // 3x8, Data1~3의 1x~12x 값 임시 저장용
@@ -644,6 +803,46 @@ public class DiagnosisInfo {
                 }
             }
         } else
+            result = 0;
+
+        return result;
+    }
+
+    private double fnMatrix2HorzAndVertResult(double[] aData1, double[] aData2, double[] aData3, double dMedia, double dMax)
+    {
+        double result = 0;
+
+        double[] dTmp = new double[27]; // 3x8, Data1~3의 1x~12x 값 임시 저장용
+        System.arraycopy(aData1, 3, dTmp, 0, 9);
+        System.arraycopy(aData2, 3, dTmp, 9, 9);
+        System.arraycopy(aData3, 3, dTmp, 18, 9);
+
+        double dMax1x_12x = Utils.getMaxDouble(dTmp); // MAX(P3:P5)
+
+        double[] dTmp1x = new double[3];
+        dTmp1x[0] = aData1[2];
+        dTmp1x[1] = aData2[2];
+        dTmp1x[2] = aData3[2];
+        double dMax1x = Utils.getMaxDouble(dTmp1x);   // MAX(P3:X5)
+
+        if (dMax1x_12x == dMax1x)
+        {
+            if (dTmp1x[1] == 0 || dTmp1x[2] == 0)
+                result = 0;
+            else
+            {
+                if ((float)dMedia / (float)dMax < 1.5)
+                    result = 0;
+                else
+                {
+                    if ((float)dMedia / (float)dMax > 2)
+                        result = 1;
+                    else
+                        result = (float)dMedia / (float)dMax / 2;
+                }
+            }
+        }
+        else
             result = 0;
 
         return result;

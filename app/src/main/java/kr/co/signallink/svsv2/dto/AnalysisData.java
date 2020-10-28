@@ -62,6 +62,8 @@ public class AnalysisData implements Serializable {
     public String pipeEtcOperatingCondition;
 
     public AnalysisData(){
+        int i = 0;
+        i = 4;
     }
 
     public int getNo() {

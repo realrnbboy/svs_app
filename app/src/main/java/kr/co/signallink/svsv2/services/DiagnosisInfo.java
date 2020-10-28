@@ -193,6 +193,7 @@ public class DiagnosisInfo {
         }
     }
 
+
     /// <summary>
     /// 설정된 Variable 2 값을 토대로 측정 데이터 분석용 임시 배열 초기화
     /// </summary>

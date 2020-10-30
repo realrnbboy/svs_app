@@ -47,7 +47,7 @@ public class PipeReport1Activity extends BaseActivity {
 
         Toolbar svsToolbar = findViewById(R.id.toolbar);
         TextView toolbarTitle = svsToolbar.findViewById(R.id.toolbar_title);
-        toolbarTitle.setText("report1");
+        toolbarTitle.setText("Report1");
 
         setSupportActionBar(svsToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -145,7 +145,7 @@ public class PipeReport1Activity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("concern", valueList4, ContextCompat.getColor(getBaseContext(), R.color.myorange), false));
+            lineData.addDataSet(generateLineData("Concern", valueList4, ContextCompat.getColor(getBaseContext(), R.color.myorange), false));
 
             if (data5 != null) {
                 for (float v : data5) {
@@ -153,7 +153,7 @@ public class PipeReport1Activity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("problem", valueList5, ContextCompat.getColor(getBaseContext(), R.color.myred), false));
+            lineData.addDataSet(generateLineData("Problem", valueList5, ContextCompat.getColor(getBaseContext(), R.color.myred), false));
         } catch (Exception ex) {
             return;
         }
@@ -166,9 +166,9 @@ public class PipeReport1Activity extends BaseActivity {
         int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
         xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
         xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
-        //xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+        xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
         //xAxis.setAxisMaximum(Constants.MAX_PIPE_X_VALUE);
-        xAxis.setAxisMaximum(300);
+        //xAxis.setAxisMaximum(300);
 
         lineChartRawData.setData(lineData);
         lineChartRawData.invalidate();
@@ -220,11 +220,11 @@ public class PipeReport1Activity extends BaseActivity {
             public String getFormattedValue(float value, AxisBase axis) {
 
                 int index = (int)value;
-                if( value == 3000 )// added by hslee 2020.07.15
+                if( index == 300 )// added by hslee 2020.07.15
                     return "100";
-                else if( value == 600 )
+                else if( index == 600 )
                     return "200";
-                else if( value == 900 )
+                else if( index == 900 )
                     return "300";
                 else
                     return String.valueOf(index);
@@ -258,10 +258,16 @@ public class PipeReport1Activity extends BaseActivity {
         try {
 
             for(int i=0; i<yDataList.size(); i++) {
-               // entries.add(new Entry(i, yDataList.get(i)));
-                if( i < 9 || i > 300 ) // added by hslee 2020.08.27 9개까지 데이터 넣지 말아달라고함.
+
+                if( i < 10 && !(label.contains("Concern") || label.contains("Problem")) ) {    // added by hslee 2020-10-30 파이프는 앞의 9개 0으로 처리
+                    entries.add(new Entry(i, 0));
                     continue;
-                entries.add(new Entry(i-9, yDataList.get(i)));
+                }
+                entries.add(new Entry(i, yDataList.get(i)));
+               // entries.add(new Entry(i, yDataList.get(i)));
+//                if( i < 9 || i > 300 ) // added by hslee 2020.08.27 9개까지 데이터 넣지 말아달라고함.
+//                    continue;
+//                entries.add(new Entry(i-9, yDataList.get(i)));
             }
 
             lineDataSet = new LineDataSet(entries, label);

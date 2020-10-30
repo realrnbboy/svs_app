@@ -1,9 +1,10 @@
 package kr.co.signallink.svsv2.model;
 
 
+import java.io.Serializable;
 
-    //[StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class DIAGNOSIS_DATA_Type
+//[StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class DIAGNOSIS_DATA_Type implements Serializable
     {
         public float fSamplingRate;
         public float fRMS;

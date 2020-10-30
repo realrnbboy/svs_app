@@ -56,13 +56,26 @@
                     android:textSize="@dimen/font_midium"
                     tools:text="@string/main_screen"/>
 
-                <ImageView
-                    android:id="@+id/toolbar_img_title"
-                    android:layout_width="100dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/signallink"
-                    android:visibility="gone"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/toolbar_img_title_hyundai"
+                        android:layout_width="100dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/hyundailogo_back_white"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        android:id="@+id/toolbar_img_title"
+                        android:layout_width="100dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/signallink"
+                        android:visibility="gone"/>
+                </LinearLayout>
 
             </FrameLayout>
 

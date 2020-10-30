@@ -278,7 +278,7 @@ public class PipeResultActivity extends BaseActivity {
                 }
 
                 // csv로 raw data 데이터 저장
-                String fileName = Utils.createCsv("pipe", new String [] {"X", "Vertical", "Horizontal", "Axial", "concern", "problem"}, xData, data1, data2, data3, data4, data5);
+                String fileName = Utils.createCsv("pipe", new String [] {"X", "Vertical", "Horizontal", "Axial", "Concern", "Problem"}, xData, data1, data2, data3, data4, data5);
                 if( fileName == null ) {
                     ToastUtil.showShort("failed to save csv.");
                 }
@@ -399,7 +399,7 @@ public class PipeResultActivity extends BaseActivity {
         //lineChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
         lineChartRawData.setNoDataText("no data.");
         lineChartRawData.setOnChartValueSelectedListener(onChartValueSelectedListenerRawData);
-        lineChartRawData.setScaleXEnabled(false);   // added by hslee 2020.07.15 x측 zoom하면 임시로 넣은 label값이 맞지 않게 됨
+        lineChartRawData.setScaleXEnabled(false);   // added by hslee 2020.07.15 x측 zoom하면 임의로 넣은 label값이 맞지 않게 됨
 
         Legend l = lineChartRawData.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
@@ -437,11 +437,11 @@ public class PipeResultActivity extends BaseActivity {
             public String getFormattedValue(float value, AxisBase axis) {
 
                 int index = (int)value;
-                if( value == 3000 )// added by hslee 2020.07.15
+                if( index == 300 )// added by hslee 2020.07.15
                     return "100";
-                else if( value == 600 )
+                else if( index == 600 )
                     return "200";
-                else if( value == 900 )
+                else if( index == 900 )
                     return "300";
                 else
                     return String.valueOf(index);
@@ -525,7 +525,7 @@ public class PipeResultActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("concern", valueList4, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
+            lineData.addDataSet(generateLineData("Concern", valueList4, ContextCompat.getColor(getBaseContext(), R.color.myorange)));
 
             if (data5 != null) {
                 for (float v : data5) {
@@ -533,7 +533,7 @@ public class PipeResultActivity extends BaseActivity {
                 }
             }
 
-            lineData.addDataSet(generateLineData("problem", valueList5, ContextCompat.getColor(getBaseContext(), R.color.myred)));
+            lineData.addDataSet(generateLineData("Problem", valueList5, ContextCompat.getColor(getBaseContext(), R.color.myred)));
 
         } catch (Exception ex) {
             return;
@@ -547,8 +547,8 @@ public class PipeResultActivity extends BaseActivity {
         int xAxisMaximum = valueList1.size() <= 0 ? 0 : valueList1.size() - 1;
         xAxisMaximum = xAxisMaximum <= 0 ? valueList2.size() - 1 : xAxisMaximum;
         xAxisMaximum = xAxisMaximum <= 0 ? valueList3.size() - 1 : xAxisMaximum;
-        //xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
-        xAxis.setAxisMaximum(300);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+        xAxis.setAxisMaximum(xAxisMaximum);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
+        //xAxis.setAxisMaximum(300);    // data1,2,3의 데이터 개수가 같다고 가정하고, 한개만 세팅
         //xAxis.setAxisMaximum(Constants.MAX_PIPE_X_VALUE);
 
         lineChartRawData.setData(lineData);
@@ -559,9 +559,18 @@ public class PipeResultActivity extends BaseActivity {
         ArrayList<Entry> entries = new ArrayList<>();
 
         for(int i=0; i<valueList.size(); i++){
-            if( i < 9 || i > 300 ) // added by hslee 2020.08.27 9개까지 데이터 넣지 말아달라고함.
+            if( i < 10 && !(label.contains("Concern") || label.contains("Problem")) ) {    // added by hslee 2020-10-30 파이프는 앞의 9개 0으로 처리
+                entries.add(new Entry(i, 0));
                 continue;
-            entries.add(new Entry(i-9, valueList.get(i)));
+            }
+//            else if( i > 300 ) {
+//                continue;
+//            }
+
+            entries.add(new Entry(i, valueList.get(i)));
+//            if( i < 9 || entries.add(new Entry(i-9, valueList.get(i)));i > 300 ) // added by hslee 2020.08.27 9개까지 데이터 넣지 말아달라고함.
+//                continue;
+//
             //entries.add(new Entry(i, valueList.get(i)));
         }
 

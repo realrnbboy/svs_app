@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -27,6 +28,7 @@ import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
@@ -44,6 +46,7 @@ import kr.co.signallink.svsv2.commons.DefLog;
 import kr.co.signallink.svsv2.databases.AnalysisEntity;
 import kr.co.signallink.svsv2.databases.DatabaseUtil;
 import kr.co.signallink.svsv2.dto.AnalysisData;
+import kr.co.signallink.svsv2.model.DIAGNOSIS_DATA_Type;
 import kr.co.signallink.svsv2.model.MATRIX_2_Type;
 import kr.co.signallink.svsv2.model.RmsModel;
 import kr.co.signallink.svsv2.utils.ToastUtil;
@@ -65,6 +68,8 @@ public class ResultActivity extends BaseActivity {
     ArrayList<RmsModel> rmsList = new ArrayList<>();
 
     LineChart lineChartRawData;
+
+    DIAGNOSIS_DATA_Type[] testRawData;
 
     String equipmentUuid = null;
 
@@ -122,6 +127,10 @@ public class ResultActivity extends BaseActivity {
             ToastUtil.showShort("matrix2 data is null");
             return;
         }
+
+
+        // test data 가져오기
+        testRawData = (DIAGNOSIS_DATA_Type[])intent.getSerializableExtra("rawData");
 
         equipmentUuid = intent.getStringExtra("equipmentUuid");
 
@@ -531,6 +540,7 @@ public class ResultActivity extends BaseActivity {
         //lineChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
         lineChartRawData.setNoDataText("no data.");
         lineChartRawData.setOnChartValueSelectedListener(onChartValueSelectedListenerRawData);
+        lineChartRawData.setScaleXEnabled(false);   // added by hslee 2020-10-30 x측 zoom하면 임의로 넣은 label값이 맞지 않게 됨
 
         Legend l = lineChartRawData.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
@@ -560,6 +570,32 @@ public class ResultActivity extends BaseActivity {
         //xAxis.setAxisMaximum(80);
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
+        xAxis.setLabelCount(9, true);
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+
+                int index = (int)value;
+                if( index == 127 )// added by hslee 2020.07.15
+                    return "200";
+                else if( index == 255 )
+                    return "400";
+                else if( index == 383 )
+                    return "600";
+                else if( index == 511 )
+                    return "800";
+                else if( index == 639 )
+                    return "1000";
+                else if( index == 767 )
+                    return "1200";
+                else if( index == 895 )
+                    return "1400";
+                else if( index == 1023 )
+                    return "1600";
+                else
+                    return String.valueOf(index);
+            }
+        });
 
         final ScrollView scrollView = findViewById(R.id.scrollView);
         lineChartRawData.setOnTouchListener(new View.OnTouchListener() {    // 차크 클릭 시, 스크롤뷰의 스크롤 기능을 off 하여 차트 스크롤 기능을 방해하지 않게 함.
@@ -603,9 +639,20 @@ public class ResultActivity extends BaseActivity {
             return;
         }
 
-        float [] data1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
-        float [] data2 = analysisData.getMeasureData2().getAxisBuf().getfFreq();
-        float [] data3 = analysisData.getMeasureData3().getAxisBuf().getfFreq();
+        float [] data1;// = analysisData.getMeasureData1().getAxisBuf().getfFreq();
+        float [] data2;// = analysisData.getMeasureData2().getAxisBuf().getfFreq();
+        float [] data3;// = analysisData.getMeasureData3().getAxisBuf().getfFreq();
+
+        if( testRawData != null ) {
+            data1 = testRawData[0].dFreq;
+            data2 = testRawData[1].dFreq;
+            data3 = testRawData[2].dFreq;
+        }
+        else {
+            data1 = analysisData.getMeasureData1().getAxisBuf().getfFreq();
+            data2 = analysisData.getMeasureData2().getAxisBuf().getfFreq();
+            data3 = analysisData.getMeasureData3().getAxisBuf().getfFreq();
+        }
 
         LineData lineData = new LineData();
 
@@ -666,6 +713,10 @@ public class ResultActivity extends BaseActivity {
         ArrayList<Entry> entries = new ArrayList<>();
 
         for(int i=0; i<valueList.size(); i++){
+            if( i < 2 ) {    // added by hslee 2020-10-30 펌프는 앞의 두개 0으로 처리
+                entries.add(new Entry(i, 0));
+                continue;
+            }
             entries.add(new Entry(i, valueList.get(i)));
         }
 

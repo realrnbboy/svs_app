@@ -21,12 +21,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
@@ -221,12 +223,15 @@ public class MeasureActivity extends BaseActivity {
                 makeMatrix2();
 
                 // 다음 화면으로 이동
-                Intent intent = new Intent(getBaseContext(), ResultDiagnosisActivity.class);
-                //Intent intent = new Intent(getBaseContext(), ResultActivity.class);
+                //Intent intent = new Intent(getBaseContext(), ResultDiagnosisActivity.class);
+                Intent intent = new Intent(getBaseContext(), ResultActivity.class);
+
+                DIAGNOSIS_DATA_Type[] rawData = mainData.fnGetRawDatas();   // 임시데이터
 
                 intent.putExtra("matrix2", matrix2);
                 intent.putExtra("analysisData", analysisData);
                 intent.putExtra("equipmentUuid", equipmentUuid);
+                intent.putExtra("rawData", rawData);
                 startActivity(intent);
             }
         });
@@ -283,6 +288,7 @@ public class MeasureActivity extends BaseActivity {
         //lineChartRawData.setNoDataText(getResources().getString(R.string.recordingchartdata));
         lineChartRawData.setNoDataText("no data. please measure first");
         lineChartRawData.setOnChartValueSelectedListener(onChartValueSelectedListenerRawData);
+        lineChartRawData.setScaleXEnabled(false);   // added by hslee 2020-10-30 x측 zoom하면 임의로 넣은 label값이 맞지 않게 됨
 
         Legend l = lineChartRawData.getLegend();
         l.setTextColor(Color.WHITE);    // 범례 글자 색
@@ -314,6 +320,32 @@ public class MeasureActivity extends BaseActivity {
         xAxis.setGranularity(1.0f);
         xAxis.setTextColor(Color.WHITE);
         //applyXAxisDefault(xAxis, l);
+        xAxis.setLabelCount(9, true);
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+
+                int index = (int)value;
+                if( index == 127 )// added by hslee 2020.07.15
+                    return "200";
+                else if( index == 255 )
+                    return "400";
+                else if( index == 383 )
+                    return "600";
+                else if( index == 511 )
+                    return "800";
+                else if( index == 639 )
+                    return "1000";
+                else if( index == 767 )
+                    return "1200";
+                else if( index == 895 )
+                    return "1400";
+                else if( index == 1023 )
+                    return "1600";
+                else
+                    return String.valueOf(index);
+            }
+        });
 
         final ScrollView scrollView = findViewById(R.id.scrollView);
         lineChartRawData.setOnTouchListener(new View.OnTouchListener() {    // 차크 클릭 시, 스크롤뷰의 스크롤 기능을 off 하여 차트 스크롤 기능을 방해하지 않게 함.
@@ -422,6 +454,11 @@ public class MeasureActivity extends BaseActivity {
         ArrayList<Entry> entries = new ArrayList<>();
 
         for(int i=0; i<valueList.size(); i++){
+            if( i < 2 ) {    // added by hslee 2020-10-30 펌프는 앞의 두개 0으로 처리
+                entries.add(new Entry(i, 0));
+                continue;
+            }
+
             entries.add(new Entry(i, valueList.get(i)));
         }
 

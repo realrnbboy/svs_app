@@ -263,6 +263,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         Toolbar toolbar = findViewById(R.id.toolbar);
         ImageView img_title = toolbar.findViewById(R.id.toolbar_img_title);
         img_title.setVisibility(View.VISIBLE);
+        ImageView img_title_hyundai = toolbar.findViewById(R.id.toolbar_img_title_hyundai);
+        img_title_hyundai.setVisibility(View.VISIBLE);
 
         //사용안하는 툴바의 레코드 버튼 숨기기
         Button button_record = findViewById(R.id.button_record);

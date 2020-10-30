@@ -61,7 +61,7 @@ public class PipeReport2Activity extends BaseActivity {
 
         Toolbar svsToolbar = findViewById(R.id.toolbar);
         TextView toolbarTitle = svsToolbar.findViewById(R.id.toolbar_title);
-        toolbarTitle.setText("report2");
+        toolbarTitle.setText("Report2");
 
         setSupportActionBar(svsToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);

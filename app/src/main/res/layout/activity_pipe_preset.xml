@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/myblue"
                     android:textSize="@dimen/font_midium"
-                    android:text="Site &amp; Pump code" />
+                    android:text="Site &amp; Guideline for Vibration" />
             </LinearLayout>
 
             <LinearLayout

@@ -231,11 +231,11 @@ public class PipeMeasureActivity extends BaseActivity {
             public String getFormattedValue(float value, AxisBase axis) {
 
                 int index = (int)value;
-                if( value == 300 )// added by hslee 2020.07.15
+                if( index == 300 ) // added by hslee 2020.07.15
                     return "100";
-                else if( value == 600 )
+                else if( index == 600 )
                     return "200";
-                else if( value == 900 )
+                else if( index == 900 )
                     return "300";
                 else
                     return String.valueOf(index);
@@ -335,27 +335,16 @@ public class PipeMeasureActivity extends BaseActivity {
         ArrayList<Entry> entries = new ArrayList<>();
 
         for(int i=0; i<valueList.size(); i++){
+            if( i < 10 ) {    // added by hslee 2020-10-30 파이프는 앞의 9개 0으로 처리
+                entries.add(new Entry(i, 0));
+                continue;
+            }
+//            else if( i > 300 ) {
+//                continue;
+//            }
+
             entries.add(new Entry(i, valueList.get(i)));
-        }
-
-        LineDataSet lineDataSet = new LineDataSet(entries, label);
-
-        lineDataSet.setDrawCircleHole(false);
-        lineDataSet.setDrawCircles(false);
-        lineDataSet.setColor(lineColor);
-        lineDataSet.setDrawFilled(false);    // 값 하단 색  채움
-        lineDataSet.setValueTextColor(Color.WHITE);
-        lineDataSet.setDrawValues(true);
-        lineDataSet.setValueTextSize(10f);
-
-        return lineDataSet;
-    }
-
-    private LineDataSet generateLineData2(String label, ArrayList<Float> valueList, int lineColor){
-        ArrayList<Entry> entries = new ArrayList<>();
-
-        for(int i=0; i<valueList.size(); i++){
-            entries.add(new Entry(valueList.get(i), i));
+           // entries.add(new Entry(i, valueList.get(i)));
         }
 
         LineDataSet lineDataSet = new LineDataSet(entries, label);

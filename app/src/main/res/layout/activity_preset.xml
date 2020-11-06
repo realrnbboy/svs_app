@@ -198,7 +198,7 @@
                             android:id="@+id/editTextInputPower"
                             android:layout_weight="1"
                             android:text="980"
-                            android:inputType="numberDecimal"
+                            android:inputType="numberSigned"
                             style="@style/preset_item_edittext"/>
 
                         <TextView

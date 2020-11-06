@@ -401,6 +401,7 @@ public class PresetActivity extends BaseActivity {
         String siteCode = editTextSiteCode.getText().toString();
         String equipmentName = editTextEquipmentName.getText().toString();
         String tagNo = editTextTagNo.getText().toString();
+        //float inputPowerFloat = Float.parseFloat(editTextInputPower.getText().toString());
         int inputPower = Integer.parseInt(editTextInputPower.getText().toString());
         int equipmentRpm = Integer.parseInt(editTextEquipmentRpm.getText().toString());
         int bladeVane = Integer.parseInt(editTextBladeVane.getText().toString());
@@ -438,7 +439,7 @@ public class PresetActivity extends BaseActivity {
         diagVar1.nEquipType = equipmentType;
         diagVar1.nBearingType = bearingType;
         diagVar1.nLineFreq = lineFrequency;
-        diagVar1.nPrjVibSpec = projectVibSpec;    // added by hslee 2020.03 아마도 사용 안함
+        diagVar1.nPrjVibSpec = projectVibSpec;
         diagVar1.strSiteCode = siteCode;
         diagVar1.strEquipName = equipmentName;
         diagVar1.strTagNo = tagNo;
@@ -906,15 +907,15 @@ public class PresetActivity extends BaseActivity {
 
         if( jsonString == null || "".equals(jsonString) ) {
             //ToastUtil.showShort("failed get preset from server. use in local storage");
-
+// input poewr 7356.8, 17943.7, 1276.9, 439.5, 1249.4, 259.5
             preset = new String[][]{
                 {"1","CWP_IBON","2","0","IBON","Circulating Water Pump","P2PAC10AP001","3086","0","1","425","5","2","0","0","0","0","0"},
-                {"2","BFP#1_IBON","2","0","IBON","Motor Driven Boiler Feedwater Pump","P2LAC13AP010KP02","7356.8","0","0","5583","0","2","0","0","0","0","0"},
-                {"3","BFP#2_IBON","2","0","IBON","Turbine Driven Boiler Feedwater Pump","P2LAC11AP010KP02","17943.7","0","0","5857","0","2","0","0","0","0","0"},
-                {"4","CEP_IBON","2","0","IBON","Condensate Extraction Pump","P2LCB10AP010","1276.9","0","1","1486","0","2","0","0","0","0","0"},
-                {"5","CWP_FA30","2","0","FA30","Circulating Water Pump","12PAC10AP001","439.5","1","0","893","0","0","9","0","0","0","0"},
-                {"6","BFP_FA30","2","0","FA30","Boiler Feedwater Pump","12LAC11AP001","1249.4","1","0","3570","0","2","0","0","0","0","0"},
-                {"7","CEP_FA30","2","0","FA30","Condensate Extraction Pump","12LCB11AP001","259.5","1","1","1784","0","1","0","0","0","0","0"},
+                {"2","BFP#1_IBON","2","0","IBON","Motor Driven Boiler Feedwater Pump","P2LAC13AP010KP02","7356","0","0","5583","0","2","0","0","0","0","0"},
+                {"3","BFP#2_IBON","2","0","IBON","Turbine Driven Boiler Feedwater Pump","P2LAC11AP010KP02","17943","0","0","5857","0","2","0","0","0","0","0"},
+                {"4","CEP_IBON","2","0","IBON","Condensate Extraction Pump","P2LCB10AP010","1276","0","1","1486","0","2","0","0","0","0","0"},
+                {"5","CWP_FA30","2","0","FA30","Circulating Water Pump","12PAC10AP001","439","1","0","893","0","0","9","0","0","0","0"},
+                {"6","BFP_FA30","2","0","FA30","Boiler Feedwater Pump","12LAC11AP001","1249","1","0","3570","0","2","0","0","0","0","0"},
+                {"7","CEP_FA30","2","0","FA30","Condensate Extraction Pump","12LCB11AP001","259","1","1","1784","0","1","0","0","0","0","0"},
                 {"8","MCWP_RAPO","4","7.11","RAPO","Main Cooling Water Pump","P00PAC11","2264","0","1","424","5","2","0","0","0","0","0"},
                 {"9","CTBDP_RAPO","4","7.11","RAPO","Cooling Tower BlowDown Pump","P00PAD11","1980","0","1","494","4","3","0","0","0","0","0"},
                 {"10", PRESET_USER_DEFINITION, "4", "9", "dodo1", "pump", "p-001", "10", "0", "0", "8", "6", "0", "6", "1", "2", "3", "60", "0", ""}
@@ -1056,8 +1057,13 @@ public class PresetActivity extends BaseActivity {
         editTextBallDiameter.setText(preset[i][15]);
         //editTextRps.setText(preset[i][16]);
 
-        String rps = getRpsFromRpm(preset[i][16]);
-        editTextRps.setText(rps); // added by hslee 2020.07.13 rpm에 따라 자동 계산되므로 삭제
+        if( i == 9 ) {  // 사용자 저장 값이면 그대로 표시
+            editTextRps.setText(preset[i][16]);
+        }
+        else {
+            String rps = getRpsFromRpm(preset[i][16]);
+            editTextRps.setText(rps); // added by hslee 2020.07.13 rpm에 따라 자동 계산되므로 삭제
+        }
         //editTextRps.setText(preset[i][16]); // // for test
 
         spinnerEquipmentCode.setSelection(equipmentCode);

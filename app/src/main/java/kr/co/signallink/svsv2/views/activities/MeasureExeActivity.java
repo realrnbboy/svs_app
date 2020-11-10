@@ -589,7 +589,18 @@ public class MeasureExeActivity extends Activity {
                 + " " + connectSVSItems.getCurrentIndexSvsLocation().toString().toUpperCase()
                 + "\n\n"+ subMessage + "...";
 
-        if( !bModePump ) {  // added by hslee 2020.06.02 pipe인 경우
+        if( bModePump ) {
+            String position = " Vertical";  // added by hslee 2020.11.09 pump도 이름 변경 요청함.
+            if( connectSVSItems.getCurrentIndexSvsLocation().toString().toUpperCase().equals("SVS2") )
+                position = " Horizontal";
+            else if( connectSVSItems.getCurrentIndexSvsLocation().toString().toUpperCase().equals("SVS3") )
+                position = " Axial";
+
+            message = equipmentName
+                    + position
+                    + "\n\n"+ subMessage + "...";
+        }
+        else {  // added by hslee 2020.06.02 pipe인 경우
 
             String position = " Vertical";
             if( nowMeasurePosition == 2 )
@@ -601,6 +612,8 @@ public class MeasureExeActivity extends Activity {
                     + position
                     + "\n\n"+ subMessage + "...";
         }
+
+
 
         ProgressBar progressBar = findViewById(R.id.progressBar);
         TextView textViewTitle = findViewById(R.id.textViewTitle);

@@ -177,11 +177,11 @@ public class ResultActivity extends BaseActivity {
             public void setRmsStatus(int position, float rms) {
                 switch(position) {
                     case 0 :
-                        bRmsResultGood1 = !(rms > analysisData.rmsLimit); break;    // 기준값을 넘으면 false
+                        bRmsResultGood1 = !(rms > analysisData.rmsLimitWarning); break;    // 기준값을 넘으면 false
                     case 1 :
-                        bRmsResultGood2 = !(rms > analysisData.rmsLimit); break;    // 기준값을 넘으면 false
+                        bRmsResultGood2 = !(rms > analysisData.rmsLimitWarning); break;    // 기준값을 넘으면 false
                     case 2 :
-                        bRmsResultGood3 = !(rms > analysisData.rmsLimit); break;    // 기준값을 넘으면 false
+                        bRmsResultGood3 = !(rms > analysisData.rmsLimitWarning); break;    // 기준값을 넘으면 false
                 }
 
             }
@@ -503,15 +503,20 @@ public class ResultActivity extends BaseActivity {
             rmsModel2.setbProjectVib(true);
             rmsModel3.setbProjectVib(true);
 
+            rmsModel1.setWarning(analysisData.getDiagVar1().nPrjVibSpec * 0.8f); // added by hslee 2020.11.09
+            rmsModel2.setWarning(analysisData.getDiagVar1().nPrjVibSpec * 0.8f); // added by hslee 2020.11.09
+            rmsModel3.setWarning(analysisData.getDiagVar1().nPrjVibSpec * 0.8f); // added by hslee 2020.11.09
             rmsModel1.setDanger(analysisData.getDiagVar1().nPrjVibSpec);
             rmsModel2.setDanger(analysisData.getDiagVar1().nPrjVibSpec);
             rmsModel3.setDanger(analysisData.getDiagVar1().nPrjVibSpec);
-
         }
         else {
-            rmsModel1.setDanger(analysisData.rmsLimit);
-            rmsModel2.setDanger(analysisData.rmsLimit);
-            rmsModel3.setDanger(analysisData.rmsLimit);
+            rmsModel1.setWarning(analysisData.rmsLimitWarning); // added by hslee 2020.11.09
+            rmsModel2.setWarning(analysisData.rmsLimitWarning); // added by hslee 2020.11.09
+            rmsModel3.setWarning(analysisData.rmsLimitWarning); // added by hslee 2020.11.09
+            rmsModel1.setDanger(analysisData.rmsLimitDanger);
+            rmsModel2.setDanger(analysisData.rmsLimitDanger);
+            rmsModel3.setDanger(analysisData.rmsLimitDanger);
 //            float danger1 = analysisData.getMeasureData1().getRmsDanger();
 //            float danger2 = analysisData.getMeasureData2().getRmsDanger();
 //            float danger3 = analysisData.getMeasureData3().getRmsDanger();
@@ -526,6 +531,11 @@ public class ResultActivity extends BaseActivity {
 //            rmsModel2.setWarning(warning2);
 //            rmsModel3.setWarning(warning3);
         }
+
+        // for test
+//        rmsModel1.setRms(2f);// added by hslee 2020.11.09
+//        rmsModel2.setRms(3f);// added by hslee 2020.11.09
+//        rmsModel3.setRms(4f);// added by hslee 2020.11.09
 
         rmsList.add(rmsModel1);
         rmsList.add(rmsModel2);

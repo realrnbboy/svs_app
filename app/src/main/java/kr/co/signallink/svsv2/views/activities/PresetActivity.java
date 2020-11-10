@@ -455,7 +455,9 @@ public class PresetActivity extends BaseActivity {
         analysisData.setDiagVar1(diagVar1);
 
         float rmsLimit = fnGetCodeValue();
-        analysisData.rmsLimit = rmsLimit;
+        //rmsLimit = 3.1f;    // for test
+        analysisData.rmsLimitWarning = rmsLimit * 0.8f; // added by hslee 2020.11.09
+        analysisData.rmsLimitDanger = rmsLimit;
 //        analysisData.setValueVar2(mainData.valueVar2);
 //        analysisData.setRangeVar2(mainData.rangeVar2);
 //        analysisData.setLowerVar2(mainData.lowerVar2);

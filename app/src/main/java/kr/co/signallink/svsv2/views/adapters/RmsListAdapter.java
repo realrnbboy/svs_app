@@ -59,36 +59,62 @@ public class RmsListAdapter extends ArrayAdapter<RmsModel> {
 
         float rms = Float.parseFloat(String.format("%.04f", rmsModel.getRms())); // 소수점 자르기
 
-        if( rmsModel.isbProjectVib() ) {    // added by hslee 2020.05.25 사용자 입력값 사용할 경우
-            if (rmsModel.getRms() >= rmsModel.getDanger()) {
-                rmsColor = ContextCompat.getColor(context, R.color.myred);
-                statusColor = ContextCompat.getColor(context, R.color.myred);
-                rmsString = rms + "mm/s" + " (" + rmsModel.getDanger() + ")";
-                statusString = "PROBLEM";
-            } else {
-                rmsColor = ContextCompat.getColor(context, R.color.myblue);
-                statusColor = ContextCompat.getColor(context, R.color.mygreen);
-                rmsString = rms + "mm/s";
-                statusString = "GOOD";
-            }
+//        if( rmsModel.isbProjectVib() ) {    // added by hslee 2020.05.25 사용자 입력값 사용할 경우
+////            if (rmsModel.getRms() >= rmsModel.getDanger()) {
+////                rmsColor = ContextCompat.getColor(context, R.color.myred);
+////                statusColor = ContextCompat.getColor(context, R.color.myred);
+////                rmsString = rms + "mm/s" + " (" + rmsModel.getDanger() + ")";
+////                statusString = "PROBLEM";
+////            }
+////            else {
+////                rmsColor = ContextCompat.getColor(context, R.color.myblue);
+////                statusColor = ContextCompat.getColor(context, R.color.mygreen);
+////                rmsString = rms + "mm/s";
+////                statusString = "GOOD";
+////            }
+////        }
+////        else {
+////            if (rmsModel.getRms() >= rmsModel.getDanger()) {
+////                rmsColor = ContextCompat.getColor(context, R.color.myred);
+////                statusColor = ContextCompat.getColor(context, R.color.myred);
+////                rmsString = rms + "mm/s" + " (" + rmsModel.getDanger() + ")";
+////                statusString = "PROBLEM";
+//////            }
+//////            else if (rmsModel.getRms() >= rmsModel.getWarning()) {
+//////                rmsColor = ContextCompat.getColor(context, R.color.myblue);
+//////                statusColor = ContextCompat.getColor(context, R.color.myorange);
+//////                rmsString = rms + "mm/s" + " (" + rmsModel.getWarning() + ")";
+//////                statusString = "CONCERN";
+////            }
+////            else {
+////                rmsColor = ContextCompat.getColor(context, R.color.myblue);
+////                statusColor = ContextCompat.getColor(context, R.color.mygreen);
+////                rmsString = rms + "mm/s";
+////                statusString = "GOOD";
+////            }
+////        }
+
+        // added by hslee 2020-11-09
+//        기준값의 80%(2.24) 미만 일때 GOOD(녹색) 표시 -> 진단 미진행
+//        기준값의 80%(2.24) 초과 ~ 기준(2.8) 미만 일때 CONCERN(노란색) 표시 -> 진단 진행
+//        기준값과 비교하여 기준(2.8)을 초과하면 PROBLEM(적색) 표시 -> 진단 진행
+        if (rmsModel.getRms() >= rmsModel.getDanger()) {
+            rmsColor = ContextCompat.getColor(context, R.color.myred);
+            statusColor = ContextCompat.getColor(context, R.color.myred);
+            rmsString = rms + "mm/s" + " (" + rmsModel.getDanger() + ")";
+            statusString = "PROBLEM";
+        }
+        else if (rmsModel.getRms() >= rmsModel.getWarning()) {
+            rmsColor = ContextCompat.getColor(context, R.color.myblue);
+            statusColor = ContextCompat.getColor(context, R.color.myorange);
+            rmsString = rms + "mm/s" + " (" + rmsModel.getDanger() + ")";
+            statusString = "CONCERN";
         }
         else {
-            if (rmsModel.getRms() >= rmsModel.getDanger()) {
-                rmsColor = ContextCompat.getColor(context, R.color.myred);
-                statusColor = ContextCompat.getColor(context, R.color.myred);
-                rmsString = rms + "mm/s" + " (" + rmsModel.getDanger() + ")";
-                statusString = "PROBLEM";
-//            } else if (rmsModel.getRms() >= rmsModel.getWarning()) {
-//                rmsColor = ContextCompat.getColor(context, R.color.myblue);
-//                statusColor = ContextCompat.getColor(context, R.color.myorange);
-//                rmsString = rms + "mm/s" + " (" + rmsModel.getWarning() + ")";
-//                statusString = "CONCERN";
-            } else {
-                rmsColor = ContextCompat.getColor(context, R.color.myblue);
-                statusColor = ContextCompat.getColor(context, R.color.mygreen);
-                rmsString = rms + "mm/s";
-                statusString = "GOOD";
-            }
+            rmsColor = ContextCompat.getColor(context, R.color.myblue);
+            statusColor = ContextCompat.getColor(context, R.color.mygreen);
+            rmsString = rms + "mm/s";
+            statusString = "GOOD";
         }
         //statusString = "PROBLEM";   // for test
 
